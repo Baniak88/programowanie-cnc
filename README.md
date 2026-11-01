@@ -7,19 +7,15 @@ Interaktywny kurs programowania obrabiarek CNC (frezowanie i toczenie, składnia
 - ściąga kodów G i M
 - symulator G-code: edytor, wykrywanie błędów i kolizji, podgląd 3D z usuwaniem materiału
 
-## Uruchomienie
+## Uruchomienie bez instalacji
 
-Jeden plik HTML bez kroku budowania. Otwórz `index.html` w przeglądarce albo uruchom serwer:
+`index.html` to jeden samodzielny plik: three.js jest wbudowany, więc kurs działa po otwarciu w przeglądarce, także bez internetu. Pobierz go ([link do pobrania](https://github.com/Baniak88/programowanie-cnc/raw/main/index.html)) i otwórz w Chrome, Firefoksie lub Edge, na komputerze albo telefonie. Bez internetu zmieniają się tylko czcionki na systemowe.
 
-```
-python3 -m http.server 8080
-```
-
-i wejdź na http://localhost:8080. Model 3D korzysta z three.js (r128) z cdnjs, więc wymaga internetu; bez WebGL symulator przechodzi na widok z góry.
+Bez WebGL symulator przechodzi na widok z góry.
 
 ## Edycja
 
-Źródłem jest `kurs.html` (treść strony bez nagłówka dokumentu). Po zmianach uruchom `./build.sh`, który generuje `index.html`.
+Źródłem jest `kurs.html` (treść strony bez nagłówka dokumentu). Po zmianach uruchom `./build.sh`, który generuje `index.html` i wbudowuje w niego `vendor/three.min.js` (three.js r128, licencja MIT w `vendor/THREE-LICENSE.txt`).
 
 ## Publikacja
 
