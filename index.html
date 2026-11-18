@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#131B23">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -209,6 +214,51 @@ details.box summary{cursor:pointer;font:600 .85rem var(--f-mono)}
 .f-stock{fill:var(--stock)} .f-panel{fill:var(--panel2)} .f-ink{fill:var(--ink)} .f-mut{fill:var(--muted)} .f-acc{fill:var(--accent)} .f-cut{fill:var(--cut)} .f-none{fill:none}
 svg text{font-family:var(--f-mono)}
 
+/* generator CAM + practical pages */
+.gen-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;list-style:none;padding:0;margin:0 0 12px;counter-reset:g}
+.gen-steps li{counter-increment:g;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;font-size:.85rem;color:var(--muted)}
+.gen-steps li b{display:block;color:var(--ink);font:600 1.1rem var(--f-display)}
+.gen-steps li b::before{content:counter(g) ". ";color:var(--accent)}
+@media (max-width:560px){.gen-steps{grid-template-columns:1fr}}
+.gen-drop{display:grid;justify-items:center;gap:8px;text-align:center;padding:1.4rem 1rem;border:2px dashed var(--line);border-radius:12px;background:var(--panel)}
+.gen-drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,var(--panel))}
+.gen-drop>b{font:600 1.35rem var(--f-display)}
+.gen-drop>span{color:var(--muted);font-size:.9rem}
+.gen-info{margin:.8rem 0 0;font-size:.92rem;max-width:90ch}
+.gen-info.bad{color:var(--bad)}
+.gen-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.25fr);gap:16px;align-items:start;margin:14px 0 18px}
+@media (max-width:980px){.gen-grid{grid-template-columns:1fr}}
+.gen-panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:.2rem 1rem 1rem;min-width:0}
+.gen-panel h3,.gen-out h3{font-size:1.2rem;margin:1rem 0 .5rem}
+.gen-ctl{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.gen-chks{display:grid;gap:6px;margin-top:10px}
+.gen-chk{display:flex;gap:8px;align-items:center;font-size:.9rem}
+.gen-hint{font-size:.85rem;color:var(--muted);margin:.2rem 0}
+#genFeat input[type=number]{width:5.2em}
+#genFeat td{font-size:.86rem}
+.gen-out{min-width:0}
+.gen-vp{aspect-ratio:4/3}
+.gen-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin:12px 0}
+.gen-stats div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.45rem .7rem}
+.gen-stats span{font:500 .68rem var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.gen-stats b{display:block;font:600 1.3rem/1.2 var(--f-display);font-variant-numeric:tabular-nums}
+.gen-ops{padding-left:1.4em;margin:.3rem 0}.gen-ops li{margin:.3rem 0}
+.gen-code{max-height:520px;overflow:auto;margin-top:.4rem}
+.tldr{background:color-mix(in srgb,var(--accent) 7%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));border-radius:10px;padding:.75rem 1.1rem .8rem;margin:0 0 1.6rem;max-width:72ch}
+.tldr .t{font:600 .74rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.tldr ul{margin:.35rem 0 0;padding-left:1.2em}.tldr li{margin:.2rem 0}
+ol.check{list-style:none;padding:0;margin:1rem 0;display:grid;gap:6px;max-width:80ch;counter-reset:c}
+ol.check li{counter-increment:c;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+ol.check label{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:.6rem .8rem;cursor:pointer;align-items:start}
+ol.check input{margin-top:.3rem;accent-color:var(--ok);width:18px;height:18px}
+ol.check li:has(input:checked){border-color:var(--ok)}
+ol.check li:has(input:checked) span{color:var(--muted)}
+.dict{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin:1rem 0}
+.dict div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.7rem .9rem}
+.dict dt{font:600 1.15rem var(--f-display)}
+.dict dd{margin:.25rem 0 0;font-size:.92rem;color:var(--muted)}
+.tools-cards .card b{font-size:1.15rem}
+
 @media (max-width:900px){
   .app{grid-template-columns:1fr}
   .side{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:auto;flex-direction:column;gap:10px;border-right:0;border-bottom:1px solid var(--line);padding-block:10px;padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -241,7 +291,7 @@ svg text{font-family:var(--f-mono)}
       <p class="eyebrow">Kurs od zera · frezowanie i toczenie · ISO / Fanuc</p>
       <h1>Warsztat G-code</h1>
       <p class="lead">Nauczysz się czytać i pisać programy na obrabiarki CNC: od osi maszyny, przez ruchy G00–G03 i parametry skrawania, po korekcje, cykle wiercenia i własny program sprawdzony w symulatorze 3D.</p>
-      <div class="row"><a class="btn primary" href="#maszyna">Zacznij od lekcji 1</a><a class="btn" href="#symulator">Otwórz symulator</a></div>
+      <div class="row"><a class="btn primary" href="#maszyna">Zacznij od lekcji 1</a><a class="btn" href="#generator">Program z modelu (CAM)</a><a class="btn" href="#symulator">Symulator</a></div>
     </div>
     <div class="hero-screen scr" aria-label="Animacja: program płytki wykonywany linia po linii">
       <div class="scr-top"><span>O1001 · płytka</span><span id="heroDro">X 0.000 Y 0.000 Z 0.000</span></div>
@@ -251,11 +301,22 @@ svg text{font-family:var(--f-mono)}
   </div>
 
   <h2>Program kursu</h2>
-  <p class="prose">Lekcje idą po kolei: każda ma krótką teorię, interaktywną wizualizację do przetestowania i trzy pytania kontrolne. Zaliczone lekcje zaznaczają się w spisie po lewej.</p>
+  <p class="prose">Lekcje idą po kolei. Każda zaczyna się ramką <b>„W skrócie”</b> z najważniejszymi zasadami, potem jest krótka teoria, wizualizacja do przetestowania i trzy pytania kontrolne. Zaliczone lekcje zaznaczają się w spisie po lewej.</p>
   <div class="cards" id="cards"></div>
 
+  <h2>Narzędzia do pracy</h2>
+  <p class="prose">Po kursie, albo równolegle z nim, korzystaj z narzędzi praktycznych. Generator robi to, co CAM: z rysunku DXF lub modelu STL sam pisze program.</p>
+  <div class="cards tools-cards">
+    <a class="card" href="#generator"><span class="n">CAM</span><b>Generator programu z modelu</b><p>Wczytaj DXF lub STL, a program z narzędziami i parametrami powstanie sam.</p></a>
+    <a class="card" href="#symulator"><span class="n">SYMULACJA</span><b>Symulator G-code</b><p>Błędy, kolizje, tor i zdejmowanie materiału w 3D.</p></a>
+    <a class="card" href="#obsluga"><span class="n">WARSZTAT</span><b>Praca przy maszynie</b><p>Zero G54, długości narzędzi, pierwsza sztuka, alarmy.</p></a>
+    <a class="card" href="#tabele"><span class="n">DANE</span><b>Tabele warsztatowe</b><p>Parametry skrawania, gwinty, pasowania, kalkulator S i F.</p></a>
+    <a class="card" href="#sciaga"><span class="n">ŚCIĄGA</span><b>Kody G i M</b><p>Wszystkie kody z kursu z wyszukiwarką.</p></a>
+    <a class="card" href="#slownik"><span class="n">POJĘCIA</span><b>Słowniczek</b><p>Krótko i po ludzku: od bazowania po wysięg.</p></a>
+  </div>
+
   <h2>Jak powstaje detal na CNC</h2>
-  <p class="prose">Program G-code to tylko jeden etap. Ten kurs uczy pisać go ręcznie, bo dopiero wtedy rozumiesz, co wygenerował CAM i dlaczego maszyna zrobiła to, co zrobiła.</p>
+  <p class="prose">Program G-code to tylko jeden etap. Ten kurs uczy pisać go ręcznie, bo dopiero wtedy rozumiesz, co wygenerował CAM i dlaczego maszyna zrobiła to, co zrobiła. W praktyce długie programy pisze CAM, a programista sprawdza je i poprawia.</p>
   <ol class="flow">
     <li><b>Rysunek</b><br>wymiary, tolerancje, materiał</li>
     <li><b>Technologia</b><br>kolejność operacji, narzędzia, mocowanie</li>
@@ -275,6 +336,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">CNC (Computer Numerical Control) to obrabiarka, której ruchy steruje komputer według programu. Zanim napiszesz pierwszą linię, musisz wiedzieć, co się rusza i w którą stronę.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>CNC to obrabiarka, która wykonuje ruchy zapisane w programie.</li><li>Na frezarce kręci się narzędzie, na tokarce kręci się detal.</li><li>Oś Z jest zawsze wzdłuż wrzeciona. Z+ oznacza odjazd od detalu, czyli kierunek bezpieczny.</li><li>Programujesz ruch narzędzia względem detalu. Nie myśl o tym, co fizycznie jedzie.</li></ul></div>
   <div class="prose">
     <p>Każda frezarka CNC ma te same główne zespoły:</p>
     <ul>
@@ -335,6 +397,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">Maszyna zna tylko swój własny układ. Ty programujesz od wygodnego punktu na detalu. Kod <code>G54</code> łączy jedno z drugim.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>Maszyna ma swoje zero (M). Zero detalu (W) wybierasz sam.</li><li>G54 znaczy „tu jest zero mojego detalu”. Operator mierzy je i wpisuje do tabeli.</li><li>G90: liczby to współrzędne od zera. G91: liczby mówią, o ile się przesunąć.</li><li>Zawsze pisz kropkę: X10. zamiast X10.</li></ul></div>
   <div class="prose">
     <p>Osie tworzą układ prawoskrętny: kciuk prawej dłoni to X+, palec wskazujący Y+, środkowy Z+. Na obrabiarce są trzy ważne punkty:</p>
     <ul>
@@ -382,6 +445,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">Program to lista bloków (linii). Każdy blok składa się ze słów: litery-adresu i liczby. Kliknij słowo, żeby zobaczyć, co robi.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>Program to linie (bloki), a linia to słowa: litera + liczba.</li><li>G mówi, jak się ruszać i w jakim trybie. M włącza i wyłącza: wrzeciono, chłodziwo, koniec programu.</li><li>Kody modalne działają aż do zmiany, nie trzeba ich powtarzać.</li><li>Każdy program: linia bezpieczeństwa na początku, M30 na końcu.</li></ul></div>
   <figure class="fig">
     <div class="fig-h"><b>Anatomia jednego bloku</b><span>Wizualizacja 3.1</span></div>
     <div class="anat scr" id="anat"></div>
@@ -442,6 +506,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead"><code>G00</code> to szybki dojazd w powietrzu, <code>G01</code> to ruch roboczy po prostej z zadanym posuwem. Pomylenie ich to najczęstsza przyczyna kolizji.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>G00 to ruch szybki, tylko w powietrzu. G01 to skrawanie z posuwem F.</li><li>Dojazd: najpierw XY wysoko, potem Z w dół. Odjazd: najpierw Z w górę, potem XY.</li><li>Ostatnie 2 mm nad materiałem zawsze ruchem G01.</li></ul></div>
   <div class="prose">
     <ul>
       <li><code>G00 X.. Y.. Z..</code> – ruch z maksymalną prędkością maszyny (często 20–50 m/min). Nigdy nie skrawa. Posuw F nie ma znaczenia.</li>
@@ -480,6 +545,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead"><code>G02</code> to łuk zgodnie z ruchem wskazówek zegara, <code>G03</code> przeciwnie. Kierunek oceniasz, patrząc na płaszczyznę XY od strony Z+, czyli z góry, tak jak wrzeciono.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>G02 to łuk zgodnie z ruchem wskazówek zegara, G03 przeciwnie (patrząc z góry).</li><li>I i J mówią, gdzie jest środek łuku, licząc od punktu startu.</li><li>R to promień. Pełny okrąg tylko przez I/J.</li><li>Łuk z dopisanym Z to helisa, czyli łagodne wejście w materiał.</li></ul></div>
   <div class="prose">
     <p>Łuk opisują: punkt startowy (tam, gdzie narzędzie stoi), punkt końcowy <code>X Y</code> oraz środek. Środek podajesz na dwa sposoby:</p>
     <ul>
@@ -511,6 +577,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">Obroty i posuw nie biorą się z głowy. Liczysz je z prędkości skrawania materiału i posuwu na ostrze, które podaje katalog narzędzia.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>Z katalogu narzędzia bierzesz Vc i fz, a z nich liczysz S i F.</li><li>S = Vc · 1000 / (π · D), F = S · z · fz.</li><li>Mniejszy frez kręci się szybciej. Więcej ostrzy pozwala na większy posuw.</li><li>Zaczynaj od dolnej granicy katalogu i podnoś, jeśli nie ma drgań.</li></ul></div>
   <div class="prose">
     <p><b>Prędkość skrawania V<sub>c</sub></b> [m/min] to prędkość, z jaką ostrze przesuwa się po materiale. Zależy od materiału i narzędzia (węglik, HSS). Z niej liczysz obroty:</p>
     <p class="formula">n = V<sub>c</sub> · 1000 / (π · D) &nbsp;[obr/min]</p>
@@ -545,6 +612,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">Dzięki korekcjom programujesz kontur z rysunku, a sterowanie samo przesuwa środek freza o promień i uwzględnia długość każdego narzędzia.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>G41/G42: sterowanie samo odsuwa frez o jego promień od konturu.</li><li>G41 przy M03 daje frezowanie współbieżne, czyli lepszą powierzchnię.</li><li>G43 H: każde narzędzie ma inną długość, sterowanie ją uwzględnia.</li><li>Wymiar za duży lub za mały? Popraw korektor D, nie program.</li></ul></div>
   <div class="prose">
     <ul>
       <li><code>G41</code> – narzędzie po <b>lewej</b> stronie konturu, patrząc w kierunku ruchu.</li>
@@ -591,6 +659,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">Cykl to gotowa sekwencja ruchów w jednym bloku. Raz opisujesz głębokość i płaszczyznę R, a potem podajesz już tylko kolejne pozycje otworów.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>Cykl to wiele ruchów zapisanych w jednej linii.</li><li>G81 do płytkich otworów, G83 do głębokich (wyjście co Q), G73 łamie wiór.</li><li>G98 wraca wysoko (bezpieczniej), G99 tylko do R (szybciej).</li><li>Zawsze kończ cykl kodem G80.</li></ul></div>
   <div class="prose">
     <ul>
       <li><code>G81</code> – zwykłe wiercenie: dojazd do R, posuw do Z, szybki powrót. Płytkie otwory.</li>
@@ -628,6 +697,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">Na tokarce obraca się detal, więc prędkość skrawania zależy od średnicy. Sterowanie może samo zmieniać obroty, żeby utrzymać stałe V<sub>c</sub>.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>Na tokarce X oznacza średnicę, nie promień.</li><li>G96 to stała prędkość skrawania, G50 to limit obrotów. G50 zawsze przed G96.</li><li>G71 zbiera materiał warstwami, G70 wykańcza po tym samym konturze.</li><li>Posuw na tokarce zwykle w mm/obr (G95).</li></ul></div>
   <div class="prose">
     <ul>
       <li><code>G96 S200</code> – stała prędkość skrawania 200 m/min. Im mniejsza średnica, tym wyższe obroty.</li>
@@ -675,6 +745,7 @@ svg text{font-family:var(--f-mono)}
     <p class="lead">Składamy wszystko w jeden kompletny program: trzy narzędzia, kontur, kieszeń z wejściem po helisie i cztery otwory. Przeczytaj go sekcja po sekcji, potem uruchom w symulatorze.</p>
     <div class="row"><button class="btn speak" type="button">Odsłuchaj lekcję</button><a class="btn primary" href="#symulator" id="projOpen">Otwórz w symulatorze</a></div>
   </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>Kolejność: kontur, kieszeń, otwory. Każda operacja innym narzędziem.</li><li>Każde narzędzie: T.. M06 → S.. M03 → G43 H.. → praca → odjazd.</li><li>Przed maszyną: symulacja, potem pierwsza sztuka z małym override.</li><li>Ten sam detal możesz też wygenerować automatycznie w Generatorze CAM.</li></ul></div>
   <div class="prose">
     <p><b>Półfabrykat:</b> aluminium 100 × 60 × 20 mm. <b>Zero G54:</b> lewy dolny róg, górna powierzchnia (Z0). <b>Operacje:</b></p>
     <ol>
@@ -729,15 +800,310 @@ svg text{font-family:var(--f-mono)}
       <details class="box">
         <summary>Półfabrykat i magazyn narzędzi</summary>
         <div class="row" style="margin:.6rem 0">
-          <label class="ctl">Długość X<input type="number" id="stW" value="100" min="10" max="400"></label>
-          <label class="ctl">Szerokość Y<input type="number" id="stH" value="60" min="10" max="300"></label>
-          <label class="ctl">Grubość Z<input type="number" id="stT" value="20" min="2" max="100"></label>
+          <label class="ctl">Długość X<input type="number" id="stW" value="100" min="10" max="1000"></label>
+          <label class="ctl">Szerokość Y<input type="number" id="stH" value="60" min="10" max="800"></label>
+          <label class="ctl">Grubość Z<input type="number" id="stT" value="20" min="2" max="300"></label>
         </div>
         <p style="margin:.2rem 0;font-size:.9rem;color:var(--muted)">Zero G54 w lewym dolnym rogu, na górnej powierzchni. Narzędzia:</p>
         <div class="tbl" style="margin:.3rem 0"><table id="toolTbl"></table></div>
       </details>
     </div>
   </div>
+</section>
+
+<!-- ============ GENERATOR CAM ============ -->
+<section data-route="generator" hidden class="wide">
+  <header class="lhead">
+    <p class="eyebrow">Praktyka · CAM</p>
+    <h1>Generator programu z modelu</h1>
+    <p class="lead">Wczytaj rysunek <b>DXF</b> albo model 3D <b>STL</b>. Generator sam rozpozna kontur, kieszenie i otwory, dobierze narzędzia, obroty i posuwy, a potem napisze gotowy program G-code. Tak działają programy CAM, np. Edgecam czy Fusion 360, tylko w uproszczeniu.</p>
+  </header>
+  <ol class="gen-steps"><li><b>Model</b> wczytaj plik albo przykład</li><li><b>Ustawienia</b> maszyna, materiał, półfabrykat</li><li><b>Program</b> sprawdź, zasymuluj, pobierz</li></ol>
+  <div class="gen-drop" id="genDrop">
+    <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true"><path d="M14 30 L24 20 L34 30 M24 20 V42" class="f-none s-acc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 26 A10 10 0 0 1 14 8 A13 13 0 0 1 38 12 A9 9 0 0 1 38 30" class="f-none s-mut" stroke-width="2.5" stroke-linecap="round"/></svg>
+    <b>Upuść tutaj plik .DXF lub .STL</b>
+    <span>albo skopiuj plik i wklej go na tej stronie (Ctrl+V)</span>
+    <label class="btn primary">Wybierz plik z dysku<input type="file" id="genFile" accept=".dxf,.stl,.DXF,.STL" hidden></label>
+    <div class="row" style="justify-content:center"><span style="color:var(--muted);font-size:.9rem">albo przykład:</span><button class="btn" type="button" data-sample="plate">Płytka 2D (DXF)</button><button class="btn" type="button" data-sample="mold">Forma 3D (STL)</button><button class="btn" type="button" data-sample="shaft">Wałek na tokarkę (DXF)</button></div>
+  </div>
+  <p class="gen-info" id="genInfo"></p>
+
+  <div class="gen-grid" id="genWork" hidden>
+    <div class="gen-panel">
+      <h3>1. Maszyna i materiał</h3>
+      <div class="gen-ctl">
+        <label class="ctl">Maszyna<select id="genMach"><option value="mill">Frezarka 3-osiowa</option><option value="lathe">Tokarka 2-osiowa</option></select></label>
+        <label class="ctl">Materiał<select id="genMat"></select></label>
+        <label class="ctl" data-m="mill">Maks. obroty wrzeciona<input type="number" id="genSmax" value="12000" min="500" max="60000" step="500"></label>
+        <label class="ctl" data-m="lathe">Limit obrotów G50<input type="number" id="genSmaxL" value="3000" min="300" max="8000" step="100"></label>
+      </div>
+      <h3>2. Półfabrykat</h3>
+      <div class="gen-ctl">
+        <label class="ctl" data-m="mill">Naddatek z boków [mm]<input type="number" id="genSide" value="3" min="0" max="50" step="0.5"></label>
+        <label class="ctl" data-k="2d">Grubość półfabrykatu [mm]<input type="number" id="genThk" value="20" min="1" max="300" step="1"></label>
+        <label class="ctl" data-k="3d">Naddatek na górze [mm]<input type="number" id="genTop" value="1" min="0" max="50" step="0.5"></label>
+        <label class="ctl" data-k="3d">Podstawa pod modelem [mm]<input type="number" id="genBase" value="3" min="0" max="100" step="0.5"></label>
+        <label class="ctl" data-k="3d">Góra modelu to oś<select id="genUp"><option value="z">+Z (bez zmian)</option><option value="y">+Y</option><option value="-y">−Y</option><option value="x">+X</option><option value="-x">−X</option><option value="-z">−Z (odwróć)</option></select></label>
+        <label class="ctl" data-m="lathe">Oś wałka na rysunku<select id="genAxis"><option value="auto">wykryj sama</option><option value="bottom">dolna krawędź (pół profilu)</option><option value="mid">środek (pełny obrys)</option></select></label>
+        <label class="ctl" data-m="lathe">Czoło detalu<select id="genFace"><option value="right">po prawej stronie rysunku</option><option value="left">po lewej stronie rysunku</option></select></label>
+        <label class="ctl" data-m="lathe">Naddatek na czole [mm]<input type="number" id="genFaceA" value="1" min="0" max="10" step="0.5"></label>
+      </div>
+      <h3>3. Narzędzia i strategia</h3>
+      <div class="gen-ctl">
+        <label class="ctl" data-m="mill">Największy frez<select id="genTmax"><option value="6">Ø6</option><option value="8">Ø8</option><option value="10">Ø10</option><option value="12" selected>Ø12</option><option value="16">Ø16</option><option value="20">Ø20</option></select></label>
+        <label class="ctl" data-k="3d">Frez kulowy na gotowo<select id="genBall"><option value="3">Ø3 (R1,5)</option><option value="4">Ø4 (R2)</option><option value="6" selected>Ø6 (R3)</option><option value="8">Ø8 (R4)</option><option value="10">Ø10 (R5)</option></select></label>
+      </div>
+      <div class="gen-chks">
+        <label class="gen-chk" data-m="mill"><input type="checkbox" id="genFin" checked> obróbka wykańczająca (na gotowo)</label>
+        <label class="gen-chk" data-k="2d"><input type="checkbox" id="genSpot" checked> nakiełkowanie otworów nawiertakiem</label>
+        <label class="gen-chk" data-m="lathe"><input type="checkbox" id="genPart" checked> przecinanie na końcu</label>
+        <label class="gen-chk" data-m="mill"><input type="checkbox" id="genNum"> numery bloków N10, N20…</label>
+      </div>
+      <div id="genFeatWrap">
+        <h3>4. Rozpoznane cechy</h3>
+        <p class="gen-hint">Odznacz, czego nie chcesz obrabiać, i popraw głębokości. Głębokość generator czyta też z nazwy warstwy (np. <code>KIESZEN_6</code>) albo z ujemnej współrzędnej Z w DXF.</p>
+        <div class="tbl" style="margin:.4rem 0 0"><table id="genFeat"></table></div>
+      </div>
+    </div>
+
+    <div class="gen-out">
+      <div class="vp gen-vp"><canvas id="genCv" aria-label="Podgląd detalu i torów narzędzi z góry"></canvas></div>
+      <div class="legend"><span><i style="border-color:var(--cut)"></i>ruch roboczy</span><span><i style="border-color:var(--rapid);border-top-style:dashed"></i>ruch szybki</span><span><i style="border-color:var(--ink)"></i>kontur detalu</span></div>
+      <div class="gen-stats" id="genStats"></div>
+      <div class="row"><button class="btn primary" id="genSim" type="button">Otwórz w symulatorze 3D</button><button class="btn" id="genDl" type="button">Pobierz plik .NC</button><button class="btn" id="genCopy" type="button">Kopiuj program</button></div>
+      <ul class="msgs" id="genMsgs"></ul>
+      <h3>Operacje (kolejność na maszynie)</h3>
+      <ol class="gen-ops" id="genOps"></ol>
+      <h3>Narzędzia i parametry</h3>
+      <div class="tbl"><table id="genTools"></table></div>
+      <h3>Program</h3>
+      <pre class="code scr gen-code" id="genCode"></pre>
+    </div>
+  </div>
+
+  <details class="box">
+    <summary>Jak przygotować plik w programie CAD</summary>
+    <div class="prose" style="padding:.4rem 0">
+      <p><b>Frezowanie 2D (płytki, wsporniki, kieszenie, otwory): DXF.</b> Narysuj widok z góry w skali 1:1, w milimetrach. Zostaw tylko krawędzie detalu: bez wymiarów, osi, ramek i kreskowania (generator i tak pomija warstwy o nazwach typu <i>wymiary</i>, <i>osie</i>, <i>tekst</i>).</p>
+      <ul>
+        <li><b>SolidWorks:</b> na płaskiej ścianie prawy klik → <i>Eksportuj do DXF/DWG</i>, albo rysunek → <i>Zapisz jako → DXF</i>.</li>
+        <li><b>Inventor:</b> szkic na ścianie → prawy klik → <i>Eksportuj szkic jako → DXF</i>.</li>
+        <li><b>Fusion 360:</b> w przeglądarce szkiców prawy klik na szkicu → <i>Save as DXF</i>.</li>
+        <li><b>FreeCAD:</b> zaznacz ścianę lub szkic → <i>Plik → Eksportuj → Autodesk DXF</i>.</li>
+        <li><b>AutoCAD / ZWCAD / DraftSight:</b> <i>Zapisz jako → DXF</i> (dowolna wersja).</li>
+      </ul>
+      <p>Każdy zamknięty kontur wewnątrz obrysu to kieszeń, okręgi do Ø13 mm to otwory, a otwarte linie to rowki. Głębokość możesz zapisać w nazwie warstwy, np. <code>KIESZEN_8</code> albo <code>GRAWER_0.5</code>.</p>
+      <p><b>Frezowanie 3D (formy, kształty swobodne): STL.</b> <i>Plik → Zapisz jako / Eksportuj → STL</i>, jednostki milimetry, rozdzielczość „dokładna”. Generator obrabia model od góry, tak jak leży w osi +Z. Jeżeli model leży na boku, zmień „Góra modelu to oś”.</p>
+      <p><b>Toczenie: DXF z profilem.</b> Narysuj połowę przekroju wałka nad osią (oś na dolnej krawędzi) albo pełny obrys. Czoło detalu po prawej stronie.</p>
+      <p>Formaty STEP, IGES i pliki natywne (SLDPRT, IPT, F3D) wymagają jądra geometrycznego, którego nie ma w przeglądarce. Dlatego trzeba je wyeksportować do STL lub DXF.</p>
+    </div>
+  </details>
+  <p class="note" style="margin-top:14px"><b>Program z CAM też trzeba sprawdzić.</b> Generator nie zna Twojego imadła, docisków ani długości narzędzi. Przed pierwszą sztuką: symulacja, sprawdzenie korektorów, przebieg na sucho nad detalem i start z posuwem 25%. Szczegóły w części „Praca przy maszynie”.</p>
+</section>
+
+<!-- ============ PRACA PRZY MASZYNIE ============ -->
+<section data-route="obsluga" hidden>
+  <header class="lhead">
+    <p class="eyebrow">Praktyka · warsztat</p>
+    <h1>Praca przy maszynie</h1>
+    <p class="lead">Program to połowa sukcesu. Druga połowa to poprawne ustawienie maszyny: zero detalu, długości narzędzi i bezpieczny pierwszy przebieg. Tu jest kolejność, którą stosuje się na produkcji.</p>
+    <div class="row"><button class="btn speak" type="button">Odsłuchaj</button></div>
+  </header>
+  <div class="tldr"><b class="t">W skrócie</b><ul><li>Bazowanie → mocowanie → zero G54 → długości narzędzi → test programu.</li><li>Pierwsza sztuka zawsze z pojedynczym blokiem i zmniejszonym posuwem.</li><li>Wymiar nie wychodzi? Popraw korektor, nie program.</li></ul></div>
+  <div class="prose">
+    <h2>Tryby pracy sterowania</h2>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Tryb</th><th>Do czego służy</th></tr></thead>
+    <tbody>
+      <tr><td><b>REF / ZRN</b></td><td>Bazowanie osi po włączeniu maszyny. Bez tego maszyna nie wie, gdzie jest.</td></tr>
+      <tr><td><b>JOG</b></td><td>Ręczny przesuw osi przyciskami, ze stałą prędkością.</td></tr>
+      <tr><td><b>HANDLE / MPG</b></td><td>Przesuw kółkiem ręcznym, skok 0,001 / 0,01 / 0,1 mm. Do ustawiania zera i mierzenia.</td></tr>
+      <tr><td><b>MDI</b></td><td>Wpisanie i wykonanie pojedynczych linii, np. <code>T1 M06</code> albo <code>S1000 M03</code>.</td></tr>
+      <tr><td><b>EDIT</b></td><td>Edycja programów w pamięci sterowania.</td></tr>
+      <tr><td><b>MEM / AUTO</b></td><td>Wykonywanie programu z pamięci. Przycisk CYCLE START.</td></tr>
+      <tr><td><b>DNC / RMT</b></td><td>Wykonywanie długiego programu (np. 3D z CAM) wprost z komputera lub karty.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="prose">
+    <h2>Ustawienie maszyny krok po kroku</h2>
+  </div>
+  <ol class="check" id="setupList">
+    <li><label><input type="checkbox"> <span><b>Bazowanie osi</b> (REF). Najpierw Z, potem X i Y.</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Rozgrzanie wrzeciona</b> po dłuższym postoju, np. 5 minut na rosnących obrotach.</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Mocowanie detalu</b>: imadło wyosiowane czujnikiem zegarowym (bicie poniżej 0,01 mm na długości szczęk), detal na podkładkach równoległych, dociśnięty młotkiem gumowym.</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Zero G54 w X i Y</b>: czujnik krawędziowy (krawędziak) albo sonda. Dotknij krawędzi, wpisz w tabelę G54 pozycję maszynową ± promień trzpienia. Albo w tabeli wpisz <code>X0</code> i naciśnij <i>MEASURE</i>.</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Zero G54 w Z</b>: górna powierzchnia detalu. Zwykle zostawia się Z w G54 = 0 i wszystko załatwiają długości narzędzi.</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Długości narzędzi</b> (rejestry H): zmierz każde narzędzie wysokościomierzem, sondą narzędziową albo wzorcem 50 mm na detalu. Sprawdź, czy numer H zgadza się z numerem narzędzia.</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Promienie</b> (rejestry D) dla programów z <code>G41/G42</code>.</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Kontrola programu</b>: grafika na sterowaniu, potem przebieg na sucho (DRY RUN) z Z podniesionym np. o 50 mm przez przesunięcie wspólne (EXT / G54.0).</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Pierwsza sztuka</b>: SINGLE BLOCK, pokrętło RAPID na 25%, FEED na 50–100%. Przed każdym wejściem w materiał patrz na licznik „pozostało do przejechania” (DIST TO GO).</span></label></li>
+    <li><label><input type="checkbox"> <span><b>Pomiar</b> pierwszej sztuki i korekta zużycia (WEAR) zamiast zmian w programie.</span></label></li>
+  </ol>
+
+  <div class="prose">
+    <h2>Pokrętła i przyciski, które ratują narzędzia</h2>
+    <ul>
+      <li><b>FEED OVERRIDE</b> (0–150%) zmienia posuw w trakcie pracy. Drgania? Zmniejsz posuw albo obroty.</li>
+      <li><b>RAPID OVERRIDE</b> (F0/25/50/100%) ogranicza ruchy G00. Przy pierwszej sztuce zawsze 25%.</li>
+      <li><b>SPINDLE OVERRIDE</b> (50–120%) zmienia obroty.</li>
+      <li><b>SINGLE BLOCK</b>: maszyna staje po każdej linii, startujesz ją przyciskiem CYCLE START.</li>
+      <li><b>OPTIONAL STOP</b>: włącza zatrzymanie na <code>M01</code>, np. przed każdą zmianą narzędzia.</li>
+      <li><b>FEED HOLD</b> zatrzymuje ruch osi bez kasowania programu. <b>RESET</b> przerywa program. <b>EMERGENCY STOP</b> tylko w zagrożeniu.</li>
+    </ul>
+
+    <h2>Ustawianie zera krawędziakiem</h2>
+    <p>Krawędziak (mimośrodowy albo elektroniczny) ma trzpień o znanej średnicy, np. Ø10. Gdy dotkniesz lewej krawędzi detalu od lewej strony, środek wrzeciona jest 5 mm na lewo od krawędzi. Krawędź = pozycja maszynowa X + 5. Dla krawędzi przedniej (Y) analogicznie. Środek otworu lub wałka znajdziesz, dotykając dwóch przeciwległych ścianek i biorąc średnią.</p>
+    <p class="formula">G54 X = X<sub>maszynowe</sub> + R<sub>trzpienia</sub> &nbsp; (krawędź z lewej strony)</p>
+
+    <h2>Wymiar nie wychodzi: korektor zamiast programu</h2>
+    <ul>
+      <li>Kontur zewnętrzny wyszedł <b>za duży</b> o 0,04 mm na stronę → z <code>G41/G42</code> zmniejsz promień w rejestrze zużycia D o 0,04 mm (wpisz <code>-0.04</code>).</li>
+      <li>Kieszeń wyszła <b>za mała</b> → też zmniejsz promień w D, frez pójdzie bliżej ściany.</li>
+      <li>Głębokość wyszła <b>za płytka</b> o 0,05 → w rejestrze zużycia długości (H, WEAR) wpisz <code>-0.05</code>.</li>
+      <li>Program z CAM bez <code>G41</code> (tor środka freza) nie da się skorygować rejestrem D. Dlatego na wymiarach tolerowanych CAM często generuje tor z korekcją w sterowaniu.</li>
+    </ul>
+
+    <h2>Typowe alarmy (Fanuc)</h2>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Alarm</th><th>Co znaczy</th><th>Co zrobić</th></tr></thead>
+    <tbody>
+      <tr><td><code>PS0010</code></td><td>Nieprawidłowy kod G</td><td>Literówka albo kod, którego maszyna nie ma (opcja). Sprawdź linię wskazaną przez sterowanie.</td></tr>
+      <tr><td><code>PS0011</code></td><td>Brak posuwu</td><td>Pierwszy <code>G01/G02/G03</code> bez <code>F</code>.</td></tr>
+      <tr><td><code>PS0020</code></td><td>Błąd promienia łuku</td><td>Punkt końcowy nie leży na łuku: złe <code>I J</code> albo <code>R</code>.</td></tr>
+      <tr><td><code>PS0033 / PS0041</code></td><td>Kolizja w korekcji promienia</td><td>Element konturu mniejszy niż promień freza albo zbyt krótki najazd z <code>G41/G42</code>.</td></tr>
+      <tr><td><code>OT0500 / OT0501</code></td><td>Przekroczenie zakresu osi (+ / −)</td><td>Złe G54, brak <code>G43</code> albo za długi ruch. Wyjedź w JOG w przeciwną stronę.</td></tr>
+      <tr><td><code>SV…</code></td><td>Alarm serwonapędu</td><td>Przeciążenie osi, często po kolizji. Wezwij serwis, nie kasuj na ślepo.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Numery alarmów</b> różnią się między generacjami sterowań i producentami. Zawsze czytaj tekst alarmu na ekranie i instrukcję maszyny.</p>
+
+  <div class="prose">
+    <h2>Najczęstsze błędy początkujących</h2>
+    <ol>
+      <li>Brak <code>G43 H..</code> po zmianie narzędzia albo zły numer H → frez wjeżdża w detal lub stół.</li>
+      <li>Liczby bez kropki: <code>Z-5</code> zamiast <code>Z-5.</code> (na części sterowań to 0,005 mm).</li>
+      <li><code>G00</code> w materiale albo zjazd w Z szybkim ruchem do samej powierzchni.</li>
+      <li>Zostawiony tryb <code>G91</code> po fragmencie przyrostowym.</li>
+      <li>Za długie narzędzie lub za krótkie: wysięg dobrany „na oko”, frez nie sięga dna albo drga.</li>
+      <li>Wióry niewypłukane z kieszeni → frez je ponownie skrawa i się łamie. Używaj chłodziwa lub powietrza.</li>
+      <li>Start programu z niewłaściwego miejsca po przerwaniu: zawsze od bloku ze zmianą narzędzia (<code>T.. M06</code>), który ustawia S, G43 i chłodziwo.</li>
+    </ol>
+    <h2>BHP przy CNC</h2>
+    <ul>
+      <li>Drzwi kabiny zamknięte podczas pracy. Nie wkładaj rąk do maszyny przy obracającym się wrzecionie.</li>
+      <li>Okulary ochronne, brak luźnych rękawów, długie włosy związane. Rękawiczki tylko przy zatrzymanej maszynie.</li>
+      <li>Klucz z uchwytu tokarskiego zawsze wyjmij od razu. Nigdy nie zostawiaj go w uchwycie.</li>
+      <li>Wióry usuwaj hakiem albo szczotką, nie ręką.</li>
+    </ul>
+  </div>
+  <nav class="pager"></nav>
+</section>
+
+<!-- ============ TABELE ============ -->
+<section data-route="tabele" hidden>
+  <header class="lhead">
+    <p class="eyebrow">Praktyka · dane</p>
+    <h1>Tabele warsztatowe</h1>
+    <p class="lead">Dane, po które sięga się codziennie przy programowaniu: parametry skrawania, otwory pod gwinty i śruby, tolerancje. Wartości są orientacyjne, zawsze zaczynaj od dolnej granicy i sprawdź katalog narzędzia.</p>
+  </header>
+  <figure class="fig">
+    <div class="fig-h"><b>Szybki kalkulator S i F</b><span>frezowanie i wiercenie</span></div>
+    <div class="ctrls">
+      <label class="ctl">V<sub>c</sub> [m/min]<input type="number" id="qVc" value="150" min="1" max="2000"></label>
+      <label class="ctl">Średnica D [mm]<input type="number" id="qD" value="10" min="0.5" max="200" step="0.5"></label>
+      <label class="ctl">Ostrza z (wiertło: 1)<input type="number" id="qZ" value="4" min="1" max="12"></label>
+      <label class="ctl">f<sub>z</sub> lub f [mm]<input type="number" id="qF" value="0.04" min="0.001" max="2" step="0.005"></label>
+    </div>
+    <div class="out" id="qOut"></div>
+  </figure>
+
+  <div class="prose"><h2>Frezy z węglika (VHM): dane startowe</h2></div>
+  <div class="tbl"><table class="num">
+    <thead><tr><th>Materiał</th><th>V<sub>c</sub> [m/min]</th><th>f<sub>z</sub> Ø6</th><th>f<sub>z</sub> Ø10</th><th>f<sub>z</sub> Ø16</th><th>a<sub>p</sub> rowek</th><th>Uwagi</th></tr></thead>
+    <tbody>
+      <tr><td>Aluminium</td><td>250–600</td><td>0,03–0,05</td><td>0,05–0,08</td><td>0,08–0,12</td><td>0,5·D</td><td>2–3 ostrza, polerowane, emulsja lub powietrze</td></tr>
+      <tr><td>Stal konstrukcyjna (S235, C45)</td><td>120–200</td><td>0,02–0,035</td><td>0,04–0,06</td><td>0,06–0,09</td><td>0,3·D</td><td>4 ostrza, powłoka AlTiN</td></tr>
+      <tr><td>Stal ulepszona (42CrMo4)</td><td>90–150</td><td>0,02–0,03</td><td>0,03–0,05</td><td>0,05–0,07</td><td>0,25·D</td><td>mały a<sub>e</sub>, duże a<sub>p</sub> (HPC)</td></tr>
+      <tr><td>Stal nierdzewna (1.4301)</td><td>60–120</td><td>0,015–0,03</td><td>0,03–0,04</td><td>0,04–0,06</td><td>0,2·D</td><td>nie pozwól ostrzu trzeć, stały posuw</td></tr>
+      <tr><td>Żeliwo szare</td><td>120–200</td><td>0,03–0,04</td><td>0,04–0,07</td><td>0,07–0,1</td><td>0,3·D</td><td>na sucho, odciąg pyłu</td></tr>
+      <tr><td>Mosiądz</td><td>150–300</td><td>0,03–0,05</td><td>0,05–0,07</td><td>0,07–0,1</td><td>0,5·D</td><td>ostra geometria, wiór krótki</td></tr>
+      <tr><td>Tworzywa (POM, PA)</td><td>200–500</td><td>0,05–0,1</td><td>0,08–0,15</td><td>0,12–0,2</td><td>0,8·D</td><td>1–2 ostrza, powietrze zamiast emulsji</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="prose"><h2>Wiertła: dane startowe</h2></div>
+  <div class="tbl"><table class="num">
+    <thead><tr><th>Materiał</th><th>V<sub>c</sub> HSS-Co</th><th>V<sub>c</sub> VHM</th><th>f [mm/obr] Ø5</th><th>f Ø10</th><th>f Ø16</th></tr></thead>
+    <tbody>
+      <tr><td>Aluminium</td><td>60–90</td><td>150–250</td><td>0,12</td><td>0,25</td><td>0,35</td></tr>
+      <tr><td>Stal konstrukcyjna</td><td>20–30</td><td>70–100</td><td>0,08</td><td>0,15</td><td>0,22</td></tr>
+      <tr><td>Stal nierdzewna</td><td>8–15</td><td>40–60</td><td>0,05</td><td>0,1</td><td>0,15</td></tr>
+      <tr><td>Mosiądz</td><td>50–80</td><td>120–180</td><td>0,1</td><td>0,2</td><td>0,3</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Wiercenie głębokie.</b> Do 3×D wystarczy <code>G81</code>. Głębiej <code>G83</code> z Q ≈ 1×D (stal) lub 2×D (aluminium), albo wiertło VHM z chłodzeniem przez wrzeciono. Zawsze najpierw nakiełkuj nawiertakiem 90°.</p>
+
+  <div class="prose"><h2>Gwinty metryczne: wiertło i gwintowanie</h2></div>
+  <div class="tbl"><table class="num">
+    <thead><tr><th>Gwint</th><th>Skok P</th><th>Wiertło pod gwint</th><th>Otwór przejściowy (średni)</th><th>Pogłębienie pod łeb DIN 912</th><th>Przykład G84 przy S500</th></tr></thead>
+    <tbody>
+      <tr><td>M3</td><td>0,5</td><td>Ø2,5</td><td>Ø3,4</td><td>Ø6,5 × 3,4</td><td><code>F250</code></td></tr>
+      <tr><td>M4</td><td>0,7</td><td>Ø3,3</td><td>Ø4,5</td><td>Ø8 × 4,4</td><td><code>F350</code></td></tr>
+      <tr><td>M5</td><td>0,8</td><td>Ø4,2</td><td>Ø5,5</td><td>Ø10 × 5,4</td><td><code>F400</code></td></tr>
+      <tr><td>M6</td><td>1</td><td>Ø5</td><td>Ø6,6</td><td>Ø11 × 6,4</td><td><code>F500</code></td></tr>
+      <tr><td>M8</td><td>1,25</td><td>Ø6,8</td><td>Ø9</td><td>Ø15 × 8,6</td><td><code>F625</code></td></tr>
+      <tr><td>M10</td><td>1,5</td><td>Ø8,5</td><td>Ø11</td><td>Ø18 × 10,6</td><td><code>F750</code></td></tr>
+      <tr><td>M12</td><td>1,75</td><td>Ø10,2</td><td>Ø13,5</td><td>Ø20 × 12,6</td><td><code>F875</code></td></tr>
+      <tr><td>M16</td><td>2</td><td>Ø14</td><td>Ø17,5</td><td>Ø26 × 16,6</td><td><code>F1000</code></td></tr>
+      <tr><td>M20</td><td>2,5</td><td>Ø17,5</td><td>Ø22</td><td>Ø33 × 20,6</td><td><code>F1250</code></td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <p>Przy gwintowaniu sztywnym <code>G84</code> posuw musi dokładnie odpowiadać skokowi: <span class="formula" style="display:inline;padding:.15rem .5rem">F = S · P</span> (mm/min). Przykład dla M8 w stali:</p>
+  </div>
+  <pre class="code scr" id="tapCode"></pre>
+
+  <div class="prose"><h2>Pasowania: najczęstsze odchyłki [µm]</h2></div>
+  <div class="tbl"><table class="num">
+    <thead><tr><th>Wymiar nominalny</th><th>Otwór H7</th><th>Wałek h6</th><th>Wałek g6</th><th>Wałek k6</th><th>Wałek p6</th></tr></thead>
+    <tbody>
+      <tr><td>3–6 mm</td><td>0 / +12</td><td>−8 / 0</td><td>−12 / −4</td><td>+1 / +9</td><td>+12 / +20</td></tr>
+      <tr><td>6–10 mm</td><td>0 / +15</td><td>−9 / 0</td><td>−14 / −5</td><td>+1 / +10</td><td>+15 / +24</td></tr>
+      <tr><td>10–18 mm</td><td>0 / +18</td><td>−11 / 0</td><td>−17 / −6</td><td>+1 / +12</td><td>+18 / +29</td></tr>
+      <tr><td>18–30 mm</td><td>0 / +21</td><td>−13 / 0</td><td>−20 / −7</td><td>+2 / +15</td><td>+22 / +35</td></tr>
+      <tr><td>30–50 mm</td><td>0 / +25</td><td>−16 / 0</td><td>−25 / −9</td><td>+2 / +18</td><td>+26 / +42</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Jak to czytać:</b> Ø10 H7 to otwór od 10,000 do 10,015 mm. Program pisz na <b>środek tolerancji</b> (10,0075), a nie na wymiar nominalny. H7/g6 to pasowanie luźne (obraca się), H7/k6 mieszane, H7/p6 wciskane.</p>
+
+  <div class="prose"><h2>Toczenie: chropowatość od posuwu</h2>
+    <p>Teoretyczna chropowatość zależy od posuwu f i promienia naroża płytki r: <span class="formula" style="display:inline;padding:.15rem .5rem">Ra ≈ f² · 1000 / (32 · r) [µm]</span></p>
+  </div>
+  <div class="tbl"><table class="num">
+    <thead><tr><th>Ra [µm]</th><th>r = 0,4 mm</th><th>r = 0,8 mm</th><th>r = 1,2 mm</th></tr></thead>
+    <tbody>
+      <tr><td>0,8</td><td>f 0,10</td><td>f 0,14</td><td>f 0,18</td></tr>
+      <tr><td>1,6</td><td>f 0,14</td><td>f 0,20</td><td>f 0,25</td></tr>
+      <tr><td>3,2</td><td>f 0,20</td><td>f 0,29</td><td>f 0,35</td></tr>
+      <tr><td>6,3</td><td>f 0,28</td><td>f 0,40</td><td>f 0,49</td></tr>
+    </tbody>
+  </table></div>
+  <nav class="pager"></nav>
+</section>
+
+<!-- ============ SŁOWNICZEK ============ -->
+<section data-route="slownik" hidden>
+  <header class="lhead">
+    <p class="eyebrow">Praktyka · pojęcia</p>
+    <h1>Słowniczek</h1>
+    <p class="lead">Najważniejsze pojęcia z kursu i z hali, wyjaśnione jednym-dwoma zdaniami.</p>
+  </header>
+  <input class="search" id="dictQ" type="search" placeholder="Szukaj: posuw, wysięg, krawędziak…" aria-label="Szukaj pojęcia">
+  <dl class="dict" id="dict"></dl>
+  <nav class="pager"></nav>
 </section>
 
 <!-- ============ ŚCIĄGA ============ -->
@@ -749,6 +1115,7 @@ svg text{font-family:var(--f-mono)}
   </header>
   <input class="search" id="cheatQ" type="search" placeholder="Szukaj: G83, łuk, chłodziwo…" aria-label="Szukaj kodu">
   <div class="tbl"><table id="cheat"></table></div>
+  <nav class="pager"></nav>
 </section>
 
 <!-- ============ TEST ============ -->
@@ -864,6 +1231,7 @@ const TOOLS = {
   3: { d: 8.5, type: 'drill', name: 'wiertło kręte Ø8,5, kąt 118°' },
   4: { d: 6, type: 'ball', name: 'frez kulowy Ø6 (R3)' }
 };
+Object.assign(TOOLS, store.get('gentools', {})); // tools created by the CAM generator (T11+)
 const HOME = { x: -20, y: -20, z: 60 }, RAPID = 6000;
 const KNOWN_G = new Set([0, 1, 2, 3, 4, 17, 18, 19, 20, 21, 28, 40, 41, 42, 43, 49, 54, 55, 56, 57, 58, 59, 73, 80, 81, 82, 83, 90, 91, 94, 98, 99]);
 
@@ -972,7 +1340,7 @@ function interpret(src, stock) {
     }
     if ('F' in Wd) st.f = Wd.F * st.u;
     if ('S' in Wd) st.s = Wd.S;
-    if ('T' in Wd) { st.pend = Wd.T; if (!TOOLS[Wd.T]) msg(i, 'err', `Brak narzędzia T${Wd.T} w magazynie (dostępne T1–T4).`); }
+    if ('T' in Wd) { st.pend = Wd.T; if (!TOOLS[Wd.T]) msg(i, 'err', `Brak narzędzia T${Wd.T} w magazynie (dostępne: ${Object.keys(TOOLS).map(k => 'T' + k).join(', ')}).`); }
     if (st.cyc) { if ('R' in Wd) st.cR = Wd.R * st.u; if ('Z' in Wd) st.cZ = Wd.Z * st.u; if ('Q' in Wd) st.cQ = Wd.Q * st.u; }
     for (const mm of M) {
       switch (mm) {
@@ -2003,7 +2371,7 @@ widget('toczenie', {
 widget('projekt', {
   init() {
     codeBlock($('#projCode'), PROJECT, PROJECT_NOTES, $('#projOut'));
-    $('#projOpen').addEventListener('click', () => { SIM.pending = PROJECT; });
+    $('#projOpen').addEventListener('click', () => { SIM.pending = PROJECT; $('#stW').value = 100; $('#stH').value = 60; $('#stT').value = 20; store.set('simdims', { W: 100, H: 60, T: 20 }); });
   }
 });
 
@@ -2014,12 +2382,13 @@ widget('symulator', {
     const ta = SIM.ta = $('#edTa'), hlEl = SIM.hl = $('#edHl'), gut = SIM.gut = $('#edGut');
     $('#simEx').innerHTML = EXAMPLES.map((e, i) => `<option value="${i}">${e.name}</option>`).join('');
     ta.value = SIM.pending || store.get('simsrc', PROJECT); SIM.pending = null;
-    $('#toolTbl').innerHTML = '<thead><tr><th>T</th><th>Narzędzie</th><th>H / D</th></tr></thead><tbody>' + Object.entries(TOOLS).map(([k, t]) => `<tr><td><code>T${k}</code></td><td>${t.name}</td><td><code>H0${k}</code> · R${pl(t.d / 2, 2)}</td></tr>`).join('') + '</tbody>';
+    const sd = store.get('simdims', null); if (sd) { $('#stW').value = sd.W; $('#stH').value = sd.H; $('#stT').value = sd.T; }
+    this.toolTbl();
     let deb = 0;
     ta.addEventListener('input', () => { this.renderHL(); clearTimeout(deb); deb = setTimeout(() => this.load(), 650); });
     ta.addEventListener('scroll', () => { hlEl.scrollTop = ta.scrollTop; hlEl.scrollLeft = ta.scrollLeft; gut.scrollTop = ta.scrollTop; });
     ta.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); document.execCommand('insertText', false, '  '); } });
-    $('#simLoad').onclick = () => { ta.value = EXAMPLES[+$('#simEx').value].code; this.renderHL(); this.load(); };
+    $('#simLoad').onclick = () => { ta.value = EXAMPLES[+$('#simEx').value].code; $('#stW').value = 100; $('#stH').value = 60; $('#stT').value = 20; store.set('simdims', this.dims()); this.renderHL(); this.load(); };
     $('#simPlay').onclick = () => { if (this.time >= this.res.T - 1e-6) this.seek(0); this.play = !this.play; this.ui(); this.audioCheck(); };
     $('#simRestart').onclick = () => { this.seek(0); this.play = false; this.ui(); };
     $('#simStep').onclick = () => { // jump to end of next block
@@ -2032,7 +2401,7 @@ widget('symulator', {
     const setView = m => { this.mode = m; $('#simV3').classList.toggle('on', m === '3d'); $('#simV2').classList.toggle('on', m === '2d'); $('#sim3d').hidden = m !== '3d'; $('#sim2d').hidden = m !== '2d'; $('#vpHint').hidden = m !== '3d'; this.draw(); };
     $('#simV3').onclick = () => HAS3D && setView('3d'); $('#simV2').onclick = () => setView('2d');
     $('#simSound').onclick = () => { this.sound = !this.sound; $('#simSound').textContent = 'Dźwięk: ' + (this.sound ? 'wł.' : 'wył.'); $('#simSound').setAttribute('aria-pressed', this.sound); this.audioCheck(); };
-    ['stW', 'stH', 'stT'].forEach(id => $('#' + id).addEventListener('change', () => this.load()));
+    ['stW', 'stH', 'stT'].forEach(id => $('#' + id).addEventListener('change', () => { store.set('simdims', this.dims()); this.load(); }));
     $('#simMsgs').addEventListener('click', e => { const li = e.target.closest('li[data-l]'); if (li) this.gotoLine(+li.dataset.l); });
     this.speed = 10; $('#simSpeed').onchange = () => { this.speed = +$('#simSpeed').value; };
     if (HAS3D) {
@@ -2044,8 +2413,9 @@ widget('symulator', {
     } else { this.mode = '2d'; $('#simV3').disabled = true; setView('2d'); }
     this.renderHL(); this.load();
   },
-  onShow() { if (SIM.pending && this.ready) { SIM.ta.value = SIM.pending; SIM.pending = null; this.renderHL(); this.load(); } if (this.V) this.V.resize(); },
-  dims() { return { W: clamp(+$('#stW').value || 100, 10, 400), H: clamp(+$('#stH').value || 60, 10, 300), T: clamp(+$('#stT').value || 20, 2, 100) }; },
+  toolTbl() { $('#toolTbl').innerHTML = '<thead><tr><th>T</th><th>Narzędzie</th><th>H / D</th></tr></thead><tbody>' + Object.entries(TOOLS).map(([k, t]) => `<tr><td><code>T${k}</code></td><td>${t.name}</td><td><code>H${String(k).padStart(2, '0')}</code> · R${pl(t.d / 2, 2)}</td></tr>`).join('') + '</tbody>'; },
+  onShow() { this.toolTbl(); if (SIM.pending && this.ready) { SIM.ta.value = SIM.pending; SIM.pending = null; this.renderHL(); this.load(); } if (this.V) this.V.resize(); },
+  dims() { return { W: clamp(+$('#stW').value || 100, 10, 1000), H: clamp(+$('#stH').value || 60, 10, 800), T: clamp(+$('#stT').value || 20, 2, 300) }; },
   load() {
     const src = SIM.ta.value; store.set('simsrc', src);
     const D = this.dims(); this.stock = new Stock(D.W, D.H, D.T); this.res = interpret(src, D);
@@ -2188,6 +2558,1010 @@ widget('symulator', {
   }
 });
 
+// ============================================================ GENERATOR CAM: model (DXF / STL) -> program G-code
+// Pipeline as in a CAM system: read geometry -> recognise features -> choose tools and cutting data -> toolpaths -> post-processor (Fanuc ISO).
+const GMATS = [
+  { n: 'Aluminium (PA6, 6082)', k: 'ALUMINIUM', vc: 300, fz: 0.05, ap: 1, ae: 0.45, z: 3, vcd: 80, kd: 0.025, vct: 300, ft: 0.25, ut: 2 },
+  { n: 'Stal konstrukcyjna (S235, C45)', k: 'STAL C45', vc: 150, fz: 0.04, ap: 0.5, ae: 0.35, z: 4, vcd: 25, kd: 0.015, vct: 200, ft: 0.22, ut: 1.5 },
+  { n: 'Stal nierdzewna (1.4301)', k: 'STAL NIERDZEWNA', vc: 90, fz: 0.03, ap: 0.4, ae: 0.3, z: 4, vcd: 12, kd: 0.012, vct: 150, ft: 0.18, ut: 1 },
+  { n: 'Mosiądz (CuZn39Pb3)', k: 'MOSIADZ', vc: 200, fz: 0.05, ap: 0.8, ae: 0.4, z: 3, vcd: 60, kd: 0.02, vct: 250, ft: 0.22, ut: 2 },
+  { n: 'Tworzywo POM', k: 'POM', vc: 250, fz: 0.08, ap: 1, ae: 0.5, z: 2, vcd: 50, kd: 0.03, vct: 300, ft: 0.25, ut: 2.5 }
+];
+const MILLS = [2, 3, 4, 5, 6, 8, 10, 12, 16, 20];
+const BARS = [10, 12, 16, 20, 22, 25, 30, 32, 35, 40, 45, 50, 55, 60, 65, 70, 80, 90, 100, 110, 120, 140, 160, 180, 200, 250, 300];
+const HOLE_MAX = 13;
+const fmt = v => { v = Math.round(v * 1000) / 1000; return nf(v === 0 ? 0 : v); };
+const ascii = s => String(s).replace(/×/g, 'X').replace(/ł/g, 'l').replace(/Ł/g, 'L').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/Ø/g, 'D').replace(/[^\x20-\x7e]/g, '');
+const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const hn = v => pl(v, Math.abs(v - Math.round(v)) < 0.005 ? 0 : Math.abs(v * 10 - Math.round(v * 10)) < 0.05 ? 1 : 2);
+function segD2(px, py, ax, ay, bx, by) {
+  const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy; let t = L ? ((px - ax) * dx + (py - ay) * dy) / L : 0;
+  t = t < 0 ? 0 : t > 1 ? 1 : t; const ex = ax + t * dx - px, ey = ay + t * dy - py; return ex * ex + ey * ey;
+}
+function pArea(P) { let a = 0; for (let i = 0, n = P.length; i < n; i++) { const p = P[i], q = P[(i + 1) % n]; a += p[0] * q[1] - q[0] * p[1]; } return a / 2; }
+function pIn(P, x, y) { let c = false; for (let i = 0, n = P.length, j = n - 1; i < n; j = i++) { const a = P[i], b = P[j]; if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) c = !c; } return c; }
+function pBox(list) { const b = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity }; for (const P of list) for (const p of P) { if (p[0] < b.x0) b.x0 = p[0]; if (p[0] > b.x1) b.x1 = p[0]; if (p[1] < b.y0) b.y0 = p[1]; if (p[1] > b.y1) b.y1 = p[1]; } return b; }
+function arcPts(cx, cy, r, a0, sw, tol = 0.004) {
+  const st = 2 * Math.acos(clamp(1 - tol / Math.max(r, tol * 2), -1, 1)) || 0.2;
+  const n = Math.max(2, Math.ceil(Math.abs(sw) / Math.min(st, Math.PI / 10)));
+  const o = []; for (let k = 0; k <= n; k++) { const a = a0 + sw * k / n; o.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } return o;
+}
+const circlePts = (cx, cy, r) => arcPts(cx, cy, r, 0, 2 * Math.PI).slice(0, -1);
+function bulgePts(p, q, b) {
+  const d = dist(p, q); if (Math.abs(b) < 1e-9 || d < 1e-9) return [p, q];
+  const th = 4 * Math.atan(b), ux = (q[0] - p[0]) / d, uy = (q[1] - p[1]) / d, h = d / 2 / Math.tan(th / 2);
+  const cx = (p[0] + q[0]) / 2 - uy * h, cy = (p[1] + q[1]) / 2 + ux * h;
+  const P = arcPts(cx, cy, Math.hypot(p[0] - cx, p[1] - cy), Math.atan2(p[1] - cy, p[0] - cx), th); P[P.length - 1] = q.slice(); return P;
+}
+function cleanPts(P, closed) {
+  const o = []; for (const p of P) if (!o.length || dist(o[o.length - 1], p) > 1e-6) o.push(p);
+  if (closed) while (o.length > 1 && dist(o[0], o[o.length - 1]) < 1e-6) o.pop();
+  return o;
+}
+
+// ------------------------------------------------------------ DXF reader (LINE, ARC, CIRCLE, LWPOLYLINE, POLYLINE, ELLIPSE, SPLINE, INSERT)
+const gv = (E, c) => { for (const p of E.d) if (p[0] === c) return p[1]; return null; };
+const gn = (E, c, d = 0) => { const v = gv(E, c); if (v == null) return d; const n = parseFloat(v); return isNaN(n) ? d : n; };
+const mmul = (M, N) => [M[0] * N[0] + M[2] * N[1], M[1] * N[0] + M[3] * N[1], M[0] * N[2] + M[2] * N[3], M[1] * N[2] + M[3] * N[3], M[0] * N[4] + M[2] * N[5] + M[4], M[1] * N[4] + M[3] * N[5] + M[5]];
+const mtp = (M, p) => [M[0] * p[0] + M[2] * p[1] + M[4], M[1] * p[0] + M[3] * p[1] + M[5]];
+function bspline(deg, K, C, W, N) {
+  const out = [], t0 = K[deg], t1 = K[C.length];
+  for (let s = 0; s <= N; s++) {
+    const t = s === N ? t1 - (t1 - t0) * 1e-9 : t0 + (t1 - t0) * s / N;
+    let k = deg; while (k < C.length - 1 && K[k + 1] <= t) k++;
+    const d = []; for (let j = 0; j <= deg; j++) { const w = W && W.length === C.length ? W[j + k - deg] : 1, p = C[j + k - deg]; d.push([p[0] * w, p[1] * w, w]); }
+    for (let r = 1; r <= deg; r++) for (let j = deg; j >= r; j--) { const i = j + k - deg, den = K[i + deg - r + 1] - K[i], a = den ? (t - K[i]) / den : 0; for (let q = 0; q < 3; q++) d[j][q] = (1 - a) * d[j - 1][q] + a * d[j][q]; }
+    out.push([d[deg][0] / d[deg][2], d[deg][1] / d[deg][2]]);
+  }
+  return out;
+}
+function parseDXF(txt) {
+  const raw = txt.split(/\r\n|\r|\n/), pr = [];
+  for (let i = 0; i + 1 < raw.length; i += 2) { const c = raw[i].trim(); if (!/^-?\d+$/.test(c)) { i--; continue; } pr.push([+c, raw[i + 1].trim()]); }
+  let scale = 1;
+  for (let k = 0; k + 1 < pr.length; k++) if (pr[k][0] === 9 && pr[k][1] === '$INSUNITS') { scale = { 1: 25.4, 2: 304.8, 5: 10, 6: 1000 }[parseInt(pr[k + 1][1], 10)] || 1; break; }
+  const ents = [], blocks = {}; let sec = null, cb = null, e = null;
+  const flush = () => {
+    if (!e) return; const E = e; e = null;
+    if (sec === 'BLOCKS') { if (E.t === 'BLOCK') { cb = { n: gv(E, 2), bx: gn(E, 10), by: gn(E, 20), ents: [] }; blocks[cb.n] = cb; } else if (E.t === 'ENDBLK') cb = null; else if (cb) cb.ents.push(E); }
+    else if (sec === 'ENTITIES') ents.push(E);
+  };
+  for (let k = 0; k < pr.length; k++) {
+    const c = pr[k][0], v = pr[k][1];
+    if (c === 0) {
+      flush();
+      if (v === 'SECTION') sec = pr[k + 1] && pr[k + 1][0] === 2 ? pr[++k][1] : '';
+      else if (v === 'ENDSEC') sec = null;
+      else if (v === 'EOF') break;
+      else if (sec === 'ENTITIES' || sec === 'BLOCKS') e = { t: v, d: [] };
+    } else if (e) e.d.push([c, v]);
+  }
+  flush();
+  const pieces = [], skip = { aux: 0, other: 0 }, unk = new Set();
+  const AUX = /(^|[^a-z])(wymiar|dim|osie|axis|center|centre|srodk|hatch|kreskow|text|tekst|opis|ramka|border|title|defpoints)/i;
+  const LT = /center|dash|hidden|phantom|dot|divide/i;
+  const polyPts = (vs, closed) => {
+    const n = vs.length; if (n < 2) return null; const o = [[vs[0][0], vs[0][1]]];
+    for (let i = 0; i < (closed ? n : n - 1); i++) { const a = vs[i], b = vs[(i + 1) % n], s = bulgePts([a[0], a[1]], [b[0], b[1]], a[2] || 0); for (let k = 1; k < s.length; k++) o.push(s[k]); }
+    return cleanPts(o, closed);
+  };
+  function walk(list, M, lvl) {
+    for (let k = 0; k < list.length; k++) {
+      const E = list[k];
+      if (E.t === 'VERTEX' || E.t === 'SEQEND') continue;
+      const lay = gv(E, 8) || '0', lt = gv(E, 6) || '';
+      if (AUX.test(lay) || LT.test(lt)) { skip.aux++; continue; }
+      const zz = gv(E, 30) != null ? gn(E, 30) : gn(E, 38), Me = gn(E, 230, 1) < 0 ? mmul(M, [-1, 0, 0, 1, 0, 0]) : M;
+      const det = Math.sqrt(Math.abs(Me[0] * Me[3] - Me[1] * Me[2]));
+      const add = (pts, closed, circ) => {
+        if (!pts || pts.length < 2) return;
+        pieces.push({ pts: pts.map(p => mtp(Me, p)), closed, layer: lay, z: zz, circ: circ ? { c: mtp(Me, circ.c), r: circ.r * det } : null });
+      };
+      switch (E.t) {
+        case 'LINE': { const a = [gn(E, 10), gn(E, 20)], b = [gn(E, 11), gn(E, 21)]; if (dist(a, b) > 1e-6) add([a, b], false); break; }
+        case 'ARC': { const r = gn(E, 40), a0 = gn(E, 50) * Math.PI / 180; let sw = gn(E, 51) * Math.PI / 180 - a0; while (sw <= 1e-9) sw += 2 * Math.PI; if (r > 0) add(arcPts(gn(E, 10), gn(E, 20), r, a0, sw), false); break; }
+        case 'CIRCLE': { const r = gn(E, 40), c = [gn(E, 10), gn(E, 20)]; if (r > 0) add(circlePts(c[0], c[1], r), true, { c, r }); break; }
+        case 'LWPOLYLINE': {
+          const vs = []; for (const [c, v] of E.d) { if (c === 10) vs.push([+v, 0, 0]); else if (c === 20 && vs.length) vs[vs.length - 1][1] = +v; else if (c === 42 && vs.length) vs[vs.length - 1][2] = +v; }
+          const cl = (gn(E, 70) & 1) === 1; add(polyPts(vs, cl), cl); break;
+        }
+        case 'POLYLINE': {
+          const vs = []; while (list[k + 1] && list[k + 1].t === 'VERTEX') { const V = list[++k]; if (!(gn(V, 70) & 128)) vs.push([gn(V, 10), gn(V, 20), gn(V, 42)]); }
+          const fl = gn(E, 70); if (fl & 80) { skip.other++; break; }
+          add(polyPts(vs, (fl & 1) === 1), (fl & 1) === 1); break;
+        }
+        case 'ELLIPSE': {
+          const c = [gn(E, 10), gn(E, 20)], mj = [gn(E, 11), gn(E, 21)], ra = gn(E, 40, 1), t0 = gn(E, 41, 0); let sw = gn(E, 42, 2 * Math.PI) - t0; while (sw <= 1e-9) sw += 2 * Math.PI;
+          const n = Math.ceil(96 * sw / (2 * Math.PI)) + 4, pts = [], full = Math.abs(sw - 2 * Math.PI) < 1e-6;
+          for (let i = 0; i <= n; i++) { const t = t0 + sw * i / n; pts.push([c[0] + mj[0] * Math.cos(t) - ra * mj[1] * Math.sin(t), c[1] + mj[1] * Math.cos(t) + ra * mj[0] * Math.sin(t)]); }
+          add(cleanPts(pts, full), full); break;
+        }
+        case 'SPLINE': {
+          const deg = gn(E, 71, 3), K = [], C = [], Wt = [], Fp = [];
+          for (const [c, v] of E.d) { if (c === 40) K.push(+v); else if (c === 41) Wt.push(+v); else if (c === 10) C.push([+v, 0]); else if (c === 20 && C.length) C[C.length - 1][1] = +v; else if (c === 11) Fp.push([+v, 0]); else if (c === 21 && Fp.length) Fp[Fp.length - 1][1] = +v; }
+          let pts = null;
+          if (C.length > deg && K.length === C.length + deg + 1) pts = bspline(deg, K, C, Wt, Math.max(32, C.length * 14));
+          else if (Fp.length > 1) pts = Fp;
+          if (pts) { const cl = (gn(E, 70) & 1) === 1 || dist(pts[0], pts[pts.length - 1]) < 1e-6; add(cleanPts(pts, cl), cl); }
+          break;
+        }
+        case 'INSERT': {
+          const B = blocks[gv(E, 2)]; if (!B || lvl > 6) { skip.other++; break; }
+          const sx = gn(E, 41, 1), sy = gn(E, 42, 1), ro = gn(E, 50) * Math.PI / 180, cr = Math.cos(ro), sr = Math.sin(ro);
+          const Mi = mmul([cr * sx, sr * sx, -sr * sy, cr * sy, gn(E, 10), gn(E, 20)], [1, 0, 0, 1, -B.bx, -B.by]);
+          walk(B.ents, mmul(Me, Mi), lvl + 1); break;
+        }
+        default: skip.other++; unk.add(E.t);
+      }
+    }
+  }
+  walk(ents, [1, 0, 0, 1, 0, 0], 0);
+  if (scale !== 1) for (const p of pieces) { p.pts = p.pts.map(q => [q[0] * scale, q[1] * scale]); if (p.circ) { p.circ.c = p.circ.c.map(v => v * scale); p.circ.r *= scale; } p.z *= scale; }
+  return { pieces, skip, unk: [...unk], inch: scale === 25.4 };
+}
+
+// ------------------------------------------------------------ STL reader (binary and ASCII)
+function parseSTL(buf) {
+  const dv = new DataView(buf);
+  if (buf.byteLength >= 84) {
+    const n = dv.getUint32(80, true);
+    if (n > 0 && 84 + n * 50 === buf.byteLength) {
+      const T = new Float32Array(n * 9);
+      for (let i = 0; i < n; i++) { const o = 84 + i * 50 + 12; for (let k = 0; k < 9; k++) T[i * 9 + k] = dv.getFloat32(o + k * 4, true); }
+      return T;
+    }
+  }
+  const txt = new TextDecoder().decode(buf), re = /vertex\s+([-+\d.eE]+)\s+([-+\d.eE]+)\s+([-+\d.eE]+)/g, v = []; let m;
+  while ((m = re.exec(txt))) v.push(+m[1], +m[2], +m[3]);
+  if (v.length < 9) throw new Error('To nie wygląda na poprawny plik STL.');
+  return new Float32Array(v.slice(0, v.length - v.length % 9));
+}
+
+// ------------------------------------------------------------ 2D analysis: chain pieces into loops, nest, recognise features
+function analyze2D(D) {
+  const tol = 0.02, closed = [], open = [], rest = D.pieces.filter(p => !p.closed);
+  D.pieces.filter(p => p.closed).forEach(p => closed.push(p));
+  const used = new Uint8Array(rest.length), near = (a, b) => Math.abs(a[0] - b[0]) <= tol && Math.abs(a[1] - b[1]) <= tol;
+  for (let s = 0; s < rest.length; s++) {
+    if (used[s]) continue; used[s] = 1;
+    let pts = rest[s].pts.slice(), z = rest[s].z; const layer = rest[s].layer;
+    for (let grew = true; grew && !(pts.length > 2 && near(pts[0], pts[pts.length - 1]));) {
+      grew = false; const st = pts[0], en = pts[pts.length - 1];
+      for (let k = 0; k < rest.length; k++) {
+        if (used[k]) continue; const q = rest[k].pts;
+        if (near(q[0], en)) pts = pts.concat(q.slice(1));
+        else if (near(q[q.length - 1], en)) pts = pts.concat(q.slice(0, -1).reverse());
+        else if (near(q[q.length - 1], st)) pts = q.slice(0, -1).concat(pts);
+        else if (near(q[0], st)) pts = q.slice(1).reverse().concat(pts);
+        else continue;
+        used[k] = 1; grew = true; z = Math.min(z, rest[k].z); break;
+      }
+    }
+    if (pts.length > 2 && near(pts[0], pts[pts.length - 1])) closed.push({ pts: cleanPts(pts, true), closed: true, layer, z });
+    else open.push({ pts: cleanPts(pts, false), layer, z });
+  }
+  const loops = [];
+  for (const c of closed) {
+    if (c.pts.length < 3) continue;
+    const A = Math.abs(pArea(c.pts)); if (A < 1e-4) continue;
+    let circ = c.circ;
+    if (!circ && c.pts.length >= 16) {
+      let mx = 0, my = 0; c.pts.forEach(p => { mx += p[0]; my += p[1]; }); mx /= c.pts.length; my /= c.pts.length;
+      let r0 = Infinity, r1 = 0; c.pts.forEach(p => { const r = Math.hypot(p[0] - mx, p[1] - my); r0 = Math.min(r0, r); r1 = Math.max(r1, r); });
+      if (r1 - r0 < Math.max(0.01, 0.003 * r1)) circ = { c: [mx, my], r: (r0 + r1) / 2 };
+    }
+    const bx = pBox([c.pts]);
+    if (loops.some(l => Math.abs(l.area - A) < 1e-3 * A + 1e-4 && Math.abs(l.box.x0 - bx.x0) < tol && Math.abs(l.box.y1 - bx.y1) < tol)) continue;
+    loops.push({ pts: c.pts, area: A, box: bx, circ, layer: c.layer, z: c.z });
+  }
+  const box = pBox(loops.map(l => l.pts).concat(open.map(o => o.pts)));
+  return { loops, open, box };
+}
+function depthHint(o) {
+  if (o.z < -1e-6) return -o.z;
+  const m = /(\d+(?:[.,]\d+)?)/.exec(o.layer || ''), v = m ? parseFloat(m[1].replace(',', '.')) : 0;
+  if (v > 0 && v < 500 && /kiesz|pocket|glob|gleb|depth|graw|rowek|slot|engr|kontur|profil|otw|hole|wier|drill|^[\d.,_ -]+$/i.test(o.layer)) return v;
+  return null;
+}
+function features2D(G, T) {
+  const feats = [], holes = G.loops.filter(l => l.circ && 2 * l.circ.r <= HOLE_MAX + 1e-6 && G.loops.some(p => p !== l && p.area > l.area && pIn(p.pts, l.circ.c[0], l.circ.c[1])));
+  const others = G.loops.filter(l => !holes.includes(l)).sort((a, b) => b.area - a.area);
+  for (const l of others) { l.parent = null; for (const p of others) if (p !== l && p.area > l.area && pIn(p.pts, l.pts[0][0], l.pts[0][1]) && (!l.parent || p.area < l.parent.area)) l.parent = p; }
+  for (const l of others) { l.dep = 0; for (let p = l.parent; p; p = p.parent) l.dep++; }
+  const roots = others.filter(l => l.dep === 0);
+  const sz = l => `${pl(l.box.x1 - l.box.x0, 1)} × ${pl(l.box.y1 - l.box.y0, 1)} mm`;
+  const dProf = T > 8 ? T - 5 : Math.round(T * 0.6 * 10) / 10;
+  if (roots.length) {
+    const hint = roots.map(depthHint).find(v => v != null);
+    feats.push({ kind: 'profile', loops: roots, label: roots.length > 1 ? `Kontury zewnętrzne (${roots.length})` : 'Kontur zewnętrzny', dims: roots.length > 1 ? `${roots.length} detale` : sz(roots[0]), depth: hint != null ? hint : dProf, on: true, dmax: T });
+  }
+  let pk = 0;
+  for (const l of others.filter(l => l.dep % 2 === 1)) {
+    const isl = others.filter(c => c.parent === l), h = depthHint(l);
+    feats.push({ kind: 'pocket', loop: l, islands: isl, label: `Kieszeń ${++pk}${l.circ ? ' okrągła' : ''}`, dims: (l.circ ? `Ø${pl(l.circ.r * 2, 1)} mm` : sz(l)) + (isl.length ? ` · wyspy: ${isl.length}` : ''), depth: h != null ? h : Math.min(5, T - 1), on: true });
+  }
+  const hg = new Map();
+  for (const l of holes) { const d = Math.round(l.circ.r * 20) / 10, h = depthHint(l), k = d + '|' + h; if (!hg.has(k)) hg.set(k, { d, h, pts: [] }); hg.get(k).pts.push(l.circ.c); }
+  for (const g of hg.values()) feats.push({ kind: 'hole', d: g.d, pts: g.pts, label: `Otwory Ø${pl(g.d, 1)}`, dims: `${g.pts.length} szt.`, depth: g.h != null ? g.h : T, through: g.h == null, mode: 'drill', on: true });
+  let sl = 0;
+  for (const o of G.open) {
+    if (o.pts.length < 2) continue; const h = depthHint(o), len = o.pts.reduce((s, p, i) => i ? s + dist(p, o.pts[i - 1]) : 0, 0);
+    feats.push({ kind: 'slot', path: o.pts, label: `Rowek / grawer ${++sl}`, dims: `długość ${pl(len, 1)} mm`, depth: h != null ? h : 0.5, on: /graw|rowek|slot|engr/i.test(o.layer) });
+  }
+  return feats;
+}
+
+// ------------------------------------------------------------ raster fields: fill, distance transform, iso-contours
+function mkGrid(x0, y0, x1, y1, cs) { return { x0, y0, cs, nx: Math.ceil((x1 - x0) / cs) + 1, ny: Math.ceil((y1 - y0) / cs) + 1 }; }
+function fillEO(G, loops) {
+  const { nx, ny, x0, y0, cs } = G, m = new Uint8Array(nx * ny), xs = [];
+  for (let j = 0; j < ny; j++) {
+    const y = y0 + (j + 0.5) * cs; xs.length = 0;
+    for (const P of loops) for (let i = 0, n = P.length, k = n - 1; i < n; k = i++) { const a = P[i], b = P[k]; if ((a[1] > y) !== (b[1] > y)) xs.push(a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1])); }
+    xs.sort((a, b) => a - b);
+    for (let k = 0; k + 1 < xs.length; k += 2) { const i0 = Math.max(0, Math.ceil((xs[k] - x0) / cs - 0.5)), i1 = Math.min(nx - 1, Math.floor((xs[k + 1] - x0) / cs - 0.5)); for (let i = i0; i <= i1; i++) m[j * nx + i] = 1; }
+  }
+  return m;
+}
+function dt1(f, n, d, v, z) {
+  let k = 0; v[0] = 0; z[0] = -Infinity; z[1] = Infinity;
+  for (let q = 1; q < n; q++) {
+    let s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+    while (s <= z[k]) { k--; s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+    k++; v[k] = q; z[k] = s; z[k + 1] = Infinity;
+  }
+  k = 0; for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; d[q] = (q - v[k]) * (q - v[k]) + f[v[k]]; }
+}
+function edtField(G, m) { // distance (mm) from every region cell to the region boundary; outside cells = -cs
+  const { nx, ny, cs } = G, N = Math.max(nx, ny), a = new Float64Array(N), d = new Float64Array(N), v = new Int32Array(N), z = new Float64Array(N + 1);
+  const g = new Float64Array(nx * ny), f = new Float32Array(nx * ny);
+  for (let i = 0; i < nx * ny; i++) g[i] = m[i] ? 1e20 : 0;
+  for (let i = 0; i < nx; i++) { for (let j = 0; j < ny; j++) a[j] = g[j * nx + i]; dt1(a, ny, d, v, z); for (let j = 0; j < ny; j++) g[j * nx + i] = d[j]; }
+  for (let j = 0; j < ny; j++) { for (let i = 0; i < nx; i++) a[i] = g[j * nx + i]; dt1(a, nx, d, v, z); for (let i = 0; i < nx; i++) { const k = j * nx + i; f[k] = m[k] ? Math.sqrt(d[i]) * cs - cs / 2 : -cs; } }
+  return Object.assign({ f }, G);
+}
+function segsOf(loops, closedL = true) { const s = []; for (const P of loops) for (let i = 0, n = P.length; i < (closedL ? n : n - 1); i++) { const a = P[i], b = P[(i + 1) % n]; s.push(a[0], a[1], b[0], b[1]); } return s; }
+function refineBand(F, segs, L, band) { // exact distances near level L (finishing passes must be exact, roughing may be approximate)
+  const { f, nx, ny, x0, y0, cs } = F;
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+    const k = j * nx + i; if (f[k] <= 0 || Math.abs(f[k] - L) > band) continue;
+    const x = x0 + (i + 0.5) * cs, y = y0 + (j + 0.5) * cs; let b = Infinity;
+    for (let s = 0; s < segs.length; s += 4) { const q = segD2(x, y, segs[s], segs[s + 1], segs[s + 2], segs[s + 3]); if (q < b) b = q; }
+    f[k] = Math.sqrt(b);
+  }
+}
+function isoLoops(F, L) { // marching squares; loops oriented with the region (f > L) on the left = climb milling with M03
+  const { f, nx, ny, x0, y0, cs } = F, NE = nx * ny * 2, nxt = new Int32Array(NE).fill(-1), px = new Float64Array(NE), py = new Float64Array(NE);
+  const val = (i, j) => (i <= 0 || j <= 0 || i >= nx - 1 || j >= ny - 1) ? -1e9 : f[j * nx + i] - L;
+  const CX = [0, 1, 1, 0], CY = [0, 0, 1, 1], vv = [0, 0, 0, 0], eid = [0, 0, 0, 0];
+  for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+    vv[0] = val(i, j); vv[1] = val(i + 1, j); vv[2] = val(i + 1, j + 1); vv[3] = val(i, j + 1);
+    const c = (vv[0] > 0) + (vv[1] > 0) + (vv[2] > 0) + (vv[3] > 0); if (c === 0 || c === 4) continue;
+    eid[0] = (j * nx + i) * 2; eid[1] = (j * nx + i + 1) * 2 + 1; eid[2] = ((j + 1) * nx + i) * 2; eid[3] = (j * nx + i) * 2 + 1;
+    const cr = [];
+    for (let e = 0; e < 4; e++) {
+      const p = e, q = (e + 1) & 3, a = vv[p], b = vv[q]; if ((a > 0) === (b > 0)) continue;
+      const t = a / (a - b), id = eid[e];
+      px[id] = x0 + (i + CX[p] + (CX[q] - CX[p]) * t + 0.5) * cs; py[id] = y0 + (j + CY[p] + (CY[q] - CY[p]) * t + 0.5) * cs;
+      cr.push([id, a > 0]);
+    }
+    if (cr.length === 2) { if (cr[0][1]) nxt[cr[0][0]] = cr[1][0]; else nxt[cr[1][0]] = cr[0][0]; }
+    else { const ctr = vv[0] + vv[1] + vv[2] + vv[3] > 0; for (let k = 0; k < 4; k++) if (cr[k][1]) nxt[cr[k][0]] = cr[(k + (ctr ? 1 : 3)) % 4][0]; }
+  }
+  const loops = [], seen = new Uint8Array(NE);
+  for (let s = 0; s < NE; s++) {
+    if (nxt[s] < 0 || seen[s]) continue;
+    const P = []; let e = s; while (!seen[e] && nxt[e] >= 0) { seen[e] = 1; P.push([px[e], py[e]]); e = nxt[e]; }
+    if (P.length > 2) loops.push(cleanPts(P, true));
+  }
+  return loops;
+}
+function fAt(F, x, y) { const i = Math.floor((x - F.x0) / F.cs), j = Math.floor((y - F.y0) / F.cs); if (i < 0 || j < 0 || i >= F.nx || j >= F.ny) return -1; return F.f[j * F.nx + i]; }
+function dp(P, tol) {
+  const n = P.length; if (n < 3) return P.slice(); const keep = new Uint8Array(n); keep[0] = keep[n - 1] = 1; const st = [[0, n - 1]];
+  while (st.length) {
+    const [a, b] = st.pop(); let md = -1, mi = -1; const A = P[a], B = P[b];
+    for (let i = a + 1; i < b; i++) { const d = segD2(P[i][0], P[i][1], A[0], A[1], B[0], B[1]); if (d > md) { md = d; mi = i; } }
+    if (md > tol * tol) { keep[mi] = 1; st.push([a, mi], [mi, b]); }
+  }
+  return P.filter((_, i) => keep[i]);
+}
+function dpClosed(P, tol) {
+  if (P.length < 5) return P; let fi = 0, fd = -1;
+  for (let i = 1; i < P.length; i++) { const d = (P[i][0] - P[0][0]) ** 2 + (P[i][1] - P[0][1]) ** 2; if (d > fd) { fd = d; fi = i; } }
+  const A = dp(P.slice(0, fi + 1), tol), B = dp(P.slice(fi).concat([P[0]]), tol); return A.concat(B.slice(1, -1));
+}
+function circ3(a, b, c) {
+  const d = 2 * (a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])); if (Math.abs(d) < 1e-12) return null;
+  const a2 = a[0] * a[0] + a[1] * a[1], b2 = b[0] * b[0] + b[1] * b[1], c2 = c[0] * c[0] + c[1] * c[1];
+  const ux = (a2 * (b[1] - c[1]) + b2 * (c[1] - a[1]) + c2 * (a[1] - b[1])) / d, uy = (a2 * (c[0] - b[0]) + b2 * (a[0] - c[0]) + c2 * (b[0] - a[0])) / d;
+  return { cx: ux, cy: uy, r: Math.hypot(a[0] - ux, a[1] - uy), cw: d < 0 };
+}
+function arcFit(P0, closed, tol) { // polyline -> lines and arcs (G01 / G02 / G03), like the arc fitting option of a CAM post-processor
+  const P = closed ? P0.concat([P0[0]]) : P0.slice(), n = P.length, el = [];
+  const lineOK = (i, j) => { for (let k = i + 1; k < j; k++) if (segD2(P[k][0], P[k][1], P[i][0], P[i][1], P[j][0], P[j][1]) > tol * tol) return false; return true; };
+  const arcOK = (i, j, c) => {
+    if (c.r < 0.05 || c.r > 3000) return false;
+    for (let k = i + 1; k < j; k++) if (Math.abs(Math.hypot(P[k][0] - c.cx, P[k][1] - c.cy) - c.r) > tol) return false;
+    let sw = 0;
+    for (let k = i; k < j; k++) { const ax = P[k][0] - c.cx, ay = P[k][1] - c.cy, bx = P[k + 1][0] - c.cx, by = P[k + 1][1] - c.cy, da = Math.atan2(ax * by - ay * bx, ax * bx + ay * by); if (c.cw ? da > 1e-9 : da < -1e-9) return false; sw += da; }
+    return Math.abs(sw) < 2 * Math.PI - 0.05;
+  };
+  let i = 0;
+  while (i < n - 1) {
+    let jl = i + 1; while (jl + 1 < n && lineOK(i, jl + 1)) jl++;
+    let ja = -1, best = null;
+    for (let j = i + 4, fails = 0; j < n && j - i < 4000; j++) { const c = circ3(P[i], P[(i + j) >> 1], P[j]); if (c && arcOK(i, j, c)) { ja = j; best = c; fails = 0; } else if (++fails > 3) break; }
+    if (ja > jl + 2) { el.push({ x: P[ja][0], y: P[ja][1], cx: best.cx, cy: best.cy, cw: best.cw }); i = ja; } else { el.push({ x: P[jl][0], y: P[jl][1] }); i = jl; }
+  }
+  return { start: P[0], el };
+}
+function polyDist(P, q) { let b = Infinity; for (let i = 0, n = P.length; i < n; i++) { const a = P[i], c = P[(i + 1) % n], d = segD2(q[0], q[1], a[0], a[1], c[0], c[1]); if (d < b) b = d; } return Math.sqrt(b); }
+function orderTree(levels) { // offset rings from the innermost (largest distance) outwards, one region at a time
+  const roots = [];
+  levels.forEach((ls, k) => ls.forEach(l => { l.ch = []; if (!k) roots.push(l); }));
+  for (let k = 1; k < levels.length; k++) for (const l of levels[k]) {
+    let best = null, bd = Infinity; for (const pa of levels[k - 1]) { const d = polyDist(pa.p, l.p[0]); if (d < bd) { bd = d; best = pa; } }
+    if (best && bd < (l.d - best.d) * 2 + 1) best.ch.push(l); else roots.push(l);
+  }
+  const out = [], visit = l => { for (const c of l.ch) visit(c); out.push(l); };
+  roots.forEach(visit); return out;
+}
+function rings(F, r, a, ae, dmax, keep, tol = 0.02) {
+  const levels = [];
+  for (let d = r + a, k = 0; d <= dmax - 0.02 && k < 400; d += ae, k++) {
+    const ls = isoLoops(F, d).map(p => ({ p: dpClosed(p, tol), d })).filter(l => l.p.length > 2 && (!keep || keep(l.p)));
+    if (!ls.length && k) break; levels.push(ls);
+  }
+  return orderTree(levels.filter(l => l.length));
+}
+function maxF(F) { let m = 0; for (const v of F.f) if (v > m) m = v; return m; }
+
+// ------------------------------------------------------------ program writer (Fanuc ISO post-processor)
+function Prog(nums) {
+  const L = [], m = {}, cur = { x: HOME.x, y: HOME.y, z: HOME.z }; let n = 0;
+  const P = {
+    L, cur,
+    out(s) { L.push(nums && s && !/^[(%O]/.test(s) ? `N${n += 10} ${s}` : s); },
+    cmt(s) { L.push('(' + ascii(s).toUpperCase().replace(/[()]/g, '').trim() + ')'); },
+    forget() { for (const k in m) delete m[k]; },
+    at(x, y, z) { if (x != null) { cur.x = x; m.x = fmt(x); } if (y != null) { cur.y = y; m.y = fmt(y); } if (z != null) { cur.z = z; m.z = fmt(z); } },
+    mv(g, x, y, z, f, c) {
+      const w = [], arc = g === 2 || g === 3, X = x == null ? null : fmt(x), Y = y == null ? null : fmt(y), Z = z == null ? null : fmt(z);
+      const cx = X != null && X !== m.x, cy = Y != null && Y !== m.y, cz = Z != null && Z !== m.z;
+      if (!arc && !cx && !cy && !cz) return;
+      if (arc && !cx && !cy) return;
+      if (m.g !== g) w.push('G0' + g);
+      if (cx || (arc && X != null)) w.push('X' + X);
+      if (cy || (arc && Y != null)) w.push('Y' + Y);
+      if (cz) w.push('Z' + Z);
+      if (arc) w.push('I' + fmt(c[0] - cur.x), 'J' + fmt(c[1] - cur.y));
+      if (g && f != null && m.f !== f) { w.push('F' + f); m.f = f; }
+      m.g = g; if (X != null) { m.x = X; cur.x = +X; } if (Y != null) { m.y = Y; cur.y = +Y; } if (Z != null) { m.z = Z; cur.z = +Z; }
+      P.out(w.join(' '));
+    },
+    up(h) { if (cur.z < h - 1e-6) P.mv(0, null, null, h); }
+  };
+  return P;
+}
+function cutData(mat, t, smax) {
+  const r10 = v => Math.max(10, Math.round(v / 10) * 10);
+  if (t.type === 'drill') { const vc = t.spot ? mat.vcd * 1.5 : mat.vcd, n = Math.min(smax, vc * 1000 / (Math.PI * t.d)), f = t.spot ? 0.04 + 0.002 * t.d : mat.kd * t.d; return { S: r10(n), F: Math.max(10, Math.round(n * f / 5) * 5), vc: Math.round(n * Math.PI * t.d / 1000), f: Math.round(f * 1000) / 1000 }; }
+  const n = Math.min(smax, mat.vc * (t.type === 'ball' ? 0.8 : 1) * 1000 / (Math.PI * t.d)), fz = Math.round(mat.fz * clamp(t.d / 10, 0.3, 1.5) * 1000) / 1000;
+  return { S: r10(n), F: Math.max(20, Math.round(n * t.z * fz / 5) * 5), vc: Math.round(n * Math.PI * t.d / 1000), fz };
+}
+function toolName(t, short) {
+  if (t.type === 'drill') return t.spot ? (short ? 'NAWIERTAK D10 90ST' : 'nawiertak Ø10, 90°') : (short ? `WIERTLO D${fmt(t.d)}` : `wiertło kręte Ø${pl(t.d, 1)}`);
+  if (t.type === 'ball') return short ? `FREZ KULOWY D${t.d} R${fmt(t.d / 2)}` : `frez kulowy Ø${t.d} (R${pl(t.d / 2, 1)})`;
+  return short ? `FREZ VHM D${t.d} Z${t.z}` : `frez walcowo-czołowy Ø${t.d}, ${t.z} ostrza`;
+}
+function steps(depth, ap) { const n = Math.max(1, Math.ceil(depth / ap - 1e-6)), o = []; for (let k = 1; k <= n; k++) o.push(-depth * k / n); return o; }
+function emitLevel(P, seq, z, zTop, C) { // roughing rings at one depth: ramp entry, climb milling, short links inside cleared area
+  let first = true;
+  const canLink = q => {
+    if (Math.abs(P.cur.z - z) > 1e-3) return false;
+    const L = Math.hypot(q[0] - P.cur.x, q[1] - P.cur.y); if (L > C.maxLink) return false;
+    const n = Math.ceil(L / C.F.cs) + 1; for (let k = 0; k <= n; k++) if (fAt(C.F, lerp(P.cur.x, q[0], k / n), lerp(P.cur.y, q[1], k / n)) < C.thr) return false;
+    return true;
+  };
+  for (const lp of seq) {
+    const Q = lp.p, n = Q.length; let s = 0, bd = Infinity;
+    Q.forEach((q, i) => { const d = Math.hypot(q[0] - P.cur.x, q[1] - P.cur.y); if (d < bd) { bd = d; s = i; } });
+    if (!first && canLink(Q[s])) P.mv(1, Q[s][0], Q[s][1], z, C.feed);
+    else {
+      let air = -1, ad = C.r + 1;
+      Q.forEach((q, i) => { const od = Math.max(-q[0], q[0] - C.W, -q[1], q[1] - C.H); if (od > ad) { ad = od; air = i; } });
+      if (air >= 0) s = air;
+      P.up(C.safe); P.mv(0, Q[s][0], Q[s][1]); P.mv(0, null, null, 1);
+      if (air >= 0) P.mv(1, null, null, z, C.plungeF);
+      else {
+        const z0 = zTop + 0.5; P.mv(1, null, null, z0, C.feed);
+        let per = 0; for (let i = 0; i < n; i++) per += dist(Q[i], Q[(i + 1) % n]);
+        if (per < 0.6) P.mv(1, null, null, z, C.plungeF);
+        else {
+          const Lr = Math.min((z0 - z) / Math.tan(C.ang), per * 4), pts = []; let acc = 0, k = s;
+          do { const a = Q[k % n], b = Q[(k + 1) % n]; acc += dist(a, b); k++; pts.push([b, acc]); } while (acc < Lr);
+          for (const [b, ac] of pts) P.mv(1, b[0], b[1], z0 - (z0 - z) * ac / acc, C.rampF);
+          s = k % n;
+        }
+      }
+    }
+    for (let k = 1; k <= n; k++) { const q = Q[(s + k) % n]; P.mv(1, q[0], q[1], z, C.feed); }
+    first = false;
+  }
+}
+function emitFinish(P, fins, zs, C) { // finishing pass along the exact wall, lead-in from the cleared side
+  for (const fl of fins) {
+    const S = fl.fit.start, R = fl.raw; let t = [R[1][0] - R[0][0], R[1][1] - R[0][1]]; const tl = Math.hypot(t[0], t[1]) || 1; t = [t[0] / tl, t[1] / tl];
+    let E = null; for (const le of [C.a + 0.8, C.a + 0.4]) { const e = [S[0] - t[1] * le, S[1] + t[0] * le]; if (fAt(C.F, e[0], e[1]) >= C.r + C.a - 0.05) { E = e; break; } }
+    P.up(C.safe); P.mv(0, (E || S)[0], (E || S)[1]); P.mv(0, null, null, 1);
+    for (const z of zs) {
+      P.mv(1, null, null, z, C.plungeF);
+      if (E) P.mv(1, S[0], S[1], null, C.ffeed);
+      for (const el of fl.fit.el) { if (el.cx != null) P.mv(el.cw ? 2 : 3, el.x, el.y, null, C.ffeed, [el.cx, el.cy]); else P.mv(1, el.x, el.y, null, C.ffeed); }
+      if (E) P.mv(1, E[0], E[1], null, C.ffeed);
+    }
+  }
+}
+function finishLoops(F, segs, r, keep) {
+  refineBand(F, segs, r, 3 * F.cs);
+  return isoLoops(F, r).filter(p => p.length > 3 && (!keep || keep(p))).map(p => ({ raw: p, fit: arcFit(p, true, 0.01) }));
+}
+function assemble(o, head, ops, tools, mat) {
+  const order = t => t.type === 'drill' ? (t.spot ? 100 : 200 + t.d) : t.type === 'ball' ? 50 : 40 - t.d;
+  tools.sort((a, b) => order(a) - order(b)); tools.forEach((t, i) => { t.T = 11 + i; Object.assign(t, cutData(mat, t, o.smax)); });
+  ops.sort((a, b) => tools.indexOf(a.tool) - tools.indexOf(b.tool));
+  const P = Prog(o.nums);
+  P.out('%'); P.out(`O${o.prog} (${ascii(o.name).toUpperCase().slice(0, 24) || 'DETAL'} - GENERATOR CAM)`);
+  head.forEach(h => P.cmt(h));
+  P.cmt('NARZEDZIA:'); tools.filter(t => ops.some(op => op.tool === t)).forEach(t => P.cmt(`T${t.T} ${toolName(t, true)} S${t.S} F${t.F}`));
+  P.out('G17 G21 G40 G49 G80 G90');
+  let cur = null;
+  for (const op of ops) {
+    const t = op.tool;
+    if (t !== cur) {
+      if (cur) { P.up(25); P.out('M09'); P.out('M05'); P.out('G91 G28 Z0.'); P.out('G90'); P.forget(); P.at(null, null, HOME.z); }
+      P.cmt(`--- T${t.T} ${toolName(t, true)} ---`);
+      P.out(`T${t.T} M06`); P.forget();
+      P.out(`G54 G00 X${fmt(op.first[0])} Y${fmt(op.first[1])} S${t.S} M03`); P.at(op.first[0], op.first[1], null);
+      P.out(`G43 H${t.T} Z25. M08`); P.at(null, null, 25);
+      cur = t;
+    }
+    P.cmt(op.title); op.run(P, t); P.up(25);
+  }
+  P.out('M09'); P.out('M05'); P.out('G91 G28 Z0.'); P.out('G90'); P.out('M30'); P.out('%');
+  return P.L.join('\n');
+}
+function holeOps(feats, o, stock, tool, ops, sh) {
+  const holes = []; feats.forEach(f => f.pts.forEach(p => holes.push({ f, p: sh(p) })));
+  if (!holes.length) return;
+  const nn = list => { const out = [], left = list.slice(); let c = [0, 0]; while (left.length) { let bi = 0, bd = Infinity; left.forEach((h, i) => { const d = dist(h.p, c); if (d < bd) { bd = d; bi = i; } }); const h = left.splice(bi, 1)[0]; out.push(h); c = h.p; } return out; };
+  const cycle = (P, list, zf, cyc, q, F) => {
+    P.mv(0, list[0].p[0], list[0].p[1]); P.mv(0, null, null, 5); let lz = null;
+    list.forEach((h, i) => { const z = zf(h); P.out(i ? `X${fmt(h.p[0])} Y${fmt(h.p[1])}${fmt(z) !== lz ? ' Z' + fmt(z) : ''}` : `G98 G${cyc} X${fmt(h.p[0])} Y${fmt(h.p[1])} Z${fmt(z)} R2.${q ? ' Q' + fmt(q) : ''} F${F}`); lz = fmt(z); });
+    P.out('G80'); P.forget(); const l = list[list.length - 1].p; P.at(l[0], l[1], 5);
+  };
+  if (o.spot) {
+    const t = tool('drill', 10, { spot: true }), all = nn(holes);
+    ops.push({ tool: t, title: `Nakiełkowanie ${all.length} otworów (G81)`, first: all[0].p, run: (P, T) => cycle(P, all, h => -Math.min(h.f.d + 0.6, 9.6) / 2, 81, 0, T.F) });
+  }
+  const groups = new Map(); holes.forEach(h => { const k = h.f.d; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(h); });
+  for (const [d, list] of [...groups.entries()].sort((a, b) => a[0] - b[0])) {
+    const t = tool('drill', d), L = nn(list), zf = h => h.f.through ? -(stock.T + 0.3 * d + 1) : -h.f.depth;
+    const deep = L.some(h => -zf(h) > 3 * d), q = Math.max(1, Math.round(d * 2) / 2);
+    ops.push({ tool: t, title: `Wiercenie ${L.length} × Ø${hn(d)} (${deep ? 'G83, Q' + fmt(q) : 'G81'})`, first: L[0].p, run: (P, T) => cycle(P, L, zf, deep ? 83 : 81, deep ? q : 0, T.F) });
+  }
+}
+
+// ------------------------------------------------------------ milling 2.5D from DXF
+function genMill2D(M, o) {
+  const mat = GMATS[o.mat], warns = [], ops = [], tools = [], b = M.G.box, side = o.side;
+  const ox = side - b.x0, oy = side - b.y0, W = b.x1 - b.x0 + 2 * side, H = b.y1 - b.y0 + 2 * side, T = o.thk, stock = { W, H, T };
+  const sh = P => P.map(p => [p[0] + ox, p[1] + oy]);
+  const tool = (type, d, ex = {}) => { let t = tools.find(t => t.type === type && Math.abs(t.d - d) < 1e-6 && !!t.spot === !!ex.spot); if (!t) { t = Object.assign({ type, d, z: type === 'flat' ? mat.z : 2 }, ex); tools.push(t); } return t; };
+  const cs = clamp(Math.max(W, H) / 700, 0.05, 0.3), a = o.fin ? Math.max(0.2, cs) : 0, on = M.feats.filter(f => f.on);
+  const ctx = (F, t, r, ae) => { const c = cutData(mat, t, o.smax); return { F, r, a, W, H, thr: r + a - 1.5 * cs, maxLink: ae * 1.6 + 2 * cs, safe: 5, feed: c.F, ffeed: Math.round(c.F * 0.8 / 5) * 5, rampF: Math.round(c.F * 0.6 / 5) * 5, plungeF: Math.round(c.F * 0.35 / 5) * 5, ang: 3 * Math.PI / 180 }; };
+  const finZ = (depth, D) => steps(depth, 3 * D);
+  for (const f of on) {
+    if (f.depth > T + 0.01 && f.kind !== 'hole') warns.push(`${f.label}: głębokość ${pl(f.depth, 1)} mm jest większa niż grubość półfabrykatu.`);
+    if (!(f.kind === 'pocket' || (f.kind === 'hole' && f.mode === 'mill'))) continue;
+    const list = f.kind === 'hole' ? f.pts.map(p => [circlePts(p[0] + ox, p[1] + oy, f.d / 2)]) : [[sh(f.loop.pts), ...f.islands.map(l => sh(l.pts))]];
+    list.forEach((loops, li) => {
+      const lb = pBox([loops[0]]), G = mkGrid(lb.x0 - 3 * cs, lb.y0 - 3 * cs, lb.x1 + 3 * cs, lb.y1 + 3 * cs, cs), F = edtField(G, fillEO(G, loops)), mx = maxF(F);
+      // largest cutter that still reaches (almost) the whole pocket: narrow passages and corners decide, not only the widest spot
+      let area = 0; for (const v of F.f) if (v > 0) area++; area *= cs * cs;
+      let D = 0;
+      for (const d of MILLS.filter(d => d <= o.tmax && d / 2 + a <= mx - 0.1).reverse()) {
+        const th = d / 2 + a, nc = new Uint8Array(F.f.length); let any = false;
+        for (let k = 0; k < nc.length; k++) { if (F.f[k] >= th) any = true; else nc[k] = 1; }
+        if (!any) continue;
+        const Fd = edtField(G, nc); let un = 0;
+        for (let k = 0; k < nc.length; k++) if (F.f[k] > 0 && nc[k] && Fd.f[k] > th + cs) un++;
+        if (un * cs * cs <= 0.02 * area + 0.6 * th * th) { D = d; break; }
+      }
+      const name = f.kind === 'hole' ? `Otwór Ø${hn(f.d)} nr ${li + 1}` : f.label;
+      if (!D) { warns.push(`${name}: za wąska nawet dla freza Ø${MILLS[0]}, pominięta.`); return; }
+      const t = tool('flat', D), r = D / 2, ae = Math.round(mat.ae * D * 10) / 10, ap = clamp(Math.round(mat.ap * D * 5) / 10, 0.3, 2 * D);
+      const seq = rings(F, r, a, ae, mx), zs = steps(f.depth, ap), C = ctx(F, t, r, ae);
+      if (!seq.length) { warns.push(`${name}: brak toru, pominięta.`); return; }
+      ops.push({ tool: t, title: `${name}: zgrubnie, warstwy: ${zs.length} × ${hn(-zs[0])} mm, krok boczny ${hn(ae)} mm`, first: seq[0].p[0], run: P => zs.forEach((z, k) => emitLevel(P, seq, z, k ? zs[k - 1] : 0, C)) });
+      if (o.fin) {
+        const fin = finishLoops(F, segsOf(loops), r);
+        if (fin.length) ops.push({ tool: t, title: `${name}: wykańczająco ściany`, first: fin[0].fit.start, run: P => emitFinish(P, fin, finZ(f.depth, D), C) });
+      }
+    });
+  }
+  const prof = on.find(f => f.kind === 'profile');
+  if (prof) {
+    const D = MILLS.filter(d => d <= Math.min(o.tmax, 16)).pop(), t = tool('flat', D), r = D / 2, ae = Math.round(mat.ae * D * 10) / 10, ap = clamp(Math.round(mat.ap * D * 5) / 10, 0.3, 2 * D);
+    const roots = prof.loops.map(l => sh(l.pts)), mg = D + 4, G = mkGrid(-mg, -mg, W + mg, H + mg, cs), inP = fillEO(G, roots), mask = new Uint8Array(inP.length);
+    for (let i = 0; i < mask.length; i++) mask[i] = inP[i] ? 0 : 1;
+    const F = edtField(G, mask); let ms = 0;
+    for (let j = 0; j < G.ny; j++) for (let i = 0; i < G.nx; i++) { const x = G.x0 + (i + 0.5) * cs, y = G.y0 + (j + 0.5) * cs; if (x >= 0 && y >= 0 && x <= W && y <= H) ms = Math.max(ms, F.f[j * G.nx + i]); }
+    const keep = p => p.some(q => q[0] > -r + 0.2 && q[0] < W + r - 0.2 && q[1] > -r + 0.2 && q[1] < H + r - 0.2);
+    const seq = rings(F, r, a, ae, ms + r - 0.3, keep), zs = steps(prof.depth, ap), C = ctx(F, t, r, ae);
+    if (seq.length) ops.push({ tool: t, title: `Kontur zewnętrzny: zgrubnie, warstwy: ${zs.length} × ${hn(-zs[0])} mm`, first: seq[0].p[0], run: P => zs.forEach((z, k) => emitLevel(P, seq, z, k ? zs[k - 1] : 0, C)) });
+    if (o.fin) {
+      const fin = finishLoops(F, segsOf(roots), r, keep);
+      if (fin.length) ops.push({ tool: t, title: 'Kontur zewnętrzny: wykańczająco, współbieżnie', first: fin[0].fit.start, run: P => emitFinish(P, fin, finZ(prof.depth, D), C) });
+    }
+    if (prof.depth >= T - 0.01) warns.push('Kontur na pełną grubość: detal odpadnie od półfabrykatu. Pod spodem potrzebna podkładka, a detal trzeba czymś przytrzymać.');
+  }
+  for (const f of on.filter(f => f.kind === 'slot')) {
+    const D = 3, t = tool('flat', D), P0 = dp(sh(f.path), 0.01), zs = steps(f.depth, clamp(mat.ap * D * 0.3, 0.2, 1)), c = cutData(mat, t, o.smax);
+    ops.push({ tool: t, title: `${f.label}: po linii, przejścia: ${zs.length} × ${hn(-zs[0])} mm`, first: P0[0], run: P => zs.forEach((z, k) => {
+      const Q = k % 2 ? P0.slice().reverse() : P0;
+      if (!k) { P.up(5); P.mv(0, Q[0][0], Q[0][1]); P.mv(0, null, null, 1); }
+      P.mv(1, null, null, z, Math.round(c.F * 0.3 / 5) * 5); Q.forEach(q => P.mv(1, q[0], q[1], null, c.F));
+    }) });
+  }
+  holeOps(on.filter(f => f.kind === 'hole' && f.mode === 'drill'), o, stock, tool, ops, p => [p[0] + ox, p[1] + oy]);
+  if (!ops.length) throw new Error('Nie ma czego obrabiać: włącz co najmniej jedną cechę.');
+  const head = [`MATERIAL: ${mat.k}`, `POLFABRYKAT: X${fmt(W)} Y${fmt(H)} Z${fmt(T)}`, 'ZERO G54: LEWY DOLNY ROG POLFABRYKATU, GORA (Z0)', `NADDATEK Z BOKU ${fmt(side)} MM`];
+  return { code: assemble(o, head, ops, tools, mat), tools: tools.filter(t => ops.some(op => op.tool === t)), ops, warns, stock, view: { kind: '2d', loops: M.G.loops.map(l => sh(l.pts)), open: M.G.open.map(l => sh(l.pts)) } };
+}
+
+// ------------------------------------------------------------ milling 3D from STL (Z-level roughing + parallel finishing with a ball mill)
+function orientTris(T, up) {
+  const R = { z: (x, y, z) => [x, y, z], '-z': (x, y, z) => [x, -y, -z], y: (x, y, z) => [x, -z, y], '-y': (x, y, z) => [x, z, -y], x: (x, y, z) => [-z, y, x], '-x': (x, y, z) => [z, y, -x] }[up] || ((x, y, z) => [x, y, z]);
+  const o = new Float32Array(T.length); for (let i = 0; i < T.length; i += 3) { const p = R(T[i], T[i + 1], T[i + 2]); o[i] = p[0]; o[i + 1] = p[1]; o[i + 2] = p[2]; } return o;
+}
+function triBox(T) { const b = [Infinity, Infinity, Infinity, -Infinity, -Infinity, -Infinity]; for (let i = 0; i < T.length; i += 3) for (let k = 0; k < 3; k++) { b[k] = Math.min(b[k], T[i + k]); b[k + 3] = Math.max(b[k + 3], T[i + k]); } return b; }
+function rowMaxW(src, nx, ny, w) {
+  const out = new Float32Array(nx * ny), k = 2 * w + 1, g = new Float32Array(nx), h = new Float32Array(nx);
+  for (let j = 0; j < ny; j++) {
+    const o = j * nx;
+    for (let i = 0; i < nx; i++) g[i] = i % k === 0 ? src[o + i] : Math.max(g[i - 1], src[o + i]);
+    for (let i = nx - 1; i >= 0; i--) h[i] = i === nx - 1 || (i + 1) % k === 0 ? src[o + i] : Math.max(h[i + 1], src[o + i]);
+    for (let i = 0; i < nx; i++) out[o + i] = Math.max(h[Math.max(0, i - w)], g[Math.min(nx - 1, i + w)]);
+  }
+  return out;
+}
+function dilateDisk(src, nx, ny, rc) {
+  const R = Math.floor(rc), cache = new Map(), out = new Float32Array(nx * ny).fill(-1e9);
+  for (let dy = -R; dy <= R; dy++) {
+    const w = Math.floor(Math.sqrt(Math.max(0, rc * rc - dy * dy))); if (!cache.has(w)) cache.set(w, rowMaxW(src, nx, ny, w));
+    const rm = cache.get(w);
+    for (let j = Math.max(0, -dy); j < Math.min(ny, ny - dy); j++) { const o = j * nx, s = (j + dy) * nx; for (let i = 0; i < nx; i++) if (rm[s + i] > out[o + i]) out[o + i] = rm[s + i]; }
+  }
+  return out;
+}
+function genMill3D(M, o) {
+  const mat = GMATS[o.mat], warns = [], ops = [], tools = [], Tr = orientTris(M.tris, o.up), bb = triBox(Tr), side = o.side;
+  const bw = bb[3] - bb[0], bh = bb[4] - bb[1], bz = bb[5] - bb[2];
+  if (!(bw > 0 && bh > 0 && bz > 0)) throw new Error('Model jest płaski albo pusty.');
+  const W = bw + 2 * side, H = bh + 2 * side, T = bz + o.top + o.base, floor = -T + o.base, stock = { W, H, T };
+  const tool = (type, d) => { let t = tools.find(t => t.type === type && t.d === d); if (!t) { t = { type, d, z: type === 'flat' ? mat.z : 2 }; tools.push(t); } return t; };
+  const Dr = MILLS.filter(d => d <= o.tmax && d <= Math.max(4, Math.min(W, H) / 3)).pop() || 4, r = Dr / 2, tr = tool('flat', Dr);
+  const cs = clamp(Math.max(W, H) / 320, 0.15, 1.2), mg = r + 3 * cs + 1.5, G = mkGrid(-mg, -mg, W + mg, H + mg, cs), { nx, ny } = G;
+  const Hm = new Float32Array(nx * ny).fill(floor);
+  for (let i = 0; i < Tr.length; i += 9) { // rasterise the top surface of the model (heightmap)
+    const x1 = Tr[i] - bb[0] + side, y1 = Tr[i + 1] - bb[1] + side, z1 = Tr[i + 2] - bb[5] - o.top, x2 = Tr[i + 3] - bb[0] + side, y2 = Tr[i + 4] - bb[1] + side, z2 = Tr[i + 5] - bb[5] - o.top, x3 = Tr[i + 6] - bb[0] + side, y3 = Tr[i + 7] - bb[1] + side, z3 = Tr[i + 8] - bb[5] - o.top;
+    const d = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3); if (Math.abs(d) < 1e-12) continue;
+    const i0 = Math.max(0, Math.ceil((Math.min(x1, x2, x3) - G.x0) / cs - 0.5)), i1 = Math.min(nx - 1, Math.floor((Math.max(x1, x2, x3) - G.x0) / cs - 0.5));
+    const j0 = Math.max(0, Math.ceil((Math.min(y1, y2, y3) - G.y0) / cs - 0.5)), j1 = Math.min(ny - 1, Math.floor((Math.max(y1, y2, y3) - G.y0) / cs - 0.5));
+    for (let j = j0; j <= j1; j++) { const py = G.y0 + (j + 0.5) * cs; for (let ii = i0; ii <= i1; ii++) { const px = G.x0 + (ii + 0.5) * cs, l1 = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) / d, l2 = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) / d, l3 = 1 - l1 - l2; if (l1 < -1e-6 || l2 < -1e-6 || l3 < -1e-6) continue; const z = l1 * z1 + l2 * z2 + l3 * z3, k = j * nx + ii; if (z > Hm[k]) Hm[k] = z; } }
+  }
+  const a3 = o.fin ? 0.5 : 0.15, Ha = Hm.map(v => v + a3), Hd = dilateDisk(Ha, nx, ny, r / cs);
+  let minHd = Infinity; for (let j = 1; j < ny - 1; j++) for (let i = 1; i < nx - 1; i++) minHd = Math.min(minHd, Hd[j * nx + i]);
+  const ae = Math.round(mat.ae * Dr * 10) / 10, ap = clamp(Math.round(mat.ap * Dr * 5) / 10, 0.5, Dr * 0.6), zl = [];
+  for (let z = -ap; z > minHd + 0.3; z -= ap) zl.push(Math.round(z * 1000) / 1000); zl.push(Math.round(minHd * 1000) / 1000);
+  const keep = p => p.some(q => q[0] > -r + 0.2 && q[0] < W + r - 0.2 && q[1] > -r + 0.2 && q[1] < H + r - 0.2);
+  const lv = [];
+  for (const z of zl) {
+    const m = new Uint8Array(nx * ny);
+    for (let j = 1; j < ny - 1; j++) for (let i = 1; i < nx - 1; i++) if (Hd[j * nx + i] <= z + 1e-6) m[j * nx + i] = 1;
+    const F = edtField(G, m), seq = rings(F, cs, 0, ae, maxF(F), keep, 0.03);
+    if (seq.length) lv.push({ z, F, seq });
+  }
+  const cr = cutData(mat, tr, o.smax), Cb = { r, a: 0, W, H, maxLink: ae * 1.6 + 2 * cs, safe: 5, feed: cr.F, rampF: Math.round(cr.F * 0.6 / 5) * 5, plungeF: Math.round(cr.F * 0.35 / 5) * 5, ang: 3 * Math.PI / 180 };
+  if (lv.length) ops.push({ tool: tr, title: `Zgrubnie warstwami Z: poziomy co ${hn(ap)} mm (${lv.length}), naddatek ${hn(a3)} mm`, first: lv[0].seq[0].p[0], run: P => lv.forEach((L, k) => emitLevel(P, L.seq, L.z, k ? lv[k - 1].z : 0, Object.assign({ F: L.F, thr: cs * 0.5 }, Cb))) });
+  if (o.fin) {
+    const Df = o.ball, R = Df / 2, tb = tool('ball', Df), cb = cutData(mat, tb, o.smax), off = [], Rc = Math.ceil(R / cs);
+    for (let dj = -Rc; dj <= Rc; dj++) for (let di = -Rc; di <= Rc; di++) { const d2 = (di * cs) ** 2 + (dj * cs) ** 2; if (d2 <= R * R) off.push(di, dj, Math.sqrt(R * R - d2)); }
+    const sr = Math.max(1, Math.round(Df * 0.1 / cs)), ci = v => Math.round((v - G.x0) / cs - 0.5);
+    const iA = clamp(ci(0), 0, nx - 1), iB = clamp(ci(W), 0, nx - 1), jA = clamp(ci(0), 0, ny - 1), jB = clamp(Math.round((H - G.y0) / cs - 0.5), 0, ny - 1), lines = [];
+    for (let j = jA, n = 0; j <= jB; j += sr, n++) {
+      const pts = [];
+      for (let i = iA; i <= iB; i++) {
+        let zc = -1e9; for (let k = 0; k < off.length; k += 3) { const ii = i + off[k], jj = j + off[k + 1]; if (ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue; const v = Hm[jj * nx + ii] + off[k + 2]; if (v > zc) zc = v; }
+        pts.push([G.x0 + (i + 0.5) * cs, zc - R]);
+      }
+      const s = dp(pts, 0.01); lines.push({ y: G.y0 + (j + 0.5) * cs, p: n % 2 ? s.reverse() : s });
+    }
+    ops.push({ tool: tb, title: `Wykańczająco frezem kulowym, równolegle do X, krok ${hn(sr * cs)} mm`, first: [lines[0].p[0][0], lines[0].y], run: P => lines.forEach((L, k) => {
+      if (!k) { P.up(5); P.mv(0, L.p[0][0], L.y); P.mv(0, null, null, 1); P.mv(1, null, null, L.p[0][1], Math.round(cb.F * 0.35 / 5) * 5); }
+      else P.mv(1, L.p[0][0], L.y, L.p[0][1], cb.F);
+      L.p.forEach(q => P.mv(1, q[0], L.y, q[1], cb.F));
+    }) });
+  }
+  if (bz > Dr * 3) warns.push(`Model ma ${pl(bz, 1)} mm wysokości: frez Ø${Dr} musi mieć długość roboczą co najmniej ${Math.ceil(bz + 5)} mm.`);
+  warns.push('Obróbka 3D z jednej strony (od góry): podcięć i ścian pionowych pod nawisami frez nie dosięgnie.');
+  const head = [`MATERIAL: ${mat.k}`, `POLFABRYKAT: X${fmt(W)} Y${fmt(H)} Z${fmt(T)}`, 'ZERO G54: LEWY DOLNY ROG POLFABRYKATU, GORA (Z0)', `MODEL: ${fmt(bw)} X ${fmt(bh)} X ${fmt(bz)}, NADDATEK GORA ${fmt(o.top)}, PODSTAWA ${fmt(o.base)}`];
+  return { code: assemble(o, head, ops, tools, mat), tools: tools.filter(t => ops.some(op => op.tool === t)), ops, warns, stock, view: { kind: '3d', G, Hm, floor } };
+}
+
+// ------------------------------------------------------------ turning from a DXF profile (G71 roughing + G70 finishing)
+function genLathe(M, o) {
+  const mat = GMATS[o.mat], warns = [], segs = [];
+  for (const pc of M.D.pieces) { const P = pc.pts, n = P.length; for (let i = 0; i < (pc.closed ? n : n - 1); i++) segs.push([P[i], P[(i + 1) % n]]); }
+  if (!segs.length) throw new Error('Rysunek jest pusty.');
+  const b = pBox(segs), Lx = b.x1 - b.x0;
+  let ya = (b.y0 + b.y1) / 2;
+  const my = b.y0 + b.y1, mir = (s, t) => [[0, 1], [1, 0]].some(([u, v]) => dist(t[0], [s[u][0], my - s[u][1]]) < 0.02 && dist(t[1], [s[v][0], my - s[v][1]]) < 0.02);
+  const sym = segs.length < 3000 && segs.every(s => segs.some(t => mir(s, t)));
+  const half = !sym && segs.some(([p, q]) => Math.abs(p[1] - b.y0) < 0.01 && Math.abs(q[1] - b.y0) < 0.01 && Math.abs(p[0] - q[0]) > Lx * 0.5);
+  if (o.axis === 'bottom' || (o.axis === 'auto' && half)) ya = b.y0;
+  const tz = x => o.face === 'left' ? b.x0 - x : x - b.x1, S = [];
+  for (const [p, q] of segs) { // split at the axis, map to (z, radius)
+    const A = [tz(p[0]), p[1] - ya], B = [tz(q[0]), q[1] - ya];
+    if (A[1] * B[1] < 0) { const t = A[1] / (A[1] - B[1]), C = [A[0] + (B[0] - A[0]) * t, 0]; S.push([A, C], [C, B]); } else S.push([A, B]);
+  }
+  S.forEach(s => { s[0] = [s[0][0], Math.abs(s[0][1])]; s[1] = [s[1][0], Math.abs(s[1][1])]; });
+  const zs = [...new Set(S.flatMap(s => [Math.round(s[0][0] * 1e4) / 1e4, Math.round(s[1][0] * 1e4) / 1e4]))].sort((a, b) => b - a);
+  const env = [];
+  const rAt = (s, z) => { const [A, B] = s; return A[0] === B[0] ? Math.max(A[1], B[1]) : A[1] + (B[1] - A[1]) * (z - A[0]) / (B[0] - A[0]); };
+  for (let k = 0; k + 1 < zs.length; k++) {
+    const hi = zs[k], lo = zs[k + 1], zm = (hi + lo) / 2; let best = null, br = -1;
+    for (const s of S) { const z0 = Math.min(s[0][0], s[1][0]), z1 = Math.max(s[0][0], s[1][0]); if (z1 - z0 < 1e-6 || zm < z0 || zm > z1) continue; const r = rAt(s, zm); if (r > br) { br = r; best = s; } }
+    const pa = [hi, best ? rAt(best, hi) : 0], pb = [lo, best ? rAt(best, lo) : 0];
+    for (const p of [pa, pb]) { const l = env[env.length - 1]; if (!l || Math.abs(l[0] - p[0]) > 1e-4 || Math.abs(l[1] - p[1]) > 1e-4) env.push(p); }
+  }
+  if (env.length < 2) throw new Error('Nie udało się odczytać profilu wałka.');
+  const prof = []; let rm = -1, clip = false, groove = 0;
+  env.forEach((p, k) => {
+    if (p[1] >= rm - 1e-6) { if (clip && k) { const q = env[k - 1]; if (p[1] > q[1] + 1e-9) { const t = (rm - q[1]) / (p[1] - q[1]); prof.push([q[0] + (p[0] - q[0]) * t, rm]); } } prof.push(p); rm = p[1]; clip = false; }
+    else { groove = Math.max(groove, rm - p[1]); clip = true; prof.push([p[0], rm]); }
+  });
+  const pf = dp(cleanPts(prof, false), 1e-4), L = -pf[pf.length - 1][0], Rmax = Math.max(...pf.map(p => p[1]));
+  if (groove > 0.05) warns.push(`Profil ma podcięcie lub rowek (głębokość ${pl(groove, 2)} mm). Cykl G71 typu I go nie obrobi: tor go pomija, potrzebny nóż do rowków albo G71 typu II.`);
+  const Db = BARS.find(d => d >= 2 * Rmax + 1.5) || Math.ceil(2 * Rmax + 2), Rb = Db / 2, fa = o.faceA, lim = Math.min(o.smaxL, 6000);
+  const fit = arcFit(pf, false, 0.005), ff = Math.max(0.05, Math.round(mat.ft * 0.45 * 100) / 100), U = mat.ut;
+  const Lp = ['%', `O${o.prog} (${ascii(o.name).toUpperCase().slice(0, 24) || 'WALEK'} - GENERATOR CAM)`];
+  const C = s => Lp.push('(' + ascii(s).toUpperCase().replace(/[()]/g, '') + ')');
+  C(`MATERIAL: ${mat.k}`); C(`PRET D${Db}, WYSIEG Z UCHWYTU MIN. ${Math.ceil(L + 15)} MM`); C(`NADDATEK NA CZOLE ${fmt(fa)} MM`);
+  C('ZERO G54: OS DETALU, CZOLO PO PLANOWANIU Z0'); C('X PROGRAMOWANE JAKO SREDNICA');
+  C('T0101 NOZ ZGRUBNY CNMG 120408 R0.8'); C('T0303 NOZ WYKANCZAJACY VNMG 160404 R0.4'); if (o.part) C('T0505 PRZECINAK SZER. 3 MM, PUNKT BAZOWY: PRAWY NAROZNIK');
+  Lp.push('G18 G21 G40 G95');
+  C('--- PLANOWANIE I TOCZENIE ZGRUBNE ---');
+  Lp.push('T0101', `G50 S${lim}`, `G96 S${mat.vct} M03`, `G00 X${fmt(Db + 2)} Z0. M08`, `G01 X-1.6 F${fmt(Math.round(mat.ft * 0.6 * 100) / 100)}`, `G00 Z2.`, `X${fmt(Db + 2)}`);
+  Lp.push(`G71 U${fmt(U)} R0.5`, `G71 P100 Q200 U0.4 W0.1 F${fmt(mat.ft)}`);
+  const s0 = fit.start; Lp.push(`N100 G00 X${fmt(2 * s0[1])}`, `G01 Z${fmt(s0[0])} F${fmt(ff)}`);
+  let cx = 2 * s0[1], cz = s0[0], mg = 1;
+  for (const e of fit.el) {
+    const X = fmt(2 * e.y), Z = fmt(e.x);
+    if (e.cx != null) { Lp.push(`${e.cw ? 'G02' : 'G03'} X${X} Z${Z} R${fmt(Math.hypot(e.x - e.cx, e.y - e.cy))}`); mg = 0; }
+    else { const w = []; if (X !== fmt(cx)) w.push('X' + X); if (Z !== fmt(cz)) w.push('Z' + Z); if (w.length) { if (mg !== 1) w.unshift('G01'); Lp.push(w.join(' ')); mg = 1; } }
+    cx = 2 * e.y; cz = e.x;
+  }
+  Lp.push(`N200 ${mg !== 1 ? 'G01 ' : ''}X${fmt(Db + 1)}`, 'G00 X100. Z100.');
+  C('--- WYKANCZANIE ---');
+  Lp.push('T0303', `G96 S${Math.round(mat.vct * 1.2)} M03`, `G00 X${fmt(Db + 2)} Z2.`, 'G70 P100 Q200', 'G00 X100. Z100.');
+  if (o.part) { C('--- PRZECINANIE ---'); Lp.push('T0505', `G96 S${Math.round(mat.vct * 0.6)} M03`, `G00 X${fmt(Db + 2)} Z${fmt(-L)}`, `G01 X-1. F${fmt(Math.max(0.03, Math.round(mat.ft * 0.25 * 100) / 100))}`, `G00 X${fmt(Db + 2)}`, 'G00 X100. Z100.'); }
+  Lp.push('M09', 'M05', 'M30', '%');
+  // estimated time and passes for the preview
+  const n = d => Math.min(lim, mat.vct * 1000 / (Math.PI * Math.max(d, 1))), hullAt = z => { for (let i = 1; i < pf.length; i++) { const a = pf[i - 1], c = pf[i]; if (z <= a[0] && z >= c[0]) return a[0] === c[0] ? Math.max(a[1], c[1]) : a[1] + (c[1] - a[1]) * (z - a[0]) / (c[0] - a[0]); } return pf[pf.length - 1][1]; };
+  const passes = []; let t = 0;
+  for (let rp = Rb - U; rp > Math.min(...pf.map(p => p[1])) + 0.2; rp -= U) {
+    let ze = -L; for (let z = 0; z >= -L; z -= 0.1) if (hullAt(z) + 0.2 >= rp) { ze = z; break; }
+    if (ze >= -1e-6) continue; passes.push([rp, ze]); t += (2 - ze) / (mat.ft * n(2 * rp)) * 60 + 3;
+  }
+  let pl_ = 0; for (let i = 1; i < pf.length; i++) pl_ += dist(pf[i], pf[i - 1]);
+  t += (Rb + 1) / (mat.ft * 0.6 * n(Db / 2)) * 60 + pl_ / (ff * n(Rmax)) * 60 + 20 + (o.part ? (Rb + 1) / (0.05 * n(Db / 2)) * 60 : 0);
+  return { code: Lp.join('\n'), lathe: true, time: t, tools: [{ T: '0101', name: 'nóż zgrubny CNMG 120408 (r 0,8)', S: `Vc ${mat.vct}`, F: `${fmt(mat.ft)} mm/obr` }, { T: '0303', name: 'nóż wykańczający VNMG 160404 (r 0,4)', S: `Vc ${Math.round(mat.vct * 1.2)}`, F: `${fmt(ff)} mm/obr` }].concat(o.part ? [{ T: '0505', name: 'przecinak 3 mm', S: `Vc ${Math.round(mat.vct * 0.6)}`, F: '0,05 mm/obr' }] : []),
+    ops: [{ title: `Planowanie czoła (${pl(fa, 1)} mm)` }, { title: `Toczenie zgrubne G71: ${passes.length} przejść po ${pl(U, 1)} mm na promień` }, { title: 'Toczenie wykańczające G70 po konturze' }].concat(o.part ? [{ title: 'Przecinanie' }] : []),
+    warns, stock: { D: Db, L }, view: { kind: 'lathe', pf, env, passes, Rb, L, fa, part: o.part } };
+}
+
+// ------------------------------------------------------------ built-in sample models
+function sampleDXF(kind) {
+  const E = [], t = Math.tan(Math.PI / 8);
+  const lw = (layer, pts, closed) => { E.push(0, 'LWPOLYLINE', 8, layer, 90, pts.length, 70, closed ? 1 : 0); for (const p of pts) { E.push(10, p[0], 20, p[1]); if (p[2]) E.push(42, p[2]); } };
+  const rr = (x0, y0, x1, y1, R) => [[x0 + R, y0], [x1 - R, y0, t], [x1, y0 + R], [x1, y1 - R, t], [x1 - R, y1], [x0 + R, y1, t], [x0, y1 - R], [x0, y0 + R, t]];
+  if (kind === 'plate') {
+    lw('KONTUR', rr(0, 0, 120, 80, 8), true);
+    lw('KIESZEN_6', rr(12, 22, 62, 58, 6), true);
+    lw('WYSPA', rr(30, 34, 44, 46, 3), true);
+    E.push(0, 'CIRCLE', 8, 'KIESZEN_8', 10, 92, 20, 40, 30, 0, 40, 15);
+    for (const [x, y] of [[10, 10], [110, 10], [10, 70], [110, 70]]) E.push(0, 'CIRCLE', 8, 'OTWORY', 10, x, 20, y, 30, 0, 40, 3.3);
+    lw('GRAWER_0.5', [[72, 70], [80, 63], [88, 70], [96, 63], [104, 70]], false);
+  } else {
+    lw('KONTUR', [[0, 0], [0, 15], [18, 15], [23, 12], [30, 12], [30, 10.5], [33, 10.5], [33, 12], [38, 12], [38, 9], [55, 9, -t], [60, 4], [60, 0]], true);
+  }
+  return `0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n4\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n${E.join('\n')}\n0\nENDSEC\n0\nEOF\n`;
+}
+function sampleSTL() { // closed solid: block 80 x 60 with a bowl, a smooth bump and rounded top edges
+  const W = 80, H = 60, nx = 80, ny = 60, out = [];
+  const f = (x, y) => {
+    let z = 16; const dx = (x - 54) / 17, dy = (y - 30) / 20, q = dx * dx + dy * dy;
+    if (q < 1) z -= 7 * Math.sqrt(1 - q);
+    z += 5 * Math.exp(-((x - 20) ** 2 + (y - 30) ** 2) / 80);
+    const e = Math.min(x, W - x, y, H - y); if (e < 4) z -= 4 - Math.sqrt(16 - (4 - e) ** 2);
+    return z;
+  };
+  const tri = (a, b, c) => out.push(...a, ...b, ...c);
+  const P = (i, j) => { const x = i * W / nx, y = j * H / ny; return [x, y, f(x, y)]; };
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const a = P(i, j), b = P(i + 1, j), c = P(i + 1, j + 1), d = P(i, j + 1); tri(a, b, c); tri(a, c, d); }
+  const edge = (pts) => { for (let k = 0; k + 1 < pts.length; k++) { const a = pts[k], b = pts[k + 1]; tri([a[0], a[1], 0], [b[0], b[1], 0], b); tri([a[0], a[1], 0], b, a); } };
+  edge([...Array(nx + 1)].map((_, i) => P(i, 0))); edge([...Array(nx + 1)].map((_, i) => P(nx - i, ny)));
+  edge([...Array(ny + 1)].map((_, j) => P(nx, j))); edge([...Array(ny + 1)].map((_, j) => P(0, ny - j)));
+  tri([0, 0, 0], [W, H, 0], [W, 0, 0]); tri([0, 0, 0], [0, H, 0], [W, H, 0]);
+  return new Float32Array(out);
+}
+
+// ------------------------------------------------------------ generator page (UI)
+const GEN = { M: null, res: null };
+widget('generator', {
+  init() {
+    $('#genMat').innerHTML = GMATS.map((m, i) => `<option value="${i}">${m.n}</option>`).join('');
+    const drop = $('#genDrop');
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+    drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); const f = e.dataTransfer.files[0]; if (f) this.file(f); });
+    $('#genFile').addEventListener('change', e => { const f = e.target.files[0]; if (f) this.file(f); e.target.value = ''; });
+    document.addEventListener('paste', e => {
+      if (ROUTE !== 'generator' || /INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) return;
+      const cd = e.clipboardData; if (!cd) return;
+      if (cd.files && cd.files[0]) { e.preventDefault(); this.file(cd.files[0]); return; }
+      const t = cd.getData('text');
+      if (t && /\bSECTION\b/.test(t) && /\bENTITIES\b/.test(t)) { e.preventDefault(); this.text(t, 'wklejony.dxf'); }
+      else if (t && /^\s*solid/i.test(t) && /vertex/i.test(t)) { e.preventDefault(); this.stl(new TextEncoder().encode(t).buffer, 'wklejony.stl'); }
+      else if (t) this.info('Schowek zawiera tekst, który nie jest plikiem DXF ani STL. Skopiuj sam plik albo przeciągnij go tutaj.', true);
+    });
+    $$('[data-sample]').forEach(b => { b.onclick = () => this.sample(b.dataset.sample); });
+    ['genMat', 'genSmax', 'genSmaxL', 'genSide', 'genThk', 'genTop', 'genBase', 'genTmax', 'genBall', 'genFin', 'genSpot', 'genNum', 'genUp', 'genAxis', 'genFace', 'genFaceA', 'genPart'].forEach(id => $('#' + id).addEventListener('change', () => this.regen()));
+    $('#genMach').addEventListener('change', () => { this.modeUI(); this.regen(); });
+    $('#genFeat').addEventListener('change', e => {
+      const tr = e.target.closest('tr[data-i]'); if (!tr) return; const f = GEN.M.feats[+tr.dataset.i];
+      if (e.target.type === 'checkbox') f.on = e.target.checked;
+      else if (e.target.tagName === 'SELECT') f.mode = e.target.value;
+      else { const v = +e.target.value; if (v > 0) { f.depth = v; if (f.kind === 'hole') f.through = false; } }
+      this.regen();
+    });
+    $('#genSim').onclick = () => this.toSim(); $('#genDl').onclick = () => this.download(); $('#genCopy').onclick = () => this.copy();
+  },
+  info(msg, bad) { const el = $('#genInfo'); el.innerHTML = msg; el.className = 'gen-info' + (bad ? ' bad' : ''); },
+  file(f) {
+    const n = f.name || 'model', ext = (n.split('.').pop() || '').toLowerCase();
+    if (/^(step|stp|igs|iges|sldprt|sldasm|ipt|iam|f3d|x_t|x_b|sat|3mf|obj|dwg|catpart|prt)$/.test(ext)) { this.info(`Plik <b>.${esc(ext)}</b> nie jest obsługiwany w przeglądarce. Wyeksportuj z programu CAD model 3D jako <b>STL</b> albo rysunek 2D jako <b>DXF</b> (instrukcja niżej, w części „Jak przygotować plik”).`, true); return; }
+    const rd = new FileReader();
+    rd.onerror = () => this.info('Nie udało się odczytać pliku.', true);
+    if (ext === 'stl') { rd.onload = () => this.stl(rd.result, n); rd.readAsArrayBuffer(f); }
+    else { rd.onload = () => this.text(rd.result, n); rd.readAsText(f); }
+  },
+  text(t, name) {
+    let D;
+    try { D = parseDXF(t); } catch (e) { this.info('Nie mogę odczytać tego pliku jako DXF.', true); return; }
+    if (!D.pieces.length) { this.info(`W pliku <b>${esc(name)}</b> nie ma geometrii, którą da się obrobić (linie, łuki, okręgi, polilinie).${D.unk.length ? ' Pominięte obiekty: ' + esc(D.unk.join(', ')) + '.' : ''}`, true); return; }
+    const G = analyze2D(D);
+    GEN.M = { kind: '2d', name, D, G, feats: features2D(G, +$('#genThk').value || 20) };
+    const sk = []; if (D.skip.aux) sk.push(`${D.skip.aux} obiektów z warstw pomocniczych (wymiary, osie, opisy)`); if (D.skip.other) sk.push(`${D.skip.other} innych obiektów (${esc(D.unk.join(', ') || 'bloki')})`);
+    this.info(`Wczytano <b>${esc(name)}</b>: ${G.loops.length} zamkniętych konturów, ${G.open.length} otwartych linii, obrys ${pl(G.box.x1 - G.box.x0, 1)} × ${pl(G.box.y1 - G.box.y0, 1)} mm${D.inch ? ' (przeliczono z cali)' : ''}.${sk.length ? ' Pominięto: ' + sk.join(', ') + '.' : ''}`);
+    this.show();
+  },
+  stl(buf, name) {
+    let tris; try { tris = parseSTL(buf); } catch (e) { this.info(esc(e.message), true); return; }
+    GEN.M = { kind: '3d', name, tris }; const b = triBox(tris);
+    this.info(`Wczytano <b>${esc(name)}</b>: ${pl(tris.length / 9)} trójkątów, wymiary ${pl(b[3] - b[0], 1)} × ${pl(b[4] - b[1], 1)} × ${pl(b[5] - b[2], 1)} mm.`);
+    $('#genMach').value = 'mill'; this.show();
+  },
+  sample(k) {
+    if (k === 'plate') { $('#genMach').value = 'mill'; $('#genThk').value = 20; this.text(sampleDXF('plate'), 'plytka.dxf'); }
+    else if (k === 'shaft') { $('#genMach').value = 'lathe'; this.text(sampleDXF('shaft'), 'walek.dxf'); }
+    else { GEN.M = { kind: '3d', name: 'forma.stl', tris: sampleSTL() }; $('#genMach').value = 'mill'; this.info('Wczytano przykład <b>forma.stl</b>: blok 80 × 60 mm z miską, wypukłością i zaokrąglonymi krawędziami.'); this.show(); }
+  },
+  show() { $('#genWork').hidden = false; this.modeUI(); this.regen(); },
+  modeUI() {
+    const M = GEN.M; if (!M) return;
+    const lo = $('#genMach option[value=lathe]'); lo.disabled = M.kind === '3d'; if (M.kind === '3d') $('#genMach').value = 'mill';
+    const mach = $('#genMach').value;
+    $$('#genWork [data-m]').forEach(el => { el.hidden = el.dataset.m !== mach; });
+    $$('#genWork [data-k]').forEach(el => { el.hidden = mach !== 'mill' || el.dataset.k !== M.kind; });
+  },
+  opts() {
+    const n = (id, d) => { const v = parseFloat($('#' + id).value); return isNaN(v) ? d : v; }, c = id => $('#' + id).checked, M = GEN.M;
+    return { mach: $('#genMach').value, mat: +$('#genMat').value, smax: clamp(n('genSmax', 12000), 500, 60000), smaxL: clamp(n('genSmaxL', 3000), 300, 8000), side: clamp(n('genSide', 3), 0, 50), thk: clamp(n('genThk', 20), 1, 300),
+      top: clamp(n('genTop', 1), 0, 50), base: clamp(n('genBase', 3), 0, 100), tmax: +$('#genTmax').value, ball: +$('#genBall').value, fin: c('genFin'), spot: c('genSpot'), nums: c('genNum'),
+      up: $('#genUp').value, axis: $('#genAxis').value, face: $('#genFace').value, faceA: clamp(n('genFaceA', 1), 0, 10), part: c('genPart'),
+      name: (M.name || 'detal').replace(/\.[^.]+$/, ''), prog: $('#genMach').value === 'lathe' ? 2001 : 1001 };
+  },
+  regen() {
+    if (!GEN.M) return; clearTimeout(this.tm);
+    $('#genStats').innerHTML = '<div><span>Status</span><b>Liczę…</b></div>';
+    this.tm = setTimeout(() => this.run(), 30);
+  },
+  run() {
+    const M = GEN.M, o = this.opts(); let R;
+    try {
+      if (M.kind === '2d') M.feats.forEach(f => { if (f.kind === 'hole' && f.through) f.depth = o.thk; });
+      R = o.mach === 'lathe' ? genLathe(M, o) : M.kind === '3d' ? genMill3D(M, o) : genMill2D(M, o);
+      if (!R.lathe) {
+        R.tools.forEach(t => { TOOLS[t.T] = { d: t.d, type: t.type, name: toolName(t) }; });
+        const gt = store.get('gentools', {}); R.tools.forEach(t => { gt[t.T] = TOOLS[t.T]; }); store.set('gentools', gt);
+        R.sim = interpret(R.code, R.stock); R.time = R.sim.T;
+      }
+    } catch (err) { console.error(err); GEN.res = null; $('#genStats').innerHTML = ''; this.info('Nie udało się wygenerować programu: ' + esc(err.message || String(err)), true); this.renderFeat(); return; }
+    GEN.res = R; this.render();
+  },
+  renderFeat() {
+    const M = GEN.M, show = M.kind === '2d' && $('#genMach').value === 'mill';
+    $('#genFeatWrap').hidden = !show; if (!show) return;
+    const K = { profile: 'Kontur zewnętrzny', pocket: 'Kieszeń', hole: 'Otwory', slot: 'Rowek / grawer' };
+    $('#genFeat').innerHTML = '<thead><tr><th></th><th>Cecha</th><th>Wymiar</th><th>Głęb. [mm]</th><th>Obróbka</th></tr></thead><tbody>' + (M.feats.length ? M.feats.map((f, i) => `<tr data-i="${i}">
+      <td><input type="checkbox" ${f.on ? 'checked' : ''} aria-label="Obrabiaj: ${esc(f.label)}"></td>
+      <td><b>${esc(f.label)}</b><br><small style="color:var(--muted)">${K[f.kind]}</small></td><td>${esc(f.dims)}</td>
+      <td><input type="number" min="0.1" step="0.5" value="${+f.depth.toFixed(2)}" aria-label="Głębokość: ${esc(f.label)}">${f.kind === 'hole' && f.through ? '<br><small style="color:var(--muted)">przelotowe</small>' : ''}</td>
+      <td>${f.kind === 'hole' ? `<select aria-label="Sposób obróbki: ${esc(f.label)}"><option value="drill" ${f.mode === 'drill' ? 'selected' : ''}>wiercenie</option><option value="mill" ${f.mode === 'mill' ? 'selected' : ''}>frezowanie</option></select>` : f.kind === 'profile' ? 'frezowanie po obwodzie' : f.kind === 'pocket' ? 'kieszeń: zgrubnie + na gotowo' : 'frez Ø3 po linii'}</td></tr>`).join('') : '<tr><td colspan="5">Nie rozpoznano cech.</td></tr>') + '</tbody>';
+  },
+  render() {
+    const R = GEN.res, o = this.opts(); this.renderFeat();
+    const lines = R.code.split('\n'), errs = R.sim ? R.sim.msgs.filter(m => m.type === 'err') : [];
+    const st = R.lathe ? `Ø${R.stock.D} × ${pl(R.stock.L + o.faceA + (o.part ? 3 : 0), 1)}` : `${pl(R.stock.W, 1)} × ${pl(R.stock.H, 1)} × ${pl(R.stock.T, 1)}`;
+    $('#genStats').innerHTML = [['Czas obróbki', '~' + mmss(R.time)], ['Operacje', R.ops.length], ['Narzędzia', R.tools.length], ['Linie programu', pl(lines.length)], [R.lathe ? 'Pręt [mm]' : 'Półfabrykat [mm]', st]].map(s => `<div><span>${s[0]}</span><b>${s[1]}</b></div>`).join('');
+    const K = { err: 'błąd', warn: 'uwaga', info: 'info' }, ms = [];
+    if (R.sim) ms.push(errs.length ? { t: 'err', m: `Symulacja znalazła ${errs.length} błędów. Pierwszy (linia ${errs[0].line + 1}): ${errs[0].text}` } : { t: 'okm', m: 'Program sprawdzony w symulatorze: bez błędów i bez kolizji G00 z półfabrykatem.' });
+    else ms.push({ t: 'info', m: 'Programu tokarskiego nie da się uruchomić w symulatorze frezarki. Przejścia widać na podglądzie obok.' });
+    R.warns.forEach(w => ms.push({ t: 'warn', m: w }));
+    $('#genMsgs').innerHTML = ms.map(x => `<li class="${x.t}"><span class="k">${x.t === 'okm' ? 'OK' : K[x.t]}</span><span>${esc(x.m)}</span></li>`).join('');
+    $('#genOps').innerHTML = R.ops.map(op => `<li>${op.tool ? `<code>T${op.tool.T}</code> ` : ''}${esc(op.title)}</li>`).join('');
+    $('#genTools').innerHTML = '<thead><tr><th>T</th><th>Narzędzie</th><th>Obroty S</th><th>Posuw F</th><th>Dane</th></tr></thead><tbody>' + R.tools.map(t => R.lathe ? `<tr><td><code>T${t.T}</code></td><td>${t.name}</td><td>${t.S} m/min</td><td>${t.F}</td><td>G96, limit G50</td></tr>` :
+      `<tr><td><code>T${t.T}</code></td><td>${toolName(t)}</td><td class="num">${pl(t.S)}</td><td class="num">${pl(t.F)} mm/min</td><td class="num">V<sub>c</sub> ${t.vc} m/min · ${t.type === 'drill' ? 'f ' + pl(t.f, 3) + ' mm/obr' : 'f<sub>z</sub> ' + pl(t.fz, 3) + ' mm'}</td></tr>`).join('') + '</tbody>';
+    const MAXL = 3000;
+    $('#genCode').innerHTML = lines.slice(0, MAXL).map(l => `<span class="ln">${hl(l) || ' '}</span>`).join('') + (lines.length > MAXL ? `<span class="ln t-c">(… jeszcze ${pl(lines.length - MAXL)} linii: pobierz plik albo otwórz w symulatorze)</span>` : '');
+    $('#genSim').disabled = !!R.lathe;
+    this.draw();
+  },
+  toSim() {
+    const R = GEN.res; if (!R || R.lathe) return;
+    $('#stW').value = +R.stock.W.toFixed(2); $('#stH').value = +R.stock.H.toFixed(2); $('#stT').value = +R.stock.T.toFixed(2);
+    store.set('simdims', { W: +R.stock.W.toFixed(2), H: +R.stock.H.toFixed(2), T: +R.stock.T.toFixed(2) });
+    SIM.pending = R.code; location.hash = '#symulator';
+  },
+  download() {
+    const R = GEN.res; if (!R) return; const o = this.opts();
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([R.code.replace(/\n/g, '\r\n') + '\r\n'], { type: 'text/plain' }));
+    a.download = `O${o.prog}_${ascii(o.name).replace(/[^\w-]+/g, '_')}.nc`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  },
+  copy() {
+    const R = GEN.res; if (!R) return; const b = $('#genCopy'), done = () => { b.textContent = 'Skopiowano'; setTimeout(() => { b.textContent = 'Kopiuj program'; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(R.code).then(done, () => this.copyOld(R.code, done)); else this.copyOld(R.code, done);
+  },
+  copyOld(t, done) { const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) {} ta.remove(); },
+  draw() {
+    const R = GEN.res, c = $('#genCv'); if (!R || !c.clientWidth) return;
+    const { x, w, h } = fit(c), V = R.view, ink = tok('--ink'), mut = tok('--muted');
+    if (V.kind === 'lathe') return this.drawLathe(x, w, h, V);
+    const S = R.stock; let x0 = -6, y0 = -6, x1 = S.W + 6, y1 = S.H + 6;
+    if (R.sim) for (let i = 2; i < R.sim.P.length; i++) { const q = R.sim.P[i]; if (q.z > 2) continue; x0 = Math.min(x0, q.x - 2); y0 = Math.min(y0, q.y - 2); x1 = Math.max(x1, q.x + 2); y1 = Math.max(y1, q.y + 2); }
+    const v = view(w, h, x0, y0, x1, y1, 14);
+    gridLines(x, v, Math.floor(x0 / 10) * 10, Math.floor(y0 / 10) * 10, Math.ceil(x1 / 10) * 10, Math.ceil(y1 / 10) * 10, 10);
+    if (V.kind === '3d') {
+      const G = V.G, img = document.createElement('canvas'); img.width = G.nx; img.height = G.ny; const g = img.getContext('2d'), id = g.createImageData(G.nx, G.ny), d = id.data;
+      for (let j = 0; j < G.ny; j++) for (let i = 0; i < G.nx; i++) {
+        const k = j * G.nx + i, hh = V.Hm[k], q = clamp((hh - V.floor) / (-V.floor || 1), 0, 1), l = i > 0 ? V.Hm[k - 1] : hh, dn = j > 0 ? V.Hm[k - G.nx] : hh, sh = clamp(1 + (hh - l) * 0.25 + (hh - dn) * 0.25, 0.55, 1.3), o4 = ((G.ny - 1 - j) * G.nx + i) * 4;
+        d[o4] = lerp(70, 205, q) * sh; d[o4 + 1] = lerp(86, 214, q) * sh; d[o4 + 2] = lerp(120, 222, q) * sh; d[o4 + 3] = 255;
+      }
+      g.putImageData(id, 0, 0); x.imageSmoothingEnabled = true;
+      x.drawImage(img, v.X(G.x0), v.Y(G.y0 + G.ny * G.cs), G.nx * G.cs * v.s, G.ny * G.cs * v.s);
+    } else {
+      x.fillStyle = tok('--stock'); x.globalAlpha = 0.45; x.fillRect(v.X(0), v.Y(S.H), S.W * v.s, S.H * v.s); x.globalAlpha = 1;
+      x.strokeStyle = ink; x.lineWidth = 1.5;
+      for (const P of V.loops) { x.beginPath(); P.forEach((p, i) => i ? x.lineTo(v.X(p[0]), v.Y(p[1])) : x.moveTo(v.X(p[0]), v.Y(p[1]))); x.closePath(); x.stroke(); }
+      x.setLineDash([3, 3]); for (const P of V.open) { x.beginPath(); P.forEach((p, i) => i ? x.lineTo(v.X(p[0]), v.Y(p[1])) : x.moveTo(v.X(p[0]), v.Y(p[1]))); x.stroke(); } x.setLineDash([]);
+    }
+    x.strokeStyle = tok('--stock-edge'); x.lineWidth = 1; x.strokeRect(v.X(0), v.Y(S.H), S.W * v.s, S.H * v.s);
+    if (R.sim) strokePath(x, v, R.sim.P, 1, R.sim.P.length - 1, V.kind === '3d' ? 0.55 : 0.85);
+    arrow(x, v.X(0), v.Y(0), v.X(14), v.Y(0), '#d33a2c', 1.5, 6); arrow(x, v.X(0), v.Y(0), v.X(0), v.Y(14), '#2e9d4f', 1.5, 6);
+    text(x, 'G54', v.X(0) + 4, v.Y(0) + 14, mut, 11);
+  },
+  drawLathe(x, w, h, V) {
+    const Ltot = V.L + 18, v = view(w, h, -Ltot - 4, -V.Rb - 6, V.fa + 8, V.Rb + 6, 14), ink = tok('--ink'), mut = tok('--muted');
+    x.fillStyle = tok('--panel2'); x.strokeStyle = ink; x.lineWidth = 1;
+    x.fillRect(v.X(-Ltot - 4), v.Y(V.Rb + 5), 10 * v.s, (2 * V.Rb + 10) * v.s); x.strokeRect(v.X(-Ltot - 4), v.Y(V.Rb + 5), 10 * v.s, (2 * V.Rb + 10) * v.s);
+    text(x, 'uchwyt', v.X(-Ltot + 1), v.Y(-V.Rb - 4) + 12, mut, 11, 'center');
+    x.fillStyle = tok('--stock'); x.globalAlpha = 0.35; x.fillRect(v.X(-Ltot + 6), v.Y(V.Rb), (Ltot - 6 + V.fa) * v.s, 2 * V.Rb * v.s); x.globalAlpha = 1;
+    x.strokeStyle = tok('--stock-edge'); x.strokeRect(v.X(-Ltot + 6), v.Y(V.Rb), (Ltot - 6 + V.fa) * v.s, 2 * V.Rb * v.s);
+    for (const sg of [1, -1]) { // finished part (envelope of the drawing)
+      x.beginPath(); x.moveTo(v.X(V.env[0][0]), v.Y(0)); V.env.forEach(p => x.lineTo(v.X(p[0]), v.Y(sg * p[1]))); x.lineTo(v.X(V.env[V.env.length - 1][0]), v.Y(0)); x.closePath();
+      x.fillStyle = tok('--stock'); x.fill(); x.strokeStyle = ink; x.lineWidth = 1.2; x.stroke();
+    }
+    x.strokeStyle = tok('--cut'); x.lineWidth = 1.2; x.globalAlpha = 0.8;
+    for (const [rp, ze] of V.passes) { x.beginPath(); x.moveTo(v.X(2), v.Y(rp)); x.lineTo(v.X(ze), v.Y(rp)); x.stroke(); }
+    x.globalAlpha = 1; x.strokeStyle = tok('--accent'); x.lineWidth = 2;
+    x.beginPath(); V.pf.forEach((p, i) => i ? x.lineTo(v.X(p[0]), v.Y(p[1])) : x.moveTo(v.X(p[0]), v.Y(p[1]))); x.stroke();
+    if (V.part) { x.fillStyle = tok('--rapid'); x.globalAlpha = 0.5; x.fillRect(v.X(-V.L - 3), v.Y(V.Rb), 3 * v.s, 2 * V.Rb * v.s); x.globalAlpha = 1; }
+    x.strokeStyle = mut; x.setLineDash([12, 3, 2, 3]); x.beginPath(); x.moveTo(v.X(-Ltot - 4), v.Y(0)); x.lineTo(v.X(V.fa + 8), v.Y(0)); x.stroke(); x.setLineDash([]);
+    text(x, 'Z0', v.X(0), v.Y(-V.Rb - 2) + 12, mut, 11, 'center');
+  }
+});
+
+// ============================================================ practical pages: tables, machine setup, glossary
+widget('tabele', {
+  init() {
+    const calc = () => {
+      const vc = +$('#qVc').value || 0, D = Math.max(0.1, +$('#qD').value || 1), z = Math.max(1, +$('#qZ').value || 1), f = +$('#qF').value || 0, n = vc * 1000 / (Math.PI * D), vf = n * z * f;
+      $('#qOut').innerHTML = `n = ${pl(vc)} · 1000 / (π · ${pl(D, 1)}) = <b>S${Math.round(n)}</b> obr/min<br>v<sub>f</sub> = ${Math.round(n)} · ${z} · ${pl(f, 3)} = <b>F${Math.round(vf)}</b> mm/min` + (n > 12000 ? ' <span class="status warn">powyżej 12 000 obr/min: sprawdź maksymalne obroty wrzeciona</span>' : '');
+    };
+    ['qVc', 'qD', 'qZ', 'qF'].forEach(id => $('#' + id).addEventListener('input', calc)); calc();
+    const tap = '(GWINT M8 X 1.25, GLEBOKOSC 15, STAL)\n(OTWOR WCZESNIEJ WIERCONY D6.8)\nT5 M06\nG54 G00 X20. Y20. S500 M03\nG43 H05 Z25. M08\nG98 G84 X20. Y20. Z-15. R5. F625\nX50.\nX80.\nG80\nG00 Z25. M09';
+    $('#tapCode').innerHTML = tap.split('\n').map(l => `<span class="ln">${hl(l)}</span>`).join('');
+  }
+});
+widget('obsluga', {
+  init() {
+    const boxes = $$('#setupList input'), st = new Set(store.get('setup', []));
+    boxes.forEach((b, i) => { b.checked = st.has(i); b.addEventListener('change', () => { const s = boxes.map((x, k) => x.checked ? k : -1).filter(k => k >= 0); store.set('setup', s); }); });
+  }
+});
+const DICT = [
+  ['Bazowanie', 'Dojazd osi do punktu referencyjnego po włączeniu maszyny. Dopiero potem sterowanie wie, gdzie są osie, i działają G54 oraz krańcówki programowe.'],
+  ['Bicie', 'Odchylenie obracającego się narzędzia lub detalu od osi obrotu. Zwiększa zużycie ostrzy i psuje wymiar. Dobra oprawka ma bicie poniżej 0,005 mm.'],
+  ['Blok', 'Jedna linia programu, np. N40 G01 X50. F300.'],
+  ['CAD / CAM', 'W CAD rysujesz detal. CAM (Edgecam, Mastercam, Fusion 360, hyperMILL, SolidCAM) na podstawie modelu liczy tory narzędzi i przez postprocesor zapisuje program G-code.'],
+  ['Chłodziwo (emulsja)', 'Ciecz chłodząca i smarująca, wypłukuje wióry. M08 włącza, M09 wyłącza. Do aluminium i tworzyw często wystarczy sprężone powietrze.'],
+  ['Cykl', 'Gotowa sekwencja ruchów wywoływana jednym kodem, np. G83 (wiercenie z wyjściem), G84 (gwintowanie), G71 (toczenie zgrubne).'],
+  ['DNC', 'Wykonywanie programu przesyłanego na bieżąco z komputera albo karty. Używa się go do długich programów 3D, które nie mieszczą się w pamięci sterowania.'],
+  ['DRY RUN (przebieg na sucho)', 'Wykonanie programu bez skrawania, zwykle z podniesionym Z i stałym posuwem, żeby zobaczyć tor i wychwycić kolizje.'],
+  ['Frez kulowy', 'Frez z końcówką w kształcie półkuli. Służy do wykańczania powierzchni 3D (formy, matryce).'],
+  ['Frez walcowo-czołowy', 'Podstawowy frez z ostrzami na obwodzie i na czole. Frezuje kontury, kieszenie i płaszczyzny.'],
+  ['Frezowanie współbieżne', 'Ostrze wchodzi w materiał od najgrubszego miejsca wióra. Daje lepszą powierzchnię i dłuższą trwałość. Przy M03: G41, kontur zewnętrzny zgodnie z ruchem wskazówek zegara, kieszeń przeciwnie.'],
+  ['Frezowanie przeciwbieżne', 'Ostrze zaczyna od cienkiego wióra i ślizga się po materiale. Stosowane na starych maszynach z luzami albo przy twardej naskórce odlewu.'],
+  ['G-code (kod ISO)', 'Język programowania obrabiarek: słowa z literą i liczbą, np. G01 X10. F200. Większość sterowań rozumie dialekt Fanuc.'],
+  ['Głębokość skrawania ap', 'Na ile milimetrów wzdłuż osi narzędzia frez wchodzi w materiał w jednym przejściu.'],
+  ['Szerokość skrawania ae', 'Jak szeroko frez wchodzi bokiem w materiał. Przy rowku ae = D (pełna szerokość), przy wykańczaniu ściany często 0,1–0,5 mm.'],
+  ['HSS', 'Stal szybkotnąca. Tańsza i odporna na wykruszenia, ale wymaga 2–3 razy mniejszych prędkości skrawania niż węglik.'],
+  ['VHM', 'Węglik spiekany lity (narzędzie pełnowęglikowe). Twardy i szybki, ale kruchy, nie lubi drgań i bicia.'],
+  ['Kieszeń', 'Zagłębienie otoczone ścianami ze wszystkich stron. Frez wchodzi w nią rampą lub helisą, nie wierci prosto w dół.'],
+  ['Wyspa', 'Fragment materiału, który zostaje w środku kieszeni. Frez obchodzi go dookoła.'],
+  ['Kod modalny', 'Kod obowiązujący aż do odwołania innym kodem z tej samej grupy, np. G01, G90, F.'],
+  ['Korektor (rejestr korekcji)', 'Tabela w sterowaniu z długościami (H) i promieniami (D) narzędzi oraz ich zużyciem. Program odwołuje się do niej przez G43 H.. i G41 D...'],
+  ['Krawędziak', 'Czujnik z trzpieniem o znanej średnicy do znajdowania krawędzi detalu przy ustawianiu zera G54.'],
+  ['Naddatek', 'Materiał celowo zostawiony na następną operację, np. 0,2 mm na ścianę do obróbki wykańczającej.'],
+  ['Nawiertak (nakiełek)', 'Krótkie, sztywne wiertło o kącie 90°. Robi stożek, który prowadzi wiertło i od razu fazuje otwór.'],
+  ['Obróbka zgrubna', 'Szybkie usunięcie większości materiału, z naddatkiem na wykończenie.'],
+  ['Obróbka wykańczająca', 'Ostatnie przejście na wymiar: mały naddatek, równy posuw, dobra powierzchnia.'],
+  ['Oprawka', 'Uchwyt narzędzia we wrzecionie: tulejkowa ER, Weldon, hydrauliczna, termokurczliwa. Decyduje o biciu i sztywności.'],
+  ['Override', 'Pokrętło procentowej zmiany posuwu (FEED), ruchu szybkiego (RAPID) albo obrotów (SPINDLE) w trakcie pracy.'],
+  ['Płaszczyzna R', 'Wysokość nad detalem, na której cykl wiercenia przechodzi z ruchu szybkiego na roboczy.'],
+  ['Płytka skrawająca', 'Wymienne ostrze z węglika w nożach tokarskich i głowicach frezarskich. Kod, np. CNMG 120408, opisuje kształt, wielkość i promień naroża (08 = 0,8 mm).'],
+  ['Postprocesor', 'Część systemu CAM, która zamienia tory narzędzi na G-code dla konkretnej maszyny i sterowania (Fanuc, Heidenhain, Sinumerik, Haas).'],
+  ['Posuw F', 'Prędkość ruchu narzędzia względem detalu: mm/min (G94, frezarki) albo mm/obr (G95, tokarki).'],
+  ['Posuw na ostrze fz', 'Grubość wióra zbierana przez jedno ostrze w jednym obrocie. Z niego liczysz F = S · z · fz.'],
+  ['Półfabrykat', 'Surowy kawałek materiału (blok, płyta, pręt), z którego powstaje detal.'],
+  ['Prędkość skrawania Vc', 'Prędkość ostrza względem materiału w m/min. Podaje ją katalog narzędzia dla danego materiału.'],
+  ['Promień naroża płytki', 'Zaokrąglenie wierzchołka noża tokarskiego. Większe = mocniejsze ostrze i lepsza powierzchnia przy tym samym posuwie, ale większe siły.'],
+  ['Punkt zerowy przedmiotu (W, G54)', 'Początek układu współrzędnych programu, wybrany przez programistę, np. lewy dolny róg na górze detalu.'],
+  ['Rampa / helisa', 'Ukośne albo spiralne wejście freza w materiał zamiast wiercenia w dół. Chroni frez walcowo-czołowy.'],
+  ['Symulacja', 'Sprawdzenie programu na komputerze: tor, kolizje, usuwanie materiału i czas.'],
+  ['Tor narzędzia', 'Droga, którą pokonuje środek lub czubek narzędzia. CAM liczy go już przesuniętego o promień, chyba że używa się G41/G42.'],
+  ['Wysięg', 'Długość narzędzia wystająca z oprawki. Im krótszy, tym mniej drgań i lepszy wymiar. Ponad 4×D trzeba zmniejszyć parametry.'],
+  ['Zużycie (WEAR)', 'Mała korekta w rejestrze narzędzia, którą operator poprawia wymiar po pomiarze, bez zmian w programie.']
+].sort((a, b) => a[0].localeCompare(b[0], 'pl'));
+function renderDict() {
+  const q = ($('#dictQ').value || '').toLowerCase().trim(), rows = DICT.filter(d => !q || (d[0] + ' ' + d[1]).toLowerCase().includes(q));
+  $('#dict').innerHTML = rows.length ? rows.map(d => `<div><dt>${d[0]}</dt><dd>${d[1]}</dd></div>`).join('') : '<div><dt>Brak wyników</dt><dd>Spróbuj innego słowa.</dd></div>';
+}
+
 // ============================================================ QUIZZES
 const QUIZ = {
   maszyna: [
@@ -2253,7 +3627,7 @@ const LESSONS = [
   ['toczenie', 'Toczenie', 'G96, G50 i cykl G71.'],
   ['projekt', 'Projekt: płytka', 'Kompletny program trzema narzędziami.']
 ];
-const EXTRA = [['symulator', 'Symulator'], ['sciaga', 'Ściąga G/M'], ['test', 'Test końcowy']];
+const EXTRA = [['generator', 'Generator CAM'], ['symulator', 'Symulator'], ['obsluga', 'Praca przy maszynie'], ['tabele', 'Tabele warsztatowe'], ['sciaga', 'Ściąga G/M'], ['slownik', 'Słowniczek'], ['test', 'Test końcowy']];
 const ROUTES = ['start', ...LESSONS.map(l => l[0]), ...EXTRA.map(e => e[0])];
 
 function done() { return new Set(store.get('done', [])); }
@@ -2387,7 +3761,11 @@ function initSpeech() {
 renderPagers(); initQuizzes(); newTest(); initSpeech();
 $('#testNew').onclick = newTest;
 $('#cheatQ').addEventListener('input', renderCheat); renderCheat();
+$('#dictQ').addEventListener('input', renderDict); renderDict();
 window.addEventListener('hashchange', show);
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+// installed app opened with a DXF/STL file (file_handlers)
+if ('launchQueue' in window) launchQueue.setConsumer(p => { if (p.files && p.files[0]) p.files[0].getFile().then(f => { location.hash = '#generator'; setTimeout(() => { const w = (WID.generator || [])[0]; if (w && w.ready) w.file(f); }, 300); }); });
 show();
 requestAnimationFrame(loop);
 let rz = 0; new ResizeObserver(() => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { for (const w of activeW()) { if (w.V) w.V.resize(); } redraw(); }); }).observe($('#main'));

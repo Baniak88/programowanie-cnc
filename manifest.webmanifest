@@ -1,0 +1,19 @@
+{
+  "name": "Warsztat G-code – kurs CNC i generator CAM",
+  "short_name": "Warsztat G-code",
+  "description": "Kurs programowania CNC, symulator G-code i generator programów z modeli DXF/STL. Działa offline.",
+  "lang": "pl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#131B23",
+  "theme_color": "#131B23",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "file_handlers": [
+    { "action": "./index.html#generator", "accept": { "application/dxf": [".dxf"], "model/stl": [".stl"] } }
+  ]
+}
