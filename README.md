@@ -9,6 +9,8 @@ Interaktywny kurs programowania obrabiarek CNC (frezowanie i toczenie, składnia
   - gwintowanie G84 otworów pod gwint (np. warstwa `GWINT_M6`)
   - DXF, tokarka: planowanie, G71 + G70 z profilu, przecinanie
   - głębokości z nazwy warstwy (np. `KIESZEN_6`) albo z ujemnego Z, tabela cech do edycji, podgląd torów, czas obróbki, pobieranie pliku .NC i otwarcie w symulatorze
+- symulator 3- i 5-osiowy: kolizje z materiałem i mocowaniem (imadło, dociski boczne), panel ustawienia detalu z offsetem G54 i rysunkiem mocowania, licznik pozycji G54 i maszynowej, widoki ISO / góra / przód / bok, płaszczyzna pochylona G68.2 / G53.1 / G69 i osie A/C
+- frezarka 5-osiowa: strona kursu o obróbce 3+2 i TCPM, generator wierci otwory boczne wykryte w modelu STL
 - praca przy maszynie: tryby sterowania, ustawienie zera i narzędzi krok po kroku, korektory, alarmy, typowe błędy, BHP
 - tabele warsztatowe: parametry skrawania, wiercenie, gwinty i otwory pod śruby, pasowania, chropowatość, kalkulator S i F
 - słowniczek pojęć
