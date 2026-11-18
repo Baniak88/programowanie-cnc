@@ -242,7 +242,9 @@ svg text{font-family:var(--f-mono)}
 .gen-stats div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.45rem .7rem}
 .gen-stats span{font:500 .68rem var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .gen-stats b{display:block;font:600 1.3rem/1.2 var(--f-display);font-variant-numeric:tabular-nums}
-.gen-ops{padding-left:1.4em;margin:.3rem 0}.gen-ops li{margin:.3rem 0}
+.gen-ops{padding-left:1.4em;margin:.3rem 0}.gen-ops li{margin:.25rem 0}
+.gen-op{font:inherit;color:inherit;text-align:left;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;cursor:pointer}
+.gen-op:hover:not(:disabled){border-color:var(--accent)}.gen-op.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--panel))}.gen-op:disabled{cursor:default}
 .gen-code{max-height:520px;overflow:auto;margin-top:.4rem}
 .tldr{background:color-mix(in srgb,var(--accent) 7%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));border-radius:10px;padding:.75rem 1.1rem .8rem;margin:0 0 1.6rem;max-width:72ch}
 .tldr .t{font:600 .74rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
@@ -269,6 +271,7 @@ ol.check li:has(input:checked) span{color:var(--muted)}
   .brand-mark{width:30px;height:30px}
   main{padding-block:22px 70px}
 }
+@media (max-width:640px){.dro{font-size:10px;min-width:0;padding:.35rem .5rem;left:6px;top:6px}.dro .ax{font-size:12px}.sim-bar select,.sim-bar .btn{font-size:.8rem}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 
@@ -779,6 +782,8 @@ ol.check li:has(input:checked) span{color:var(--muted)}
     <select id="simSpeed" aria-label="Prędkość symulacji"><option value="1">1×</option><option value="5">5×</option><option value="10" selected>10×</option><option value="25">25×</option><option value="60">60×</option><option value="200">200×</option></select>
     <div class="seg" role="group" aria-label="Widok"><button class="btn on" id="simV3" type="button">3D</button><button class="btn" id="simV2" type="button">Z góry</button></div>
     <button class="btn" id="simSound" type="button" aria-pressed="false">Dźwięk: wył.</button>
+    <select id="simPaths" aria-label="Które tory pokazać"><option value="cur">Tor: bieżące narzędzie</option><option value="done">Tor: tylko wykonany</option><option value="all">Tor: cały program</option><option value="none">Tor: ukryj</option></select>
+    <label class="gen-chk"><input type="checkbox" id="simRap"> ruchy szybkie</label>
   </div>
   <div class="sim-grid">
     <div style="min-width:0">
@@ -796,7 +801,7 @@ ol.check li:has(input:checked) span{color:var(--muted)}
         <div class="vp-hint" id="vpHint">przeciągnij: obrót · kółko lub dwa palce: zoom</div>
       </div>
       <div class="timeline"><input type="range" id="simTime" min="0" max="1000" value="0" aria-label="Czas programu"><span id="simClock">0:00 / 0:00</span></div>
-      <div class="legend"><span><i style="border-color:var(--cut)"></i>ruch roboczy G01/G02/G03</span><span><i style="border-color:var(--rapid);border-top-style:dashed"></i>ruch szybki G00</span></div>
+      <div class="legend"><span><i style="border-color:var(--cut)"></i>ruch roboczy G01/G02/G03 (jasny: jeszcze przed narzędziem)</span><span><i style="border-color:var(--rapid);border-top-style:dashed"></i>ruch szybki G00</span></div>
       <details class="box">
         <summary>Półfabrykat i magazyn narzędzi</summary>
         <div class="row" style="margin:.6rem 0">
@@ -868,11 +873,12 @@ ol.check li:has(input:checked) span{color:var(--muted)}
 
     <div class="gen-out">
       <div class="vp gen-vp"><canvas id="genCv" aria-label="Podgląd detalu i torów narzędzi z góry"></canvas></div>
-      <div class="legend"><span><i style="border-color:var(--cut)"></i>ruch roboczy</span><span><i style="border-color:var(--rapid);border-top-style:dashed"></i>ruch szybki</span><span><i style="border-color:var(--ink)"></i>kontur detalu</span></div>
+      <div class="legend"><span><i style="border-color:var(--cut)"></i>ruch roboczy</span><span><i style="border-color:var(--rapid);border-top-style:dashed"></i>ruch szybki (dla wybranej operacji)</span><span><i style="border-color:var(--ink)"></i>kontur detalu</span></div>
       <div class="gen-stats" id="genStats"></div>
       <div class="row"><button class="btn primary" id="genSim" type="button">Otwórz w symulatorze 3D</button><button class="btn" id="genDl" type="button">Pobierz plik .NC</button><button class="btn" id="genCopy" type="button">Kopiuj program</button></div>
       <ul class="msgs" id="genMsgs"></ul>
       <h3>Operacje (kolejność na maszynie)</h3>
+      <p class="gen-hint" id="genOpsHint">Kliknij operację, żeby zobaczyć na podglądzie tylko jej tor (z ruchami szybkimi). Kliknij ponownie, żeby wrócić do całości.</p>
       <ol class="gen-ops" id="genOps"></ol>
       <h3>Narzędzia i parametry</h3>
       <div class="tbl"><table id="genTools"></table></div>
@@ -1233,7 +1239,7 @@ const TOOLS = {
 };
 Object.assign(TOOLS, store.get('gentools', {})); // tools created by the CAM generator (T11+)
 const HOME = { x: -20, y: -20, z: 60 }, RAPID = 6000;
-const KNOWN_G = new Set([0, 1, 2, 3, 4, 17, 18, 19, 20, 21, 28, 40, 41, 42, 43, 49, 54, 55, 56, 57, 58, 59, 73, 80, 81, 82, 83, 90, 91, 94, 98, 99]);
+const KNOWN_G = new Set([0, 1, 2, 3, 4, 17, 18, 19, 20, 21, 28, 40, 41, 42, 43, 49, 54, 55, 56, 57, 58, 59, 73, 80, 81, 82, 83, 84, 90, 91, 94, 98, 99]);
 
 function interpret(src, stock) {
   const lines = src.split(/\r?\n/);
@@ -1332,7 +1338,7 @@ function interpret(src, stock) {
         case 20: st.u = 25.4; break; case 21: st.u = 1; break;
         case 28: home = true; break;
         case 41: case 42: msg(i, 'info', 'Symulator rysuje tor środka narzędzia bez korekcji G41/G42 (patrz lekcja 7).', 'comp'); break;
-        case 73: case 81: case 82: case 83: if (!st.cyc) st.cInit = st.z; st.cyc = g; break;
+        case 73: case 81: case 82: case 83: case 84: if (!st.cyc) st.cInit = st.z; st.cyc = g; break;
         case 80: st.cyc = 0; break;
         case 90: st.abs = true; break; case 91: st.abs = false; break;
         case 98: case 99: st.cRet = g; break;
@@ -1658,12 +1664,13 @@ function loop(now) {
 }
 
 // ------------------------------------------------------------ path drawing (2D top view)
-function strokePath(x, v, P, i0, i1, alpha) {
+function strokePath(x, v, P, i0, i1, alpha, noRapid) {
   const cut = tok('--cut'), rap = tok('--rapid');
-  let i = i0;
+  let i = Math.max(0, i0); i1 = Math.min(i1, P.length - 1);
   while (i < i1) {
     const kind = P[i + 1].kind; x.beginPath(); x.moveTo(v.X(P[i].x), v.Y(P[i].y)); let j = i;
     while (j < i1 && P[j + 1].kind === kind) { x.lineTo(v.X(P[j + 1].x), v.Y(P[j + 1].y)); j++; }
+    if (noRapid && kind === 'rapid') { i = j; continue; }
     x.strokeStyle = kind === 'rapid' ? rap : cut; x.setLineDash(kind === 'rapid' ? [5, 4] : []);
     x.globalAlpha = alpha; x.lineWidth = kind === 'rapid' ? 1.2 : 1.8; x.stroke(); i = j;
   }
@@ -2403,6 +2410,9 @@ widget('symulator', {
     $('#simSound').onclick = () => { this.sound = !this.sound; $('#simSound').textContent = 'Dźwięk: ' + (this.sound ? 'wł.' : 'wył.'); $('#simSound').setAttribute('aria-pressed', this.sound); this.audioCheck(); };
     ['stW', 'stH', 'stT'].forEach(id => $('#' + id).addEventListener('change', () => { store.set('simdims', this.dims()); this.load(); }));
     $('#simMsgs').addEventListener('click', e => { const li = e.target.closest('li[data-l]'); if (li) this.gotoLine(+li.dataset.l); });
+    this.pathMode = store.get('simpaths', 'cur'); this.rapids = store.get('simrap', false); $('#simPaths').value = this.pathMode; $('#simRap').checked = this.rapids;
+    $('#simPaths').onchange = () => { this.pathMode = $('#simPaths').value; store.set('simpaths', this.pathMode); this.updPaths(); if (this.V) this.V.dirty = true; this.draw(); };
+    $('#simRap').onchange = () => { this.rapids = $('#simRap').checked; store.set('simrap', this.rapids); this.updPaths(); if (this.V) this.V.dirty = true; this.draw(); };
     this.speed = 10; $('#simSpeed').onchange = () => { this.speed = +$('#simSpeed').value; };
     if (HAS3D) {
       const V = this.V = Viewer($('#sim3d'));
@@ -2442,7 +2452,7 @@ widget('symulator', {
   },
   build3D() {
     const V = this.V, S = this.stock;
-    for (const k of ['stockMesh', 'pathAll', 'pathDone', 'toolG']) if (this[k]) { V.scene.remove(this[k]); this[k].geometry && this[k].geometry.dispose(); }
+    for (const k of ['stockMesh', 'pFa', 'pFd', 'pRa', 'pRd', 'toolG']) if (this[k]) { V.scene.remove(this[k]); this[k].geometry && this[k].geometry.dispose(); }
     const NX = S.nx + 2, NY = S.ny + 2, pos = new Float32Array(NX * NY * 3), col = new Float32Array(NX * NY * 3), idx = [];
     for (let gj = 0; gj < NY; gj++) for (let gi = 0; gi < NX; gi++) { const i = clamp(gi - 1, 0, S.nx - 1), j = clamp(gj - 1, 0, S.ny - 1), k = (gj * NX + gi) * 3; pos[k] = i * S.cs; pos[k + 1] = j * S.cs; pos[k + 2] = -S.T; }
     for (let gj = 0; gj < NY - 1; gj++) for (let gi = 0; gi < NX - 1; gi++) { const a = gj * NX + gi, b = a + 1, c = a + NX, d = c + 1; idx.push(a, b, d, a, d, c); }
@@ -2450,13 +2460,28 @@ widget('symulator', {
     this.stockMesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.35, roughness: 0.5, flatShading: true, side: THREE.DoubleSide }));
     V.scene.add(this.stockMesh); this.NX = NX; this.NY = NY; S.dirty = true; this.updStock();
     // path
-    const P = this.res.P, n = P.length - 1, lp = new Float32Array(Math.max(1, n) * 6), lc = new Float32Array(Math.max(1, n) * 6);
-    const cR = new THREE.Color(0xe0564f), cF = new THREE.Color(0xff7a2f);
-    for (let i = 0; i < n; i++) { const a = P[i], b = P[i + 1], c = b.kind === 'rapid' ? cR : cF; lp.set([a.x, a.y, a.z, b.x, b.y, b.z], i * 6); lc.set([c.r, c.g, c.b, c.r, c.g, c.b], i * 6); }
-    const mk = (op) => { const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.BufferAttribute(lp, 3)); gg.setAttribute('color', new THREE.BufferAttribute(lc, 3)); return new THREE.LineSegments(gg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: op, depthTest: op > 0.5 })); };
-    this.pathAll = mk(0.22); this.pathDone = mk(1); this.pathDone.geometry.setDrawRange(0, 0); V.scene.add(this.pathAll); V.scene.add(this.pathDone);
+    // toolpath split into cutting and rapid moves; per-tool ranges let the view show only the active tool
+    const P = this.res.P, n = Math.max(0, P.length - 1), fP = new Int32Array(n + 1), rP = new Int32Array(n + 1), bs = new Int32Array(Math.max(1, n)), be = new Int32Array(Math.max(1, n));
+    for (let i = 0; i < n; i++) { const r = P[i + 1].kind === 'rapid'; fP[i + 1] = fP[i] + (r ? 0 : 1); rP[i + 1] = rP[i] + (r ? 1 : 0); bs[i] = i && P[i + 1].tool === P[i].tool ? bs[i - 1] : i; }
+    for (let i = n - 1; i >= 0; i--) be[i] = i < n - 1 && P[i + 2].tool === P[i + 1].tool ? be[i + 1] : i + 1;
+    const lf = new Float32Array(Math.max(1, fP[n]) * 6), lr = new Float32Array(Math.max(1, rP[n]) * 6);
+    for (let i = 0; i < n; i++) { const a = P[i], b = P[i + 1], q = [a.x, a.y, a.z, b.x, b.y, b.z]; if (b.kind === 'rapid') lr.set(q, rP[i] * 6); else lf.set(q, fP[i] * 6); }
+    const mk = (arr, col, op) => { const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.BufferAttribute(arr, 3)); const o = new THREE.LineSegments(gg, new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op, depthTest: op > 0.3 })); V.scene.add(o); return o; };
+    this.pFa = mk(lf, 0xff7a2f, 0.16); this.pFd = mk(lf, 0xff6a1a, 0.75); this.pRa = mk(lr, 0xe0564f, 0.12); this.pRd = mk(lr, 0xe0564f, 0.4);
+    Object.assign(this, { fP, rP, bs, be, nSeg: n }); this.updPaths();
     this.curTool = -1; this.grid.position.set(S.W / 2, S.H / 2, -S.T - 0.05);
     const m = Math.max(S.W, S.H); V.o.target.set(S.W / 2, S.H / 2, -S.T / 2); V.o.dist = m * 2.3 + 60; V.dirty = true;
+  },
+  pathRange() { // segment range [a, b) shown, and how much of it is done
+    const n = this.nSeg || Math.max(0, this.res.P.length - 1), i = clamp(this.idx || 0, 0, n), c = Math.min(i, n - 1);
+    let a = 0, b = n; if (this.pathMode === 'cur' && n && this.bs) { a = this.bs[Math.max(0, c)]; b = this.be[Math.max(0, c)]; }
+    return { a, b, d: Math.max(a, Math.min(i, b)) };
+  },
+  updPaths() {
+    if (!this.pFa) return; const { a, b, d } = this.pathRange(), m = this.pathMode;
+    const set = (o, pre, f, t) => o.geometry.setDrawRange(pre[f] * 2, Math.max(0, pre[t] - pre[f]) * 2);
+    this.pFa.visible = m === 'cur' || m === 'all'; this.pRa.visible = this.pFa.visible && this.rapids; this.pFd.visible = m !== 'none'; this.pRd.visible = this.pFd.visible && this.rapids;
+    set(this.pFa, this.fP, a, b); set(this.pRa, this.rP, a, b); set(this.pFd, this.fP, a, d); set(this.pRd, this.rP, a, d);
   },
   updStock() {
     const S = this.stock; if (!S.dirty || !this.stockMesh) return; S.dirty = false;
@@ -2510,7 +2535,7 @@ widget('symulator', {
       const V = this.V; this.updStock();
       if (s.tool !== this.curTool) { if (this.toolG) V.scene.remove(this.toolG); this.toolG = toolMesh(TOOLS[s.tool]); V.scene.add(this.toolG); this.curTool = s.tool; }
       this.toolG.position.set(c.x, c.y, c.z); if (s.s) this.toolG.userData.spin.rotation.z -= 0.5;
-      this.pathDone.geometry.setDrawRange(0, this.idx * 2);
+      this.updPaths();
       V.dirty = true; if (V.dirty) V.render();
     } else this.draw2D();
   },
@@ -2528,7 +2553,7 @@ widget('symulator', {
     }
     g.putImageData(id, 0, 0); x.imageSmoothingEnabled = true; x.drawImage(this.img, v.X(0), v.Y(S.H), S.W * v.s, S.H * v.s);
     x.strokeStyle = tok('--stock-edge'); x.strokeRect(v.X(0), v.Y(S.H), S.W * v.s, S.H * v.s);
-    strokePath(x, v, P, 0, P.length - 1, 0.25); strokePath(x, v, P, 0, this.idx, 1);
+    if (this.pathMode !== 'none') { const { a, b, d } = this.pathRange(); if (this.pathMode !== 'done') strokePath(x, v, P, a, b, 0.2, !this.rapids); strokePath(x, v, P, a, d, 0.85, !this.rapids); }
     const c = this.cur, r = TOOLS[this.seg.tool].d / 2;
     x.strokeStyle = tok('--ink'); x.lineWidth = 2; x.beginPath(); x.arc(v.X(c.x), v.Y(c.y), r * v.s, 0, 7); x.stroke();
     x.fillStyle = tok('--ink'); x.beginPath(); x.arc(v.X(c.x), v.Y(c.y), 2, 0, 7); x.fill();
@@ -2561,18 +2586,21 @@ widget('symulator', {
 // ============================================================ GENERATOR CAM: model (DXF / STL) -> program G-code
 // Pipeline as in a CAM system: read geometry -> recognise features -> choose tools and cutting data -> toolpaths -> post-processor (Fanuc ISO).
 const GMATS = [
-  { n: 'Aluminium (PA6, 6082)', k: 'ALUMINIUM', vc: 300, fz: 0.05, ap: 1, ae: 0.45, z: 3, vcd: 80, kd: 0.025, vct: 300, ft: 0.25, ut: 2 },
-  { n: 'Stal konstrukcyjna (S235, C45)', k: 'STAL C45', vc: 150, fz: 0.04, ap: 0.5, ae: 0.35, z: 4, vcd: 25, kd: 0.015, vct: 200, ft: 0.22, ut: 1.5 },
-  { n: 'Stal nierdzewna (1.4301)', k: 'STAL NIERDZEWNA', vc: 90, fz: 0.03, ap: 0.4, ae: 0.3, z: 4, vcd: 12, kd: 0.012, vct: 150, ft: 0.18, ut: 1 },
-  { n: 'Mosiądz (CuZn39Pb3)', k: 'MOSIADZ', vc: 200, fz: 0.05, ap: 0.8, ae: 0.4, z: 3, vcd: 60, kd: 0.02, vct: 250, ft: 0.22, ut: 2 },
-  { n: 'Tworzywo POM', k: 'POM', vc: 250, fz: 0.08, ap: 1, ae: 0.5, z: 2, vcd: 50, kd: 0.03, vct: 300, ft: 0.25, ut: 2.5 }
+  { n: 'Aluminium (PA6, 6082)', k: 'ALUMINIUM', vtp: 15, vc: 300, fz: 0.05, ap: 1, ae: 0.45, z: 3, vcd: 80, kd: 0.025, vct: 300, ft: 0.25, ut: 2 },
+  { n: 'Stal konstrukcyjna (S235, C45)', k: 'STAL C45', vtp: 10, vc: 150, fz: 0.04, ap: 0.5, ae: 0.35, z: 4, vcd: 25, kd: 0.015, vct: 200, ft: 0.22, ut: 1.5 },
+  { n: 'Stal nierdzewna (1.4301)', k: 'STAL NIERDZEWNA', vtp: 5, vc: 90, fz: 0.03, ap: 0.4, ae: 0.3, z: 4, vcd: 12, kd: 0.012, vct: 150, ft: 0.18, ut: 1 },
+  { n: 'Mosiądz (CuZn39Pb3)', k: 'MOSIADZ', vtp: 12, vc: 200, fz: 0.05, ap: 0.8, ae: 0.4, z: 3, vcd: 60, kd: 0.02, vct: 250, ft: 0.22, ut: 2 },
+  { n: 'Tworzywo POM', k: 'POM', vtp: 12, vc: 250, fz: 0.08, ap: 1, ae: 0.5, z: 2, vcd: 50, kd: 0.03, vct: 300, ft: 0.25, ut: 2.5 }
 ];
 const MILLS = [2, 3, 4, 5, 6, 8, 10, 12, 16, 20];
 const BARS = [10, 12, 16, 20, 22, 25, 30, 32, 35, 40, 45, 50, 55, 60, 65, 70, 80, 90, 100, 110, 120, 140, 160, 180, 200, 250, 300];
 const HOLE_MAX = 13;
+const DRILLS = [2, 2.5, 3, 3.3, 3.5, 4, 4.2, 4.5, 5, 5.5, 6, 6.6, 6.8, 7, 8, 8.5, 9, 10, 10.2, 11, 12, 13, 13.5, 14, 15, 16, 17.5, 18, 20];
+const TAPS = [[2.5, 3, 0.5], [3.3, 4, 0.7], [4.2, 5, 0.8], [5, 6, 1], [6.8, 8, 1.25], [8.5, 10, 1.5], [10.2, 12, 1.75], [14, 16, 2], [17.5, 20, 2.5]];
 const fmt = v => { v = Math.round(v * 1000) / 1000; return nf(v === 0 ? 0 : v); };
 const ascii = s => String(s).replace(/×/g, 'X').replace(/ł/g, 'l').replace(/Ł/g, 'L').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/Ø/g, 'D').replace(/[^\x20-\x7e]/g, '');
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const pn = (n, a, b, c) => n + ' ' + (n === 1 ? a : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? b : c);
 const hn = v => pl(v, Math.abs(v - Math.round(v)) < 0.005 ? 0 : Math.abs(v * 10 - Math.round(v * 10)) < 0.05 ? 1 : 2);
 function segD2(px, py, ax, ay, bx, by) {
   const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy; let t = L ? ((px - ax) * dx + (py - ay) * dy) / L : 0;
@@ -2759,6 +2787,7 @@ function analyze2D(D) {
 }
 function depthHint(o) {
   if (o.z < -1e-6) return -o.z;
+  if (/gwint|thread|(^|[^a-z])m\d/i.test(o.layer || '')) return null;
   const m = /(\d+(?:[.,]\d+)?)/.exec(o.layer || ''), v = m ? parseFloat(m[1].replace(',', '.')) : 0;
   if (v > 0 && v < 500 && /kiesz|pocket|glob|gleb|depth|graw|rowek|slot|engr|kontur|profil|otw|hole|wier|drill|^[\d.,_ -]+$/i.test(o.layer)) return v;
   return null;
@@ -2781,8 +2810,8 @@ function features2D(G, T) {
     feats.push({ kind: 'pocket', loop: l, islands: isl, label: `Kieszeń ${++pk}${l.circ ? ' okrągła' : ''}`, dims: (l.circ ? `Ø${pl(l.circ.r * 2, 1)} mm` : sz(l)) + (isl.length ? ` · wyspy: ${isl.length}` : ''), depth: h != null ? h : Math.min(5, T - 1), on: true });
   }
   const hg = new Map();
-  for (const l of holes) { const d = Math.round(l.circ.r * 20) / 10, h = depthHint(l), k = d + '|' + h; if (!hg.has(k)) hg.set(k, { d, h, pts: [] }); hg.get(k).pts.push(l.circ.c); }
-  for (const g of hg.values()) feats.push({ kind: 'hole', d: g.d, pts: g.pts, label: `Otwory Ø${pl(g.d, 1)}`, dims: `${g.pts.length} szt.`, depth: g.h != null ? g.h : T, through: g.h == null, mode: 'drill', on: true });
+  for (const l of holes) { const d = Math.round(l.circ.r * 20) / 10, h = depthHint(l), k = d + '|' + h + '|' + l.layer; if (!hg.has(k)) hg.set(k, { d, h, pts: [], layer: l.layer }); hg.get(k).pts.push(l.circ.c); }
+  for (const g of hg.values()) { const tap = TAPS.find(t => Math.abs(t[0] - g.d) < 0.06); feats.push({ kind: 'hole', d: g.d, pts: g.pts, tap, label: `Otwory Ø${pl(g.d, 1)}`, dims: `${g.pts.length} szt.` + (tap ? ` · pod gwint M${hn(tap[1])}` : ''), depth: g.h != null ? g.h : T, through: g.h == null, mode: tap && /gwint|thread|tap|(^|[^a-z])m\d/i.test(g.layer || '') ? 'tap' : 'drill', on: true }); }
   let sl = 0;
   for (const o of G.open) {
     if (o.pts.length < 2) continue; const h = depthHint(o), len = o.pts.reduce((s, p, i) => i ? s + dist(p, o.pts[i - 1]) : 0, 0);
@@ -2946,11 +2975,13 @@ function Prog(nums) {
 }
 function cutData(mat, t, smax) {
   const r10 = v => Math.max(10, Math.round(v / 10) * 10);
+  if (t.type === 'tap') { const n = Math.min(smax, 3000, mat.vtp * 1000 / (Math.PI * t.d)), S = r10(n); return { S, F: Math.round(S * t.pitch * 100) / 100, vc: Math.round(S * Math.PI * t.d / 1000), f: t.pitch }; }
   if (t.type === 'drill') { const vc = t.spot ? mat.vcd * 1.5 : mat.vcd, n = Math.min(smax, vc * 1000 / (Math.PI * t.d)), f = t.spot ? 0.04 + 0.002 * t.d : mat.kd * t.d; return { S: r10(n), F: Math.max(10, Math.round(n * f / 5) * 5), vc: Math.round(n * Math.PI * t.d / 1000), f: Math.round(f * 1000) / 1000 }; }
   const n = Math.min(smax, mat.vc * (t.type === 'ball' ? 0.8 : 1) * 1000 / (Math.PI * t.d)), fz = Math.round(mat.fz * clamp(t.d / 10, 0.3, 1.5) * 1000) / 1000;
   return { S: r10(n), F: Math.max(20, Math.round(n * t.z * fz / 5) * 5), vc: Math.round(n * Math.PI * t.d / 1000), fz };
 }
 function toolName(t, short) {
+  if (t.type === 'tap') return short ? `GWINTOWNIK M${fmt(t.d)}X${fmt(t.pitch)}` : `gwintownik maszynowy M${hn(t.d)}×${hn(t.pitch)}`;
   if (t.type === 'drill') return t.spot ? (short ? 'NAWIERTAK D10 90ST' : 'nawiertak Ø10, 90°') : (short ? `WIERTLO D${fmt(t.d)}` : `wiertło kręte Ø${pl(t.d, 1)}`);
   if (t.type === 'ball') return short ? `FREZ KULOWY D${t.d} R${fmt(t.d / 2)}` : `frez kulowy Ø${t.d} (R${pl(t.d / 2, 1)})`;
   return short ? `FREZ VHM D${t.d} Z${t.z}` : `frez walcowo-czołowy Ø${t.d}, ${t.z} ostrza`;
@@ -3008,7 +3039,7 @@ function finishLoops(F, segs, r, keep) {
   return isoLoops(F, r).filter(p => p.length > 3 && (!keep || keep(p))).map(p => ({ raw: p, fit: arcFit(p, true, 0.01) }));
 }
 function assemble(o, head, ops, tools, mat) {
-  const order = t => t.type === 'drill' ? (t.spot ? 100 : 200 + t.d) : t.type === 'ball' ? 50 : 40 - t.d;
+  const order = t => t.type === 'tap' ? 300 + t.d : t.type === 'drill' ? (t.spot ? 100 : 200 + t.d) : t.type === 'ball' ? 50 : 40 - t.d;
   tools.sort((a, b) => order(a) - order(b)); tools.forEach((t, i) => { t.T = 11 + i; Object.assign(t, cutData(mat, t, o.smax)); });
   ops.sort((a, b) => tools.indexOf(a.tool) - tools.indexOf(b.tool));
   const P = Prog(o.nums);
@@ -3027,29 +3058,41 @@ function assemble(o, head, ops, tools, mat) {
       P.out(`G43 H${t.T} Z25. M08`); P.at(null, null, 25);
       cur = t;
     }
-    P.cmt(op.title); op.run(P, t); P.up(25);
+    op.l0 = P.L.length; P.cmt(op.title); op.run(P, t); P.up(25); op.l1 = P.L.length - 1;
   }
   P.out('M09'); P.out('M05'); P.out('G91 G28 Z0.'); P.out('G90'); P.out('M30'); P.out('%');
   return P.L.join('\n');
 }
-function holeOps(feats, o, stock, tool, ops, sh) {
-  const holes = []; feats.forEach(f => f.pts.forEach(p => holes.push({ f, p: sh(p) })));
+function holeOps(feats, o, stock, tool, ops, sh) { // spot drilling, drilling (G81/G83) and rigid tapping (G84)
+  const holes = []; feats.forEach(f => f.pts.forEach(p => holes.push({ f, p: sh(p), top: f.ztop || 0 })));
   if (!holes.length) return;
   const nn = list => { const out = [], left = list.slice(); let c = [0, 0]; while (left.length) { let bi = 0, bd = Infinity; left.forEach((h, i) => { const d = dist(h.p, c); if (d < bd) { bd = d; bi = i; } }); const h = left.splice(bi, 1)[0]; out.push(h); c = h.p; } return out; };
-  const cycle = (P, list, zf, cyc, q, F) => {
-    P.mv(0, list[0].p[0], list[0].p[1]); P.mv(0, null, null, 5); let lz = null;
-    list.forEach((h, i) => { const z = zf(h); P.out(i ? `X${fmt(h.p[0])} Y${fmt(h.p[1])}${fmt(z) !== lz ? ' Z' + fmt(z) : ''}` : `G98 G${cyc} X${fmt(h.p[0])} Y${fmt(h.p[1])} Z${fmt(z)} R2.${q ? ' Q' + fmt(q) : ''} F${F}`); lz = fmt(z); });
-    P.out('G80'); P.forget(); const l = list[list.length - 1].p; P.at(l[0], l[1], 5);
+  const cycle = (P, list, zf, cyc, q, F, rOff = 2) => {
+    const init = Math.max(0, ...list.map(h => h.top)) + 5 + (rOff > 2 ? 3 : 0);
+    P.mv(0, list[0].p[0], list[0].p[1]); P.mv(0, null, null, init); let lz = null, lr = null;
+    list.forEach((h, i) => {
+      const z = fmt(zf(h)), r = fmt(Math.max(h.top, 0) + rOff);
+      P.out(i ? `X${fmt(h.p[0])} Y${fmt(h.p[1])}${z !== lz ? ' Z' + z : ''}${r !== lr ? ' R' + r : ''}` : `G98 G${cyc} X${fmt(h.p[0])} Y${fmt(h.p[1])} Z${z} R${r}${q ? ' Q' + fmt(q) : ''} F${F}`);
+      lz = z; lr = r;
+    });
+    P.out('G80'); P.forget(); const l = list[list.length - 1].p; P.at(l[0], l[1], init);
   };
   if (o.spot) {
     const t = tool('drill', 10, { spot: true }), all = nn(holes);
-    ops.push({ tool: t, title: `Nakiełkowanie ${all.length} otworów (G81)`, first: all[0].p, run: (P, T) => cycle(P, all, h => -Math.min(h.f.d + 0.6, 9.6) / 2, 81, 0, T.F) });
+    ops.push({ tool: t, title: `Nakiełkowanie ${all.length} otworów (G81)`, first: all[0].p, run: (P, T) => cycle(P, all, h => h.top - Math.min(h.f.d + 0.6, 9.6) / 2, 81, 0, T.F) });
   }
+  const zDrill = h => h.f.zbot != null ? h.f.zbot : h.f.through ? -(stock.T + 0.3 * h.f.d + 1) : h.top - h.f.depth;
   const groups = new Map(); holes.forEach(h => { const k = h.f.d; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(h); });
   for (const [d, list] of [...groups.entries()].sort((a, b) => a[0] - b[0])) {
-    const t = tool('drill', d), L = nn(list), zf = h => h.f.through ? -(stock.T + 0.3 * d + 1) : -h.f.depth;
-    const deep = L.some(h => -zf(h) > 3 * d), q = Math.max(1, Math.round(d * 2) / 2);
-    ops.push({ tool: t, title: `Wiercenie ${L.length} × Ø${hn(d)} (${deep ? 'G83, Q' + fmt(q) : 'G81'})`, first: L[0].p, run: (P, T) => cycle(P, L, zf, deep ? 83 : 81, deep ? q : 0, T.F) });
+    const t = tool('drill', d), L = nn(list);
+    const deep = L.some(h => h.top - zDrill(h) > 3 * d), q = Math.max(1, Math.round(d * 2) / 2);
+    ops.push({ tool: t, title: `Wiercenie ${L.length} × Ø${hn(d)} (${deep ? 'G83, Q' + fmt(q) : 'G81'})`, first: L[0].p, run: (P, T) => cycle(P, L, zDrill, deep ? 83 : 81, deep ? q : 0, T.F) });
+  }
+  const tg = new Map(); holes.filter(h => h.f.mode === 'tap' && h.f.tap).forEach(h => { const k = h.f.tap[1]; if (!tg.has(k)) tg.set(k, []); tg.get(k).push(h); });
+  for (const [M, list] of tg) {
+    const p = list[0].f.tap[2], t = tool('tap', M, { pitch: p }), L = nn(list);
+    const zt = h => h.f.through ? -(stock.T + 2 * p) : h.top - Math.max(1, h.f.depth - Math.max(2 * p, 0.2 * h.f.d));
+    ops.push({ tool: t, title: `Gwintowanie ${L.length} × M${hn(M)}×${hn(p)} (G84, F = S · ${hn(p)})`, first: L[0].p, run: (P, T) => cycle(P, L, zt, 84, 0, T.F, 5) });
   }
 }
 
@@ -3115,7 +3158,7 @@ function genMill2D(M, o) {
       P.mv(1, null, null, z, Math.round(c.F * 0.3 / 5) * 5); Q.forEach(q => P.mv(1, q[0], q[1], null, c.F));
     }) });
   }
-  holeOps(on.filter(f => f.kind === 'hole' && f.mode === 'drill'), o, stock, tool, ops, p => [p[0] + ox, p[1] + oy]);
+  holeOps(on.filter(f => f.kind === 'hole' && f.mode !== 'mill'), o, stock, tool, ops, p => [p[0] + ox, p[1] + oy]);
   if (!ops.length) throw new Error('Nie ma czego obrabiać: włącz co najmniej jedną cechę.');
   const head = [`MATERIAL: ${mat.k}`, `POLFABRYKAT: X${fmt(W)} Y${fmt(H)} Z${fmt(T)}`, 'ZERO G54: LEWY DOLNY ROG POLFABRYKATU, GORA (Z0)', `NADDATEK Z BOKU ${fmt(side)} MM`];
   return { code: assemble(o, head, ops, tools, mat), tools: tools.filter(t => ops.some(op => op.tool === t)), ops, warns, stock, view: { kind: '2d', loops: M.G.loops.map(l => sh(l.pts)), open: M.G.open.map(l => sh(l.pts)) } };
@@ -3146,15 +3189,52 @@ function dilateDisk(src, nx, ny, rc) {
   }
   return out;
 }
+function findHoles3D(Hm, G, floor, W, H) { // enclosed, round, through holes in the heightmap -> drilling features
+  const { nx, ny, cs, x0, y0 } = G, lab = new Int32Array(nx * ny).fill(-1), out = [];
+  const low = k => Hm[k] <= floor + 0.05;
+  for (let s = 0; s < nx * ny; s++) {
+    if (lab[s] >= 0 || !low(s)) continue;
+    const comp = [s], id = out.length + 1e6; lab[s] = id; let edge = false;
+    for (let q = 0; q < comp.length; q++) {
+      const k = comp[q], i = k % nx, j = (k - i) / nx;
+      if (i === 0 || j === 0 || i === nx - 1 || j === ny - 1) { edge = true; continue; }
+      for (const n of [k - 1, k + 1, k - nx, k + nx]) if (lab[n] < 0 && low(n)) { lab[n] = id; comp.push(n); }
+      if (comp.length > 40000) { edge = true; break; }
+    }
+    if (edge || comp.length < 6) continue;
+    let cx = 0, cy = 0; comp.forEach(k => { cx += k % nx; cy += Math.floor(k / nx); }); cx /= comp.length; cy /= comp.length;
+    const req = Math.sqrt(comp.length / Math.PI); let r0 = Infinity, r1 = 0; const ring = [];
+    for (const k of comp) { const i = k % nx, j = (k - i) / nx; for (const n of [k - 1, k + 1, k - nx, k + nx]) if (lab[n] !== id) { const d = Math.hypot(i - cx, j - cy); r0 = Math.min(r0, d); r1 = Math.max(r1, d); const o = Math.round((i - cx) * 1.6 + cx) + Math.round((j - cy) * 1.6 + cy) * nx; if (Hm[o] != null) ring.push(Hm[o]); } }
+    if (r1 - r0 > 2.2 + 0.06 * req) continue;
+    ring.sort((a, b) => a - b); const top0 = ring[Math.floor(ring.length / 2)], mid = (top0 + floor) / 2, rr = Math.ceil(r1 + 3); let nm = 0;
+    for (let j = Math.max(0, Math.floor(cy - rr)); j <= Math.min(ny - 1, Math.ceil(cy + rr)); j++) for (let i = Math.max(0, Math.floor(cx - rr)); i <= Math.min(nx - 1, Math.ceil(cx + rr)); i++) if (Math.hypot(i - cx, j - cy) <= rr && Hm[j * nx + i] < mid) nm++;
+    let d = Math.round(2 * Math.sqrt(nm / Math.PI) * cs * 10) / 10; const sd = DRILLS.reduce((a, b) => Math.abs(b - d) < Math.abs(a - d) ? b : a); if (Math.abs(sd - d) <= 0.2) d = sd;
+    if (d < 2 || d > 20) continue;
+    ring.sort((a, b) => a - b); const top = ring[Math.floor(ring.length / 2)];
+    if (top - floor < 0.5) continue;
+    out.push({ c: [x0 + (cx + 0.5) * cs, y0 + (cy + 0.5) * cs], d, top, cells: comp });
+  }
+  return out;
+}
+function dropBall(Hm, G, R) { // tip height of a ball mill touching the surface at every grid cell
+  const { nx, ny, cs } = G, Rc = Math.ceil(R / cs), off = [], out = new Float32Array(nx * ny);
+  for (let dj = -Rc; dj <= Rc; dj++) for (let di = -Rc; di <= Rc; di++) { const d2 = (di * cs) ** 2 + (dj * cs) ** 2; if (d2 <= R * R) off.push(di, dj, Math.sqrt(R * R - d2)); }
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+    let zc = -1e9; for (let k = 0; k < off.length; k += 3) { const ii = i + off[k], jj = j + off[k + 1]; if (ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue; const v = Hm[jj * nx + ii] + off[k + 2]; if (v > zc) zc = v; }
+    out[j * nx + i] = zc - R;
+  }
+  return out;
+}
 function genMill3D(M, o) {
   const mat = GMATS[o.mat], warns = [], ops = [], tools = [], Tr = orientTris(M.tris, o.up), bb = triBox(Tr), side = o.side;
   const bw = bb[3] - bb[0], bh = bb[4] - bb[1], bz = bb[5] - bb[2];
   if (!(bw > 0 && bh > 0 && bz > 0)) throw new Error('Model jest płaski albo pusty.');
   const W = bw + 2 * side, H = bh + 2 * side, T = bz + o.top + o.base, floor = -T + o.base, stock = { W, H, T };
-  const tool = (type, d) => { let t = tools.find(t => t.type === type && t.d === d); if (!t) { t = { type, d, z: type === 'flat' ? mat.z : 2 }; tools.push(t); } return t; };
-  const Dr = MILLS.filter(d => d <= o.tmax && d <= Math.max(4, Math.min(W, H) / 3)).pop() || 4, r = Dr / 2, tr = tool('flat', Dr);
-  const cs = clamp(Math.max(W, H) / 320, 0.15, 1.2), mg = r + 3 * cs + 1.5, G = mkGrid(-mg, -mg, W + mg, H + mg, cs), { nx, ny } = G;
-  const Hm = new Float32Array(nx * ny).fill(floor);
+  const tool = (type, d, ex = {}) => { let t = tools.find(t => t.type === type && Math.abs(t.d - d) < 1e-6 && !!t.spot === !!ex.spot); if (!t) { t = Object.assign({ type, d, z: type === 'flat' ? mat.z : 2 }, ex); tools.push(t); } return t; };
+  const Dr = MILLS.filter(d => d <= o.tmax && d <= Math.max(4, Math.min(W, H) / 3)).pop() || 4, r = Dr / 2;
+  const Dr2 = MILLS.filter(d => d <= Math.max(3, Dr / 2)).pop(), r2 = Dr2 / 2, Df = o.ball, R = Df / 2;
+  const cs = clamp(Math.max(W, H) / 320, 0.15, 1.2), mg = r + 3 * cs + 1.5, G = mkGrid(-mg, -mg, W + mg, H + mg, cs), { nx, ny } = G, N = nx * ny;
+  const Hm = new Float32Array(N).fill(floor);
   for (let i = 0; i < Tr.length; i += 9) { // rasterise the top surface of the model (heightmap)
     const x1 = Tr[i] - bb[0] + side, y1 = Tr[i + 1] - bb[1] + side, z1 = Tr[i + 2] - bb[5] - o.top, x2 = Tr[i + 3] - bb[0] + side, y2 = Tr[i + 4] - bb[1] + side, z2 = Tr[i + 5] - bb[5] - o.top, x3 = Tr[i + 6] - bb[0] + side, y3 = Tr[i + 7] - bb[1] + side, z3 = Tr[i + 8] - bb[5] - o.top;
     const d = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3); if (Math.abs(d) < 1e-12) continue;
@@ -3162,42 +3242,115 @@ function genMill3D(M, o) {
     const j0 = Math.max(0, Math.ceil((Math.min(y1, y2, y3) - G.y0) / cs - 0.5)), j1 = Math.min(ny - 1, Math.floor((Math.max(y1, y2, y3) - G.y0) / cs - 0.5));
     for (let j = j0; j <= j1; j++) { const py = G.y0 + (j + 0.5) * cs; for (let ii = i0; ii <= i1; ii++) { const px = G.x0 + (ii + 0.5) * cs, l1 = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) / d, l2 = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) / d, l3 = 1 - l1 - l2; if (l1 < -1e-6 || l2 < -1e-6 || l3 < -1e-6) continue; const z = l1 * z1 + l2 * z2 + l3 * z3, k = j * nx + ii; if (z > Hm[k]) Hm[k] = z; } }
   }
-  const a3 = o.fin ? 0.5 : 0.15, Ha = Hm.map(v => v + a3), Hd = dilateDisk(Ha, nx, ny, r / cs);
-  let minHd = Infinity; for (let j = 1; j < ny - 1; j++) for (let i = 1; i < nx - 1; i++) minHd = Math.min(minHd, Hd[j * nx + i]);
-  const ae = Math.round(mat.ae * Dr * 10) / 10, ap = clamp(Math.round(mat.ap * Dr * 5) / 10, 0.5, Dr * 0.6), zl = [];
-  for (let z = -ap; z > minHd + 0.3; z -= ap) zl.push(Math.round(z * 1000) / 1000); zl.push(Math.round(minHd * 1000) / 1000);
-  const keep = p => p.some(q => q[0] > -r + 0.2 && q[0] < W + r - 0.2 && q[1] > -r + 0.2 && q[1] < H + r - 0.2);
-  const lv = [];
-  for (const z of zl) {
-    const m = new Uint8Array(nx * ny);
-    for (let j = 1; j < ny - 1; j++) for (let i = 1; i < nx - 1; i++) if (Hd[j * nx + i] <= z + 1e-6) m[j * nx + i] = 1;
-    const F = edtField(G, m), seq = rings(F, cs, 0, ae, maxF(F), keep, 0.03);
-    if (seq.length) lv.push({ z, F, seq });
-  }
-  const cr = cutData(mat, tr, o.smax), Cb = { r, a: 0, W, H, maxLink: ae * 1.6 + 2 * cs, safe: 5, feed: cr.F, rampF: Math.round(cr.F * 0.6 / 5) * 5, plungeF: Math.round(cr.F * 0.35 / 5) * 5, ang: 3 * Math.PI / 180 };
-  if (lv.length) ops.push({ tool: tr, title: `Zgrubnie warstwami Z: poziomy co ${hn(ap)} mm (${lv.length}), naddatek ${hn(a3)} mm`, first: lv[0].seq[0].p[0], run: P => lv.forEach((L, k) => emitLevel(P, L.seq, L.z, k ? lv[k - 1].z : 0, Object.assign({ F: L.F, thr: cs * 0.5 }, Cb))) });
-  if (o.fin) {
-    const Df = o.ball, R = Df / 2, tb = tool('ball', Df), cb = cutData(mat, tb, o.smax), off = [], Rc = Math.ceil(R / cs);
-    for (let dj = -Rc; dj <= Rc; dj++) for (let di = -Rc; di <= Rc; di++) { const d2 = (di * cs) ** 2 + (dj * cs) ** 2; if (d2 <= R * R) off.push(di, dj, Math.sqrt(R * R - d2)); }
-    const sr = Math.max(1, Math.round(Df * 0.1 / cs)), ci = v => Math.round((v - G.x0) / cs - 0.5);
-    const iA = clamp(ci(0), 0, nx - 1), iB = clamp(ci(W), 0, nx - 1), jA = clamp(ci(0), 0, ny - 1), jB = clamp(Math.round((H - G.y0) / cs - 0.5), 0, ny - 1), lines = [];
-    for (let j = jA, n = 0; j <= jB; j += sr, n++) {
-      const pts = [];
-      for (let i = iA; i <= iB; i++) {
-        let zc = -1e9; for (let k = 0; k < off.length; k += 3) { const ii = i + off[k], jj = j + off[k + 1]; if (ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue; const v = Hm[jj * nx + ii] + off[k + 2]; if (v > zc) zc = v; }
-        pts.push([G.x0 + (i + 0.5) * cs, zc - R]);
-      }
-      const s = dp(pts, 0.01); lines.push({ y: G.y0 + (j + 0.5) * cs, p: n % 2 ? s.reverse() : s });
+  // holes: drilled, so the milling passes see them as filled
+  const holes = findHoles3D(Hm, G, floor, W, H), Hf = Hm.slice();
+  holes.forEach(h => h.cells.forEach(k => { Hf[k] = h.top; }));
+  const inStock = k => { const i = k % nx, j = (k - i) / nx, x = G.x0 + (i + 0.5) * cs, y = G.y0 + (j + 0.5) * cs; return x >= 0 && y >= 0 && x <= W && y <= H; };
+  const border = k => { const i = k % nx, j = (k - i) / nx; return i === 0 || j === 0 || i === nx - 1 || j === ny - 1; };
+  const keep = rr => p => p.some(q => q[0] > -rr + 0.2 && q[0] < W + rr - 0.2 && q[1] > -rr + 0.2 && q[1] < H + rr - 0.2);
+  const per = p => { let s = 0; for (let i = 0; i < p.length; i++) s += dist(p[i], p[(i + 1) % p.length]); return s; };
+  const ctx = (t, rr, ae, thr) => { const c = cutData(mat, t, o.smax); return { r: rr, a: 0, W, H, thr, maxLink: ae * 1.6 + 2 * cs, safe: 5, feed: c.F, rampF: Math.round(c.F * 0.6 / 5) * 5, plungeF: Math.round(c.F * 0.35 / 5) * 5, ang: 3 * Math.PI / 180 }; };
+  // flat areas (floors, shelves): roughing and rest machining stop exactly above them, then a flat mill finishes them
+  const flats = []; {
+    const hist = new Map(); let foot = 0;
+    for (let j = 1; j < ny - 1; j++) for (let i = 1; i < nx - 1; i++) {
+      const k = j * nx + i; if (!inStock(k)) continue; foot++;
+      const h = Hf[k]; if (Math.abs(Hf[k + 1] - h) > 0.01 || Math.abs(Hf[k - 1] - h) > 0.01 || Math.abs(Hf[k + nx] - h) > 0.01 || Math.abs(Hf[k - nx] - h) > 0.01) continue;
+      const key = Math.round(h * 20) / 20; hist.set(key, (hist.get(key) || 0) + 1);
     }
-    ops.push({ tool: tb, title: `Wykańczająco frezem kulowym, równolegle do X, krok ${hn(sr * cs)} mm`, first: [lines[0].p[0][0], lines[0].y], run: P => lines.forEach((L, k) => {
+    const cand = [...hist].filter(([z, n]) => n * cs * cs >= Math.max(25, foot * cs * cs * 0.01)).sort((a, b) => b[1] - a[1]);
+    for (const [z] of cand) if (!flats.some(f => Math.abs(f - z) < 0.3)) flats.push(z);
+    flats.sort((a, b) => b - a);
+  }
+  const fin = o.fin, a3 = fin ? 0.5 : 0.15, a2 = fin ? 0.3 : 0.1;
+  const mergeZ = (base, extra) => { const all = base.concat(extra).sort((a, b) => b - a), out = []; for (const z of all) if (!out.length || out[out.length - 1] - z > 0.25) out.push(Math.round(z * 1000) / 1000); else if (extra.includes(z)) out[out.length - 1] = Math.round(z * 1000) / 1000; return out; };
+  // 1. Z-level roughing with the big flat mill
+  const tr = tool('flat', Dr), ae = Math.round(mat.ae * Dr * 10) / 10, ap = clamp(Math.round(mat.ap * Dr * 5) / 10, 0.5, Dr * 0.6);
+  const Hd = dilateDisk(Hf.map(v => v + a3), nx, ny, r / cs); let minHd = Infinity; for (let k = 0; k < N; k++) if (!border(k)) minHd = Math.min(minHd, Hd[k]);
+  const zs1 = []; for (let z = -ap; z > minHd + 0.3; z -= ap) zs1.push(z);
+  const zl = mergeZ(zs1, flats.map(z => z + a3).filter(z => z < -0.05 && z >= minHd - 1e-6).concat([minHd]));
+  const S1 = new Float32Array(N).fill(0), lv = [];
+  for (const z of zl) {
+    const m = new Uint8Array(N); let any = false;
+    for (let k = 0; k < N; k++) if (!border(k) && Hd[k] <= z + 1e-6) { m[k] = 1; any = true; }
+    if (!any) continue;
+    const F = edtField(G, m), seq = rings(F, cs, 0, ae, maxF(F), keep(r), 0.03);
+    if (seq.length) lv.push({ z, F, seq });
+    const nm = new Uint8Array(N); for (let k = 0; k < N; k++) nm[k] = m[k] ? 0 : 1;
+    const Dn = edtField(G, nm); for (let k = 0; k < N; k++) if ((m[k] || Dn.f[k] <= r - cs) && z < S1[k]) S1[k] = z;
+  }
+  if (lv.length) { const C = ctx(tr, r, ae, cs * 0.5); ops.push({ tool: tr, title: `Zgrubnie warstwami Z: ${pn(lv.length, 'poziom', 'poziomy', 'poziomów')} (co ${hn(ap)} mm + płaskie półki), naddatek ${hn(a3)} mm`, first: lv[0].seq[0].p[0], run: P => lv.forEach((L, k) => emitLevel(P, L.seq, L.z, k ? lv[k - 1].z : 0, Object.assign({ F: L.F }, C))) }); }
+  // 2. rest machining with a smaller flat mill where the big one did not reach (narrow gaps, stair steps)
+  const t2 = tool('flat', Dr2), ae2 = Math.round(mat.ae * Dr2 * 10) / 10, ap2 = clamp(Math.round(mat.ap * Dr2 * 5) / 10, 0.3, Dr2 * 0.5);
+  const Hd2 = dilateDisk(Hf.map(v => v + a2), nx, ny, r2 / cs); let minHd2 = Infinity; for (let k = 0; k < N; k++) if (!border(k)) minHd2 = Math.min(minHd2, Hd2[k]);
+  for (let k = 0; k < N; k++) if (!inStock(k)) S1[k] = -1e9;
+  const zs2 = []; for (let z = -ap2; z > minHd2 + 0.15; z -= ap2) zs2.push(z);
+  const zl2 = mergeZ(zs2, flats.map(z => z + a2).filter(z => z < -0.05 && z >= minHd2 - 1e-6).concat([minHd2]));
+  const lv2 = []; let restVol = 0;
+  for (let k = 0; k < N; k++) if (S1[k] > Hf[k] + a3 + 0.3) restVol += (S1[k] - Hf[k] - a2) * cs * cs;
+  if (restVol > 5) for (const z of zl2) {
+    const rest = new Uint8Array(N); let any = false;
+    for (let k = 0; k < N; k++) if (S1[k] > z + 0.05 && S1[k] > Hf[k] + a3 + 0.3) { rest[k] = 0; any = true; } else rest[k] = 1;
+    if (!any) continue;
+    const Dn = edtField(G, rest), m = new Uint8Array(N); any = false;
+    for (let k = 0; k < N; k++) if (!border(k) && Hd2[k] <= z + 1e-6 && Dn.f[k] <= r2 + 1) { m[k] = 1; any = true; }
+    if (!any) continue;
+    const F = edtField(G, m), seq = rings(F, cs, 0, ae2, maxF(F), p => per(p) > 2, 0.03);
+    if (seq.length) lv2.push({ z, F, seq });
+  }
+  if (lv2.length) { const C = ctx(t2, r2, ae2, cs * 0.5); ops.push({ tool: t2, title: `Doczyszczanie resztek frezem Ø${Dr2}: ${pn(lv2.length, 'poziom', 'poziomy', 'poziomów')} co ${hn(ap2)} mm (tam, gdzie Ø${Dr} nie dosięgnął)`, first: lv2[0].seq[0].p[0], run: P => lv2.forEach((L, k) => emitLevel(P, L.seq, L.z, k ? Math.min(0, lv2[k - 1].z) : 0, Object.assign({ F: L.F }, C))) }); }
+  // 3. flat areas finished with the flat end mill at exact height (floor + wall foot)
+  if (fin && flats.length) {
+    const Hd0 = dilateDisk(Hf, nx, ny, r2 / cs), lf = [];
+    for (const zf of flats) {
+      const near = new Uint8Array(N); let any = false;
+      for (let k = 0; k < N; k++) if (inStock(k) && Math.abs(Hf[k] - zf) < 0.03) { near[k] = 0; any = true; } else near[k] = 1;
+      if (!any) continue;
+      const Dn = edtField(G, near), m = new Uint8Array(N); any = false;
+      for (let k = 0; k < N; k++) if (!border(k) && Hd0[k] <= zf + 0.005 && Dn.f[k] <= r2) { m[k] = 1; any = true; }
+      if (!any) continue;
+      const F = edtField(G, m), seq = rings(F, cs, 0, Math.round(Dr2 * 0.6 * 10) / 10, maxF(F), p => per(p) > 2, 0.01);
+      if (seq.length) lf.push({ z: zf, F, seq });
+    }
+    if (lf.length) { const c = cutData(mat, t2, o.smax), C = Object.assign(ctx(t2, r2, Dr2 * 0.6, cs * 0.5), { feed: Math.round(c.F * 0.8 / 5) * 5 }); ops.push({ tool: t2, title: `Wykańczanie płaskich powierzchni frezem Ø${Dr2}: ${pn(lf.length, 'poziom', 'poziomy', 'poziomów')} (${lf.map(L => 'Z' + fmt(L.z)).join(', ')})`, first: lf[0].seq[0].p[0], run: P => lf.forEach(L => emitLevel(P, L.seq, L.z, L.z + a2, Object.assign({ F: L.F }, C))) }); }
+  }
+  // 4. holes
+  if (holes.length) holeOps(holes.map(h => ({ pts: [h.c], d: h.d, ztop: h.top, zbot: Math.max(floor - 0.3 * h.d - 0.5, -T), depth: h.top - floor, mode: 'drill' })), o, stock, tool, ops, p => p);
+  // 5-6. finishing with the ball mill: parallel passes (shallow areas) and Z-level passes (steep walls)
+  if (fin) {
+    const tb = tool('ball', Df), cb = cutData(mat, tb, o.smax), Zb = dropBall(Hf, G, R);
+    const sr = Math.max(1, Math.round(Df * 0.1 / cs)), ci = v => Math.round((v - G.x0) / cs - 0.5);
+    const iA = clamp(ci(0), 0, nx - 1), iB = clamp(ci(W), 0, nx - 1), jA = clamp(ci(0), 0, ny - 1), jB = clamp(ci(H), 0, ny - 1), lines = [];
+    for (let j = jA, n = 0; j <= jB; j += sr, n++) { const pts = []; for (let i = iA; i <= iB; i++) pts.push([G.x0 + (i + 0.5) * cs, Zb[j * nx + i]]); const s = dp(pts, 0.01); lines.push({ y: G.y0 + (j + 0.5) * cs, p: n % 2 ? s.reverse() : s }); }
+    ops.push({ tool: tb, title: `Wykańczanie równoległe frezem kulowym Ø${Df}, krok ${hn(sr * cs)} mm`, first: [lines[0].p[0][0], lines[0].y], run: P => lines.forEach((L, k) => {
       if (!k) { P.up(5); P.mv(0, L.p[0][0], L.y); P.mv(0, null, null, 1); P.mv(1, null, null, L.p[0][1], Math.round(cb.F * 0.35 / 5) * 5); }
       else P.mv(1, L.p[0][0], L.y, L.p[0][1], cb.F);
       L.p.forEach(q => P.mv(1, q[0], L.y, q[1], cb.F));
     }) });
+    let zTop = -1e9; for (let k = 0; k < N; k++) if (inStock(k) && Zb[k] > zTop) zTop = Zb[k];
+    const dz = Math.max(0.2, Math.round(Df * 0.08 * 100) / 100), F = Object.assign({ f: new Float32Array(N) }, G), wl = [];
+    for (let z = zTop - dz; z > floor + 0.1; z -= dz) {
+      for (let k = 0; k < N; k++) F.f[k] = z - Zb[k];
+      const ls = isoLoops(F, 0).filter(p => p.length > 4 && keep(R)(p) && per(p) > 3).map(p => arcFit(p, true, 0.01));
+      if (ls.length) wl.push({ z, ls });
+    }
+    const safeAt = (x, y, z) => { const i = Math.floor((x - G.x0) / cs), j = Math.floor((y - G.y0) / cs); return i < 0 || j < 0 || i >= nx || j >= ny || Zb[j * nx + i] <= z + 0.02; };
+    if (wl.length) ops.push({ tool: tb, title: `Wykańczanie ścian warstwami Z frezem kulowym Ø${Df}: ${pn(wl.length, 'poziom', 'poziomy', 'poziomów')} co ${hn(dz)} mm`, first: wl[0].ls[0].start, run: P => wl.forEach(L => {
+      const left = L.ls.slice();
+      while (left.length) {
+        let bi = 0, bd = Infinity; left.forEach((l, i) => { const d = Math.hypot(l.start[0] - P.cur.x, l.start[1] - P.cur.y); if (d < bd) { bd = d; bi = i; } });
+        const l = left.splice(bi, 1)[0], s = l.start; let ok = bd < 4 * dz + 3 && P.cur.z < 2;
+        for (let q = 0; ok && q <= 10; q++) ok = safeAt(lerp(P.cur.x, s[0], q / 10), lerp(P.cur.y, s[1], q / 10), L.z);
+        if (ok) P.mv(1, s[0], s[1], L.z, cb.F);
+        else { P.up(5); P.mv(0, s[0], s[1]); P.mv(0, null, null, Math.max(L.z + 1, 1)); P.mv(1, null, null, L.z, Math.round(cb.F * 0.35 / 5) * 5); }
+        for (const el of l.el) { if (el.cx != null) P.mv(el.cw ? 2 : 3, el.x, el.y, null, cb.F, [el.cx, el.cy]); else P.mv(1, el.x, el.y, null, cb.F); }
+      }
+    }) });
   }
-  if (bz > Dr * 3) warns.push(`Model ma ${pl(bz, 1)} mm wysokości: frez Ø${Dr} musi mieć długość roboczą co najmniej ${Math.ceil(bz + 5)} mm.`);
-  warns.push('Obróbka 3D z jednej strony (od góry): podcięć i ścian pionowych pod nawisami frez nie dosięgnie.');
-  const head = [`MATERIAL: ${mat.k}`, `POLFABRYKAT: X${fmt(W)} Y${fmt(H)} Z${fmt(T)}`, 'ZERO G54: LEWY DOLNY ROG POLFABRYKATU, GORA (Z0)', `MODEL: ${fmt(bw)} X ${fmt(bh)} X ${fmt(bz)}, NADDATEK GORA ${fmt(o.top)}, PODSTAWA ${fmt(o.base)}`];
+  if (bz > Dr * 3) warns.push(`Model ma ${pl(bz, 1)} mm wysokości: frez Ø${Dr} musi mieć długość roboczą co najmniej ${Math.ceil(bz + 5)} mm, a Ø${Dr2} wysięg co najmniej ${Math.ceil(bz + 3)} mm.`);
+  if (holes.length) warns.push(`Rozpoznano ${holes.length} ${holes.length === 1 ? 'otwór przelotowy' : 'otwory przelotowe'} (${[...new Set(holes.map(h => 'Ø' + hn(h.d)))].join(', ')}): będą wiercone zamiast frezowane.`);
+  warns.push('Obróbka 3D z jednej strony (od góry): podcięć i ścian pod nawisami frez nie dosięgnie. Spód detalu obrabia się w drugim zamocowaniu.');
+  const head = [`MATERIAL: ${mat.k}`, `POLFABRYKAT: X${fmt(W)} Y${fmt(H)} Z${fmt(T)}`, 'ZERO G54: LEWY DOLNY ROG POLFABRYKATU, GORA Z0', `MODEL: ${fmt(bw)} X ${fmt(bh)} X ${fmt(bz)}, NADDATEK GORA ${fmt(o.top)}, PODSTAWA ${fmt(o.base)}`];
   return { code: assemble(o, head, ops, tools, mat), tools: tools.filter(t => ops.some(op => op.tool === t)), ops, warns, stock, view: { kind: '3d', G, Hm, floor } };
 }
 
@@ -3284,6 +3437,7 @@ function sampleDXF(kind) {
     lw('WYSPA', rr(30, 34, 44, 46, 3), true);
     E.push(0, 'CIRCLE', 8, 'KIESZEN_8', 10, 92, 20, 40, 30, 0, 40, 15);
     for (const [x, y] of [[10, 10], [110, 10], [10, 70], [110, 70]]) E.push(0, 'CIRCLE', 8, 'OTWORY', 10, x, 20, y, 30, 0, 40, 3.3);
+    for (const x of [30, 46]) E.push(0, 'CIRCLE', 8, 'GWINT_M6', 10, x, 20, 70, 30, 0, 40, 2.5);
     lw('GRAWER_0.5', [[72, 70], [80, 63], [88, 70], [96, 63], [104, 70]], false);
   } else {
     lw('KONTUR', [[0, 0], [0, 15], [18, 15], [23, 12], [30, 12], [30, 10.5], [33, 10.5], [33, 12], [38, 12], [38, 9], [55, 9, -t], [60, 4], [60, 0]], true);
@@ -3291,8 +3445,9 @@ function sampleDXF(kind) {
   return `0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n4\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n${E.join('\n')}\n0\nENDSEC\n0\nEOF\n`;
 }
 function sampleSTL() { // closed solid: block 80 x 60 with a bowl, a smooth bump and rounded top edges
-  const W = 80, H = 60, nx = 80, ny = 60, out = [];
+  const W = 80, H = 60, nx = 160, ny = 120, out = [];
   const f = (x, y) => {
+    if (Math.hypot(x - 8, y - 8) < 4.3 || Math.hypot(x - 8, y - 52) < 4.3) return 0;
     let z = 16; const dx = (x - 54) / 17, dy = (y - 30) / 20, q = dx * dx + dy * dy;
     if (q < 1) z -= 7 * Math.sqrt(1 - q);
     z += 5 * Math.exp(-((x - 20) ** 2 + (y - 30) ** 2) / 80);
@@ -3338,6 +3493,7 @@ widget('generator', {
       else { const v = +e.target.value; if (v > 0) { f.depth = v; if (f.kind === 'hole') f.through = false; } }
       this.regen();
     });
+    $('#genOps').addEventListener('click', e => { const b = e.target.closest('.gen-op'); if (!b || b.disabled) return; const k = +b.dataset.k; this.sel = this.sel === k ? null : k; $$('#genOps .gen-op').forEach(x => x.classList.toggle('on', +x.dataset.k === this.sel)); this.draw(); if (this.sel != null && innerWidth < 980) $('#genCv').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
     $('#genSim').onclick = () => this.toSim(); $('#genDl').onclick = () => this.download(); $('#genCopy').onclick = () => this.copy();
   },
   info(msg, bad) { const el = $('#genInfo'); el.innerHTML = msg; el.className = 'gen-info' + (bad ? ' bad' : ''); },
@@ -3368,7 +3524,7 @@ widget('generator', {
   sample(k) {
     if (k === 'plate') { $('#genMach').value = 'mill'; $('#genThk').value = 20; this.text(sampleDXF('plate'), 'plytka.dxf'); }
     else if (k === 'shaft') { $('#genMach').value = 'lathe'; this.text(sampleDXF('shaft'), 'walek.dxf'); }
-    else { GEN.M = { kind: '3d', name: 'forma.stl', tris: sampleSTL() }; $('#genMach').value = 'mill'; this.info('Wczytano przykład <b>forma.stl</b>: blok 80 × 60 mm z miską, wypukłością i zaokrąglonymi krawędziami.'); this.show(); }
+    else { GEN.M = { kind: '3d', name: 'forma.stl', tris: sampleSTL() }; $('#genMach').value = 'mill'; this.info('Wczytano przykład <b>forma.stl</b>: blok 80 × 60 mm z miską, wypukłością, dwoma otworami przelotowymi i zaokrąglonymi krawędziami.'); this.show(); }
   },
   show() { $('#genWork').hidden = false; this.modeUI(); this.regen(); },
   modeUI() {
@@ -3396,7 +3552,7 @@ widget('generator', {
       if (M.kind === '2d') M.feats.forEach(f => { if (f.kind === 'hole' && f.through) f.depth = o.thk; });
       R = o.mach === 'lathe' ? genLathe(M, o) : M.kind === '3d' ? genMill3D(M, o) : genMill2D(M, o);
       if (!R.lathe) {
-        R.tools.forEach(t => { TOOLS[t.T] = { d: t.d, type: t.type, name: toolName(t) }; });
+        R.tools.forEach(t => { TOOLS[t.T] = { d: t.d, type: t.type === 'tap' ? 'drill' : t.type, name: toolName(t) }; });
         const gt = store.get('gentools', {}); R.tools.forEach(t => { gt[t.T] = TOOLS[t.T]; }); store.set('gentools', gt);
         R.sim = interpret(R.code, R.stock); R.time = R.sim.T;
       }
@@ -3411,7 +3567,7 @@ widget('generator', {
       <td><input type="checkbox" ${f.on ? 'checked' : ''} aria-label="Obrabiaj: ${esc(f.label)}"></td>
       <td><b>${esc(f.label)}</b><br><small style="color:var(--muted)">${K[f.kind]}</small></td><td>${esc(f.dims)}</td>
       <td><input type="number" min="0.1" step="0.5" value="${+f.depth.toFixed(2)}" aria-label="Głębokość: ${esc(f.label)}">${f.kind === 'hole' && f.through ? '<br><small style="color:var(--muted)">przelotowe</small>' : ''}</td>
-      <td>${f.kind === 'hole' ? `<select aria-label="Sposób obróbki: ${esc(f.label)}"><option value="drill" ${f.mode === 'drill' ? 'selected' : ''}>wiercenie</option><option value="mill" ${f.mode === 'mill' ? 'selected' : ''}>frezowanie</option></select>` : f.kind === 'profile' ? 'frezowanie po obwodzie' : f.kind === 'pocket' ? 'kieszeń: zgrubnie + na gotowo' : 'frez Ø3 po linii'}</td></tr>`).join('') : '<tr><td colspan="5">Nie rozpoznano cech.</td></tr>') + '</tbody>';
+      <td>${f.kind === 'hole' ? `<select aria-label="Sposób obróbki: ${esc(f.label)}"><option value="drill" ${f.mode === 'drill' ? 'selected' : ''}>wiercenie</option>${f.tap ? `<option value="tap" ${f.mode === 'tap' ? 'selected' : ''}>wiercenie + gwint M${hn(f.tap[1])}</option>` : ''}<option value="mill" ${f.mode === 'mill' ? 'selected' : ''}>frezowanie</option></select>` : f.kind === 'profile' ? 'frezowanie po obwodzie' : f.kind === 'pocket' ? 'kieszeń: zgrubnie + na gotowo' : 'frez Ø3 po linii'}</td></tr>`).join('') : '<tr><td colspan="5">Nie rozpoznano cech.</td></tr>') + '</tbody>';
   },
   render() {
     const R = GEN.res, o = this.opts(); this.renderFeat();
@@ -3423,9 +3579,11 @@ widget('generator', {
     else ms.push({ t: 'info', m: 'Programu tokarskiego nie da się uruchomić w symulatorze frezarki. Przejścia widać na podglądzie obok.' });
     R.warns.forEach(w => ms.push({ t: 'warn', m: w }));
     $('#genMsgs').innerHTML = ms.map(x => `<li class="${x.t}"><span class="k">${x.t === 'okm' ? 'OK' : K[x.t]}</span><span>${esc(x.m)}</span></li>`).join('');
-    $('#genOps').innerHTML = R.ops.map(op => `<li>${op.tool ? `<code>T${op.tool.T}</code> ` : ''}${esc(op.title)}</li>`).join('');
+    this.sel = null;
+    $('#genOps').innerHTML = R.ops.map((op, i) => `<li><button type="button" class="gen-op" data-k="${i}" ${R.lathe ? 'disabled' : ''}>${op.tool ? `<code>T${op.tool.T}</code> ` : ''}${esc(op.title)}</button></li>`).join('');
+    $('#genOpsHint').hidden = !!R.lathe;
     $('#genTools').innerHTML = '<thead><tr><th>T</th><th>Narzędzie</th><th>Obroty S</th><th>Posuw F</th><th>Dane</th></tr></thead><tbody>' + R.tools.map(t => R.lathe ? `<tr><td><code>T${t.T}</code></td><td>${t.name}</td><td>${t.S} m/min</td><td>${t.F}</td><td>G96, limit G50</td></tr>` :
-      `<tr><td><code>T${t.T}</code></td><td>${toolName(t)}</td><td class="num">${pl(t.S)}</td><td class="num">${pl(t.F)} mm/min</td><td class="num">V<sub>c</sub> ${t.vc} m/min · ${t.type === 'drill' ? 'f ' + pl(t.f, 3) + ' mm/obr' : 'f<sub>z</sub> ' + pl(t.fz, 3) + ' mm'}</td></tr>`).join('') + '</tbody>';
+      `<tr><td><code>T${t.T}</code></td><td>${toolName(t)}</td><td class="num">${pl(t.S)}</td><td class="num">${pl(t.F)} mm/min</td><td class="num">V<sub>c</sub> ${t.vc} m/min · ${t.type === 'drill' || t.type === 'tap' ? 'f ' + pl(t.f, 3) + ' mm/obr' : 'f<sub>z</sub> ' + pl(t.fz, 3) + ' mm'}</td></tr>`).join('') + '</tbody>';
     const MAXL = 3000;
     $('#genCode').innerHTML = lines.slice(0, MAXL).map(l => `<span class="ln">${hl(l) || ' '}</span>`).join('') + (lines.length > MAXL ? `<span class="ln t-c">(… jeszcze ${pl(lines.length - MAXL)} linii: pobierz plik albo otwórz w symulatorze)</span>` : '');
     $('#genSim').disabled = !!R.lathe;
@@ -3470,7 +3628,14 @@ widget('generator', {
       x.setLineDash([3, 3]); for (const P of V.open) { x.beginPath(); P.forEach((p, i) => i ? x.lineTo(v.X(p[0]), v.Y(p[1])) : x.moveTo(v.X(p[0]), v.Y(p[1]))); x.stroke(); } x.setLineDash([]);
     }
     x.strokeStyle = tok('--stock-edge'); x.lineWidth = 1; x.strokeRect(v.X(0), v.Y(S.H), S.W * v.s, S.H * v.s);
-    if (R.sim) strokePath(x, v, R.sim.P, 1, R.sim.P.length - 1, V.kind === '3d' ? 0.55 : 0.85);
+    if (R.sim) {
+      const SP = R.sim.P, op = this.sel != null ? R.ops[this.sel] : null;
+      if (op) {
+        let i0 = SP.findIndex(q => q.line >= op.l0), i1 = i0; while (i1 + 1 < SP.length && SP[i1 + 1].line <= op.l1) i1++;
+        strokePath(x, v, SP, 1, SP.length - 1, 0.1, true); if (i0 > 0) strokePath(x, v, SP, i0 - 1, i1, 0.95);
+        text(x, op.title.length > w / 7.5 ? op.title.slice(0, Math.floor(w / 7.5) - 1) + '…' : op.title, 10, 18, ink, 12, 'left', 'alphabetic', 600);
+      } else strokePath(x, v, SP, 1, SP.length - 1, V.kind === '3d' ? 0.35 : 0.75, true);
+    }
     arrow(x, v.X(0), v.Y(0), v.X(14), v.Y(0), '#d33a2c', 1.5, 6); arrow(x, v.X(0), v.Y(0), v.X(0), v.Y(14), '#2e9d4f', 1.5, 6);
     text(x, 'G54', v.X(0) + 4, v.Y(0) + 14, mut, 11);
   },
