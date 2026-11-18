@@ -15,6 +15,11 @@ Interaktywny kurs programowania obrabiarek CNC (frezowanie i toczenie, składnia
 - ściąga kodów G i M
 - symulator G-code: edytor, wykrywanie błędów i kolizji, podgląd 3D z usuwaniem materiału
 
+## Instalacja
+
+- **Jako aplikacja (PC i telefon):** otwórz https://baniak88.github.io/programowanie-cnc/ w Chrome lub Edge i kliknij „Zainstaluj” w pasku adresu (na Androidzie: menu → „Zainstaluj aplikację”, na iPhonie: Udostępnij → „Do ekranu początkowego”). Aplikacja działa potem offline i sama się aktualizuje, a na komputerze otwiera pliki .DXF i .STL.
+- **Paczka offline:** pobierz [`dist/warsztat-gcode.zip`](https://github.com/Baniak88/programowanie-cnc/raw/main/dist/warsztat-gcode.zip), rozpakuj i otwórz `warsztat-gcode.html`. Instrukcja jest w `INSTALACJA.txt`.
+
 ## Uruchomienie bez instalacji
 
 `index.html` to jeden samodzielny plik: three.js jest wbudowany, więc kurs działa po otwarciu w przeglądarce, także bez internetu. Pobierz go ([link do pobrania](https://github.com/Baniak88/programowanie-cnc/raw/main/index.html)) i otwórz w Chrome, Firefoksie lub Edge, na komputerze albo telefonie. Bez internetu zmieniają się tylko czcionki na systemowe.
@@ -23,7 +28,7 @@ Bez WebGL symulator przechodzi na widok z góry.
 
 ## Edycja
 
-Źródłem jest `kurs.html` (treść strony bez nagłówka dokumentu). Po zmianach uruchom `./build.sh`, który generuje `index.html` i wbudowuje w niego `vendor/three.min.js` (three.js r128, licencja MIT w `vendor/THREE-LICENSE.txt`).
+Źródłem jest `kurs.html` (treść strony bez nagłówka dokumentu). Po zmianach uruchom `./build.sh`, który generuje `index.html` (z wbudowanym `vendor/three.min.js`) oraz paczkę `dist/warsztat-gcode.zip`. Pliki aplikacji instalowalnej: `manifest.webmanifest`, `sw.js`, `icons/` (three.js r128, licencja MIT w `vendor/THREE-LICENSE.txt`).
 
 ## Publikacja
 

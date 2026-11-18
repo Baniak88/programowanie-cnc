@@ -3742,6 +3742,9 @@ $('#testNew').onclick = newTest;
 $('#cheatQ').addEventListener('input', renderCheat); renderCheat();
 $('#dictQ').addEventListener('input', renderDict); renderDict();
 window.addEventListener('hashchange', show);
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+// installed app opened with a DXF/STL file (file_handlers)
+if ('launchQueue' in window) launchQueue.setConsumer(p => { if (p.files && p.files[0]) p.files[0].getFile().then(f => { location.hash = '#generator'; setTimeout(() => { const w = (WID.generator || [])[0]; if (w && w.ready) w.file(f); }, 300); }); });
 show();
 requestAnimationFrame(loop);
 let rz = 0; new ResizeObserver(() => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { for (const w of activeW()) { if (w.V) w.V.resize(); } redraw(); }); }).observe($('#main'));

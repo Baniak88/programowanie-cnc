@@ -1,0 +1,26 @@
+WARSZTAT G-CODE - kurs CNC, symulator i generator programow (CAM)
+=================================================================
+
+WERSJA OFFLINE (bez instalacji, takze bez internetu)
+1. Rozpakuj archiwum warsztat-gcode.zip w dowolnym folderze.
+2. Otworz plik warsztat-gcode.html w Chrome, Edge albo Firefoksie
+   (dwuklik albo przeciagnij plik do okna przegladarki).
+3. Dodaj strone do zakladek. Postep kursu zapisuje sie w przegladarce.
+
+INSTALACJA JAKO APLIKACJA (ikona na pulpicie / ekranie telefonu)
+Wymaga otwarcia strony z adresu internetowego (GitHub Pages):
+  https://baniak88.github.io/programowanie-cnc/
+- Windows / macOS / Linux, Chrome lub Edge: ikona "Zainstaluj" na koncu
+  paska adresu albo menu (trzy kropki) -> "Zainstaluj Warsztat G-code".
+- Android, Chrome: menu -> "Dodaj do ekranu glownego" / "Zainstaluj aplikacje".
+- iPhone / iPad, Safari: przycisk Udostepnij -> "Do ekranu poczatkowego".
+Po pierwszym uruchomieniu aplikacja dziala tez bez internetu, a po
+polaczeniu sama pobiera aktualizacje. W wersji zainstalowanej na
+komputerze pliki .DXF i .STL mozna otwierac prosto w aplikacji.
+
+GENERATOR CAM
+Zakladka "Generator CAM": wczytaj DXF (frezowanie 2D albo toczenie)
+lub STL (frezowanie 3D). Program G-code mozna pobrac jako plik .NC
+i przegrac na maszyne (USB, karta, DNC). Kazdy program przed
+uruchomieniem na maszynie sprawdz w symulatorze i wykonaj pierwsza
+sztuke na zmniejszonym posuwie.

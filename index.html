@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#131B23">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -3758,6 +3763,9 @@ $('#testNew').onclick = newTest;
 $('#cheatQ').addEventListener('input', renderCheat); renderCheat();
 $('#dictQ').addEventListener('input', renderDict); renderDict();
 window.addEventListener('hashchange', show);
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+// installed app opened with a DXF/STL file (file_handlers)
+if ('launchQueue' in window) launchQueue.setConsumer(p => { if (p.files && p.files[0]) p.files[0].getFile().then(f => { location.hash = '#generator'; setTimeout(() => { const w = (WID.generator || [])[0]; if (w && w.ready) w.file(f); }, 300); }); });
 show();
 requestAnimationFrame(loop);
 let rz = 0; new ResizeObserver(() => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { for (const w of activeW()) { if (w.V) w.V.resize(); } redraw(); }); }).observe($('#main'));
