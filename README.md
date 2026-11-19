@@ -12,6 +12,7 @@ Interaktywny kurs programowania obrabiarek CNC (frezowanie i toczenie, składnia
 - symulator 3- i 5-osiowy: kolizje z materiałem i mocowaniem (imadło, dociski boczne), panel ustawienia detalu z offsetem G54 i rysunkiem mocowania, licznik pozycji G54 i maszynowej, widoki ISO / góra / przód / bok, płaszczyzna pochylona G68.2 / G53.1 / G69 i osie A/C
 - frezarka 5-osiowa: strona kursu o obróbce 3+2 i TCPM, generator wierci otwory boczne wykryte w modelu STL
 - model CAD 1:1: kreator „model z rysunku technicznego” (wymiary przepisane z rysunku → dokładny DXF, bryła 3D i program), podgląd bryły, eksport STL i DXF; w symulatorze bryła docelowa i porównanie wykonanego detalu z modelem (zgodne / naddatek / podcięcie, tolerancja, najgorsze miejsce), siatka symulacji do wyboru
+- zdjęcie rysunku → model i program: w kreatorze przycisk „Zdjęcie rysunku” wysyła zdjęcie do Claude (Claude Opus 5.5, odczyt wymiarów z liczb na rysunku, odpowiedź w formacie JSON), który wypełnia kreator, łącznie z dowolnym obrysem z punktów i łuków; przed utworzeniem programu trzeba potwierdzić, że wartości zgadzają się z rysunkiem. Wymaga internetu i własnego klucza API Anthropic (zapisywanego tylko na urządzeniu)
 - praca przy maszynie: tryby sterowania, ustawienie zera i narzędzi krok po kroku, korektory, alarmy, typowe błędy, BHP
 - tabele warsztatowe: parametry skrawania, wiercenie, gwinty i otwory pod śruby, pasowania, chropowatość, kalkulator S i F
 - słowniczek pojęć
@@ -42,3 +43,7 @@ GitHub Pages: Settings → Pages → Deploy from a branch → `main` / `(root)`.
 ## Aplikacja Android
 
 Projekt w `android/` to WebView, który wyświetla `index.html` z zasobów aplikacji (bez internetu). Budowanie lokalne: `./build.sh`, skopiuj `index.html` do `android/app/src/main/assets/`, potem w `android/` uruchom `gradle assembleRelease` (wymaga Android SDK). Klucz podpisu z `android/debug.keystore` jest publiczny i służy tylko do tego, żeby kolejne wersje instalowały się jako aktualizacja; do publikacji w sklepie podaj własny klucz w sekretach (`KS_FILE`, `KS_PASS`, `KS_ALIAS`, `KS_KEY_PASS`).
+
+## Moduł API Claude
+
+`vendor/anthropic-sdk.min.js` to oficjalne SDK `@anthropic-ai/sdk` 1.4.0 (licencja w `vendor/ANTHROPIC-SDK-LICENSE.txt`) spakowane do jednego pliku, wbudowywane przez `build.sh` tak jak three.js. Odtworzenie: `npm i @anthropic-ai/sdk@1.4.0 esbuild`, plik `entry.mjs` z linią `export { default } from '@anthropic-ai/sdk';`, potem `esbuild entry.mjs --bundle --minify --format=iife --global-name=AnthropicSDK --platform=browser --outfile=vendor/anthropic-sdk.min.js`.
