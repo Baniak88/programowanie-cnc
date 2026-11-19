@@ -8,6 +8,8 @@ cd "$(dirname "$0")"
     case "$line" in
       *'<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/'*)
         printf '<script>\n'; cat vendor/three.min.js; printf '\n</script>\n' ;;
+      *'<script src="vendor/anthropic-sdk.min.js"></script>'*)
+        printf '<script>\n'; cat vendor/anthropic-sdk.min.js; printf '\n</script>\n' ;;
       *) printf '%s\n' "$line" ;;
     esac
   done < kurs.html

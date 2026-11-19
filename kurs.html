@@ -248,9 +248,21 @@ ol.check li:has(input:checked) span{color:var(--muted)}
 .dict dd{margin:.25rem 0 0;font-size:.92rem;color:var(--muted)}
 .tools-cards .card b{font-size:1.15rem}
 
+/* photo of a drawing */
+.wz-ai{border:1px solid var(--accent);border-radius:10px;padding:.7rem .9rem;margin:.6rem 0;background:color-mix(in srgb,var(--accent) 6%,var(--panel))}
+.wz-ai #aiKey{font:500 .9rem var(--f-mono);padding:.42rem .5rem;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);min-width:0;flex:1 1 220px}
+.wz-key{margin-top:.5rem}.wz-key summary{cursor:pointer;font:600 .82rem var(--f-mono)}
+.btn.busy{opacity:.6;pointer-events:none}.btn.busy::after{content:"…"}
+.wz-ai-res{border:1px solid var(--warn);border-radius:10px;padding:.7rem .9rem;margin:.6rem 0;background:color-mix(in srgb,var(--warn) 7%,var(--panel))}
+.wz-ai-grid{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:14px}
+.wz-ai-grid img{width:100%;border-radius:6px;border:1px solid var(--line)}
+@media (max-width:640px){.wz-ai-grid{grid-template-columns:1fr}}
+.wz-ok{margin:.6rem 0;font-weight:600}
+.wz-src{font:500 .78rem var(--f-mono);color:var(--muted);white-space:normal!important;min-width:12em}
+#wzPts input[type=number]{width:6em}
 /* CAD model, wizard, comparison */
 .gen-wiz{margin-top:12px}.gen-wiz summary{font-size:.95rem}
-#wzTbl input[type=number]{width:5.6em}#wzTbl select{max-width:13em}#wzTbl td{white-space:nowrap}
+#wzTbl input[type=number]{width:6.8em}#wzTbl select{max-width:13em}#wzTbl td{white-space:nowrap}
 .gen-pv{margin-bottom:8px}
 .gen-vp canvas{position:absolute;inset:0;width:100%;height:100%}
 .sim-model{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:8px;padding:.5rem .7rem;border:1px solid #2e9d4f;border-radius:8px;background:color-mix(in srgb,#2e9d4f 8%,var(--panel));font-size:.88rem}
@@ -904,13 +916,29 @@ ol.check li:has(input:checked) span{color:var(--muted)}
   </div>
   <details class="box gen-wiz" id="genWizBox">
     <summary>Nie masz pliku? Kreator: model z rysunku technicznego (wymiary 1:1)</summary>
+    <div class="wz-ai">
+      <b>Zdjęcie rysunku → model i program</b>
+      <p class="gen-hint">Zrób zdjęcie rysunku technicznego: cały rzut, prosto z góry, ostro, bez odblasków. Claude odczyta wymiary z liczb na rysunku (nie z pikseli zdjęcia) i wypełni poniższy kreator. Każdą wartość sprawdzasz przed utworzeniem programu. Wymaga internetu i własnego klucza API Anthropic; zdjęcie jest wysyłane do Anthropic.</p>
+      <div class="row"><label class="btn primary" id="wzPhotoBtn">Zdjęcie rysunku<input type="file" id="wzPhoto" accept="image/*" capture="environment" hidden></label><label class="btn">Obraz z galerii / pliku<input type="file" id="wzPhoto2" accept="image/*" hidden></label></div>
+      <ul class="msgs" id="wzAiStatus"></ul>
+      <details class="wz-key" id="wzKeyBox"><summary>Klucz API Anthropic</summary>
+        <div class="row"><input type="password" id="aiKey" placeholder="sk-ant-…" autocomplete="off" aria-label="Klucz API Anthropic"><button class="btn" type="button" id="aiKeySave">Zapisz</button><button class="btn" type="button" id="aiKeyDel">Usuń</button><span class="gen-hint" id="aiKeyMsg"></span></div>
+        <p class="gen-hint">Klucz utworzysz w Claude Console (platform.claude.com → API keys). Zostaje tylko w tej przeglądarce lub aplikacji i jest wysyłany wyłącznie do API Anthropic. Jeden odczyt to jedno zapytanie do modelu Claude Opus 5.5, zwykle od kilkunastu do kilkudziesięciu centów (USD), płatne z Twojego konta API. Nie zapisuj klucza na cudzym urządzeniu.</p>
+      </details>
+    </div>
+    <div id="wzAiBox" class="wz-ai-res" hidden></div>
     <p class="gen-hint">Przepisz wymiary z rysunku. Położenie X, Y elementów (ich środków) mierz od <b>lewego dolnego rogu</b> detalu, tak jak wymiaruje się od baz. Model i program powstają wprost z tych liczb, bez skalowania: krawędzie proste są dokładne, łuki odwzorowane z dokładnością 0,004 mm.</p>
     <div class="gen-ctl">
-      <label class="ctl">Kształt detalu<select id="wzShape"><option value="rect">Prostokąt / płyta</option><option value="round">Krążek</option></select></label>
+      <label class="ctl">Kształt detalu<select id="wzShape"><option value="rect">Prostokąt / płyta</option><option value="round">Krążek</option><option value="poly">Dowolny obrys (punkty i łuki)</option></select></label>
       <label class="ctl"><span id="wzLl">Długość X [mm]</span><input type="number" id="wzL" value="120" min="1" step="0.001"></label>
       <label class="ctl" data-wz="rect">Szerokość Y [mm]<input type="number" id="wzW" value="80" min="1" step="0.001"></label>
       <label class="ctl" data-wz="rect">Promień naroży R [mm]<input type="number" id="wzR" value="8" min="0" step="0.001"></label>
       <label class="ctl">Grubość detalu [mm]<input type="number" id="wzT" value="15" min="0.5" step="0.001"></label>
+    </div>
+    <div id="wzPtsBox" hidden>
+      <p class="gen-hint">Obrys: punkty po kolei wokół detalu (od lewego dolnego rogu). Dla każdego odcinka do następnego punktu wybierz: prosto, łuk wypukły (zaokrąglenie na zewnątrz) albo wklęsły (wcięcie w detal) z promieniem. Punkty łuków stawiaj w miejscach styku.</p>
+      <div class="tbl"><table id="wzPts"></table></div>
+      <div class="row"><button class="btn" id="wzPtAdd" type="button">+ Dodaj punkt obrysu</button></div>
     </div>
     <div class="tbl"><table id="wzTbl"></table></div>
     <div class="row"><button class="btn" id="wzAdd" type="button">+ Dodaj element</button><button class="btn primary" id="wzGo" type="button">Utwórz model i program</button><button class="btn" id="wzDxf" type="button">Pobierz DXF</button></div>
@@ -1275,6 +1303,7 @@ ol.check li:has(input:checked) span{color:var(--muted)}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="vendor/anthropic-sdk.min.js"></script>
 <script>
 (() => {
 'use strict';
@@ -3935,13 +3964,27 @@ function saveBlob(blob, name) {
   }
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
 // drawing wizard: dimensions typed from a paper drawing -> exact DXF (the whole pipeline then works on vector data)
+// outline of the wizard part as polyline vertices [x, y, bulge], counter-clockwise; arcs: convex = rounded outwards, concave = cut into the part
+function wizardOutline(w) {
+  const t = Math.tan(Math.PI / 8);
+  if (w.shape === 'rect') { const R = w.R || 0, L = w.L, W = w.W; return R > 1e-9 ? [[R, 0], [L - R, 0, t], [L, R], [L, W - R, t], [L - R, W], [R, W, t], [0, W - R], [0, R, t]] : [[0, 0], [L, 0], [L, W], [0, W]]; }
+  if (w.shape !== 'poly') return null;
+  let P = (w.pts || []).map(p => ({ x: +p.x, y: +p.y, arc: p.arc || 'none', r: +p.r || 0 }));
+  if (P.length < 3) return [];
+  if (pArea(P.map(p => [p.x, p.y])) < 0) { const n = P.length, Q = P.slice().reverse().map(p => ({ x: p.x, y: p.y, arc: 'none', r: 0 })); P.forEach((p, k) => { const j = ((n - 2 - k) % n + n) % n; Q[j].arc = p.arc; Q[j].r = p.r; }); P = Q; }
+  return P.map((p, i) => {
+    const q = P[(i + 1) % P.length], c = Math.hypot(q.x - p.x, q.y - p.y); let b = 0;
+    if (p.arc !== 'none' && p.r > 0 && c > 1e-9) { const th = 2 * Math.asin(Math.min(1, c / (2 * p.r))); b = Math.tan(th / 4) * (p.arc === 'convex' ? 1 : -1); }
+    return [p.x, p.y, b];
+  });
+}
 function wizardDXF(w) {
   const E = [], t = Math.tan(Math.PI / 8);
-  const lw = (layer, pts) => { E.push(0, 'LWPOLYLINE', 8, layer, 90, pts.length, 70, 1); for (const p of pts) { E.push(10, +p[0].toFixed(6), 20, +p[1].toFixed(6)); if (p[2]) E.push(42, p[2]); } };
+  const lw = (layer, pts) => { E.push(0, 'LWPOLYLINE', 8, layer, 90, pts.length, 70, 1); for (const p of pts) { E.push(10, +p[0].toFixed(6), 20, +p[1].toFixed(6)); if (p[2]) E.push(42, +p[2].toFixed(9)); } };
   const rr = (x0, y0, x1, y1, R) => R > 1e-9 ? [[x0 + R, y0], [x1 - R, y0, t], [x1, y0 + R], [x1, y1 - R, t], [x1 - R, y1], [x0 + R, y1, t], [x0, y1 - R], [x0, y0 + R, t]] : [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
   const circ = (layer, x, y, r) => E.push(0, 'CIRCLE', 8, layer, 10, +x.toFixed(6), 20, +y.toFixed(6), 30, 0, 40, +r.toFixed(6));
   const num = v => String(+(+v).toFixed(3)).replace('.', ',');
-  if (w.shape === 'round') circ('KONTUR_' + num(w.T), w.L / 2, w.L / 2, w.L / 2); else lw('KONTUR_' + num(w.T), rr(0, 0, w.L, w.W, w.R));
+  if (w.shape === 'round') circ('KONTUR_' + num(w.T), w.L / 2, w.L / 2, w.L / 2); else lw('KONTUR_' + num(w.T), wizardOutline(w));
   for (const f of w.items) {
     if (f.type === 'rect') lw('KIESZEN_' + num(f.d), rr(f.x - f.a / 2, f.y - f.b / 2, f.x + f.a / 2, f.y + f.b / 2, Math.min(f.r, f.a / 2, f.b / 2)));
     else if (f.type === 'round') circ('KIESZEN_' + num(f.d), f.x, f.y, f.a / 2);
@@ -3951,17 +3994,136 @@ function wizardDXF(w) {
   return `0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n4\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n${E.join('\n')}\n0\nENDSEC\n0\nEOF\n`;
 }
 function wizardCheck(w) {
-  const err = [], inPart = (x, y, m = 0) => w.shape === 'round' ? Math.hypot(x - w.L / 2, y - w.L / 2) <= w.L / 2 - m + 1e-9 : x >= m - 1e-9 && y >= m - 1e-9 && x <= w.L - m + 1e-9 && y <= w.W - m + 1e-9;
-  if (!(w.L > 0) || (w.shape !== 'round' && !(w.W > 0)) || !(w.T > 0)) err.push('Podaj wymiary obrysu i grubość detalu.');
-  if (w.shape !== 'round' && w.R * 2 > Math.min(w.L, w.W)) err.push('Promień naroży obrysu jest większy niż połowa krótszego boku.');
+  const err = [];
+  let poly = null;
+  if (w.shape === 'poly') {
+    if (!w.pts || w.pts.length < 3) err.push('Dowolny obrys potrzebuje co najmniej 3 punktów.');
+    else {
+      (w.pts || []).forEach((p, i) => { const q = w.pts[(i + 1) % w.pts.length], c = Math.hypot(q.x - p.x, q.y - p.y); if (p.arc !== 'none' && !(p.r * 2 >= c - 1e-6)) err.push(`Punkt ${i + 1}: promień łuku R${pl(+p.r || 0, 3)} jest za mały dla odcinka ${pl(c, 3)} mm (minimum R${pl(c / 2, 3)}).`); if (c < 1e-6) err.push(`Punkty ${i + 1} i ${(i + 1) % w.pts.length + 1} są w tym samym miejscu.`); });
+      if (!err.length) { const V = wizardOutline(w), o = [[V[0][0], V[0][1]]]; V.forEach((a, i) => { const b = V[(i + 1) % V.length], s = bulgePts([a[0], a[1]], [b[0], b[1]], a[2]); for (let k = 1; k < s.length; k++) o.push(s[k]); }); o.pop(); poly = o; }
+    }
+  }
+  const inPart = (x, y, m = 0) => {
+    if (w.shape === 'round') return Math.hypot(x - w.L / 2, y - w.L / 2) <= w.L / 2 - m + 1e-9;
+    if (w.shape === 'poly') { if (!poly) return true; if (!pIn(poly, x, y)) return false; for (let k = 0; k < 16 && m > 0; k++) if (!pIn(poly, x + m * Math.cos(k * Math.PI / 8), y + m * Math.sin(k * Math.PI / 8))) return false; return true; }
+    return x >= m - 1e-9 && y >= m - 1e-9 && x <= w.L - m + 1e-9 && y <= w.W - m + 1e-9;
+  };
+  if (!(w.T > 0) || (w.shape !== 'poly' && !(w.L > 0)) || (w.shape === 'rect' && !(w.W > 0))) err.push('Podaj wymiary obrysu i grubość detalu.');
+  if (w.shape === 'rect' && w.R * 2 > Math.min(w.L, w.W)) err.push('Promień naroży obrysu jest większy niż połowa krótszego boku.');
   w.items.forEach((f, i) => {
     const n = `Element ${i + 1}`;
-    if (f.type === 'rect') { if (!(f.a > 0 && f.b > 0)) err.push(`${n}: podaj długość i szerokość kieszeni.`); else if (!inPart(f.x - f.a / 2, f.y - f.b / 2) || !inPart(f.x + f.a / 2, f.y + f.b / 2)) err.push(`${n}: kieszeń wychodzi poza obrys.`); if (!(f.d > 0)) err.push(`${n}: podaj głębokość kieszeni.`); }
+    if (f.type === 'rect') { if (!(f.a > 0 && f.b > 0)) err.push(`${n}: podaj długość i szerokość kieszeni.`); else if (!inPart(f.x - f.a / 2, f.y - f.b / 2) || !inPart(f.x + f.a / 2, f.y + f.b / 2) || !inPart(f.x - f.a / 2, f.y + f.b / 2) || !inPart(f.x + f.a / 2, f.y - f.b / 2)) err.push(`${n}: kieszeń wychodzi poza obrys.`); if (!(f.d > 0)) err.push(`${n}: podaj głębokość kieszeni.`); }
     else if (f.type === 'round') { if (!(f.a > 0)) err.push(`${n}: podaj średnicę.`); else if (!inPart(f.x, f.y, f.a / 2)) err.push(`${n}: kieszeń wychodzi poza obrys.`); if (!(f.d > 0)) err.push(`${n}: podaj głębokość kieszeni.`); }
     else if (f.type === 'hole') { if (!(f.a > 0)) err.push(`${n}: podaj średnicę otworu.`); else if (!inPart(f.x, f.y, f.a / 2)) err.push(`${n}: otwór wychodzi poza obrys.`); }
     else if (f.type === 'tap') { if (!TAPS.some(q => q[1] === +f.a)) err.push(`${n}: wybierz gwint z listy.`); else if (!inPart(f.x, f.y, 2)) err.push(`${n}: gwint poza obrysem.`); }
   });
   return err;
+}
+
+// ------------------------------------------------------------ reading a photo of a technical drawing with Claude (vision + structured output)
+const AI_MODEL = 'claude-opus-5-5';
+const DRAWING_SCHEMA = {
+  type: 'object', additionalProperties: false,
+  required: ['readable', 'part_name', 'material', 'units', 'main_view', 'outline', 'thickness', 'features', 'not_modelled', 'uncertain'],
+  properties: {
+    readable: { type: 'boolean', description: 'false when the image is not a technical drawing or its dimensions cannot be read' },
+    part_name: { type: 'string' }, material: { type: 'string' },
+    units: { type: 'string', enum: ['mm', 'inch'] },
+    main_view: { type: 'string', description: 'Polish: which view became the outline and where the thickness comes from' },
+    outline: {
+      type: 'object', additionalProperties: false, required: ['shape', 'length', 'width', 'corner_radius', 'diameter', 'points'],
+      properties: {
+        shape: { type: 'string', enum: ['rect', 'round', 'polygon'] },
+        length: { type: 'number', description: 'rect: size along X' }, width: { type: 'number', description: 'rect: size along Y' },
+        corner_radius: { type: 'number', description: 'rect: equal corner radius, 0 if sharp' }, diameter: { type: 'number', description: 'round: outer diameter' },
+        points: {
+          type: 'array', description: 'polygon: vertices counter-clockwise; arc/radius describe the segment from this vertex to the next one',
+          items: { type: 'object', additionalProperties: false, required: ['x', 'y', 'arc', 'radius'], properties: { x: { type: 'number' }, y: { type: 'number' }, arc: { type: 'string', enum: ['none', 'convex', 'concave'] }, radius: { type: 'number' } } }
+        }
+      }
+    },
+    thickness: { type: 'number', description: 'size perpendicular to the outline view' },
+    features: {
+      type: 'array',
+      items: {
+        type: 'object', additionalProperties: false, required: ['type', 'x', 'y', 'size_a', 'size_b', 'corner_radius', 'depth', 'source'],
+        properties: {
+          type: { type: 'string', enum: ['hole', 'thread', 'pocket_rect', 'pocket_round'] },
+          x: { type: 'number' }, y: { type: 'number' },
+          size_a: { type: 'number', description: 'hole/pocket_round: diameter; thread: nominal M size (6 for M6); pocket_rect: length along X' },
+          size_b: { type: 'number', description: 'pocket_rect: width along Y, otherwise 0' },
+          corner_radius: { type: 'number' },
+          depth: { type: 'number', description: '0 = through the whole thickness' },
+          source: { type: 'string', description: 'the dimension text read from the drawing, e.g. "2 HOLES Ø8,5 THRO\'"' }
+        }
+      }
+    },
+    not_modelled: { type: 'array', items: { type: 'string' }, description: 'Polish: geometry seen on the drawing that this 2.5D model cannot represent' },
+    uncertain: { type: 'array', items: { type: 'string' }, description: 'Polish: values that were derived, assumed or hard to read' }
+  }
+};
+const DRAWING_PROMPT = `You read photographed mechanical (technical) drawings and turn them into a 2.5D part description for a CNC milling program: one outline extruded by a thickness, with holes and pockets cut perpendicular to the outline.
+
+Rules:
+- Take every size from the dimension numbers written on the drawing. Never measure the picture: the photo is skewed and its scale is unknown. A decimal comma is a decimal point.
+- A dimension given as two limits (e.g. 8,65 over 8,4) or with a tolerance: use the middle of the tolerance zone. Basic or boxed dimensions are exact.
+- When a size is not written, derive it from dimension chains, symmetry notes ("symmetrical about C/L"), "TYP" values or other views, and say so in "uncertain".
+- Choose as the outline the view in which the through holes appear as circles. "thickness" is the size of the part perpendicular to that view, read from another view. If the part has tapers or slopes in the other view, use the largest thickness and describe the taper in "not_modelled".
+- Coordinates: millimetres, origin in the lower-left corner of the outline's bounding box, X to the right, Y up, as seen in the chosen view.
+- Use "rect" or "round" only when the outline really is a rectangle (with equal corner radii) or a circle; otherwise "polygon". For a polygon list the vertices counter-clockwise; put vertices at the tangent points of fillets and arcs; for the segment from a vertex to the next set arc "convex" (bulging out of the part, like a rounded corner) or "concave" (cut into the part) with its radius, otherwise "none" and radius 0. Leave out edge breaks and radii below 1 mm and list them in "not_modelled".
+- Features: one entry per hole, so "2 HOLES Ø4x3,25 DEEP" gives two entries with depth 3.25; "THRO'" means depth 0. A tapped hole is type "thread" with size_a = nominal diameter. Put each feature's centre in the outline coordinates; holes symmetric about a centre line get mirrored positions.
+- Chamfers, slopes in other views, surface finish, coating, marking, tolerances of form: describe briefly in "not_modelled".
+- If the image is not a technical drawing or the numbers cannot be read, set readable to false.
+- Write main_view, not_modelled and uncertain in Polish.`;
+function aiImage(file) { // downscale to the model's native resolution (long edge 2576 px), JPEG
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, 2576 / Math.max(img.naturalWidth, img.naturalHeight)), w = Math.round(img.naturalWidth * s), h = Math.round(img.naturalHeight * s);
+      const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
+      res({ b64: c.toDataURL('image/jpeg', 0.9).split(',')[1], url, w, h });
+    };
+    img.onerror = () => rej(new Error('To nie jest obraz, który przeglądarka potrafi otworzyć (użyj JPG albo PNG).'));
+    img.src = url;
+  });
+}
+async function aiReadDrawing(b64, apiKey) {
+  const A = AnthropicSDK.default, client = new A({ apiKey, dangerouslyAllowBrowser: true, maxRetries: 2 });
+  let r;
+  try {
+    r = await client.beta.messages.create({
+      model: AI_MODEL, max_tokens: 16000,
+      betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default',
+      output_config: { effort: 'high', format: { type: 'json_schema', schema: DRAWING_SCHEMA } },
+      system: DRAWING_PROMPT,
+      messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: 'Read this drawing and describe the part.' }] }]
+    });
+  } catch (e) {
+    if (e instanceof A.AuthenticationError) throw new Error('Klucz API jest nieprawidłowy albo wygasł.');
+    if (e instanceof A.PermissionDeniedError) throw new Error('Klucz API nie ma dostępu do tego modelu.');
+    if (e instanceof A.RateLimitError) throw new Error('Przekroczony limit zapytań API. Spróbuj za minutę.');
+    if (e instanceof A.APIConnectionError) throw new Error('Brak połączenia z API. Odczyt zdjęcia wymaga internetu.');
+    throw new Error('Błąd API: ' + (e && e.message ? e.message : String(e)));
+  }
+  if (r.stop_reason === 'refusal') throw new Error('Model odmówił odczytu tego obrazu.');
+  if (r.stop_reason === 'max_tokens') throw new Error('Odpowiedź modelu została ucięta. Spróbuj ponownie z wyraźniejszym zdjęciem jednego rzutu.');
+  const t = r.content.find(b => b.type === 'text');
+  if (!t) throw new Error('Model nie zwrócił opisu rysunku.');
+  return JSON.parse(t.text);
+}
+function specToWizard(sp) {
+  const k = sp.units === 'inch' ? 25.4 : 1, n = v => Math.round((+v || 0) * k * 1000) / 1000, O = sp.outline || {};
+  const w = { shape: O.shape === 'round' ? 'round' : O.shape === 'polygon' ? 'poly' : 'rect', T: n(sp.thickness), L: n(O.shape === 'round' ? O.diameter : O.length), W: n(O.width), R: n(O.corner_radius), pts: [], items: [] };
+  if (w.shape === 'poly') { w.pts = (O.points || []).map(p => ({ x: n(p.x), y: n(p.y), arc: p.arc || 'none', r: n(p.radius) })); const xs = w.pts.map(p => p.x), ys = w.pts.map(p => p.y); w.L = Math.max(...xs) - Math.min(...xs); w.W = Math.max(...ys) - Math.min(...ys); }
+  for (const f of sp.features || []) {
+    const base = { x: n(f.x), y: n(f.y), d: n(f.depth), src: f.source || '' };
+    if (f.type === 'hole') w.items.push(Object.assign(base, { type: 'hole', a: n(f.size_a) }));
+    else if (f.type === 'thread') w.items.push(Object.assign(base, { type: 'tap', a: Math.round(+f.size_a * k) }));
+    else if (f.type === 'pocket_rect') w.items.push(Object.assign(base, { type: 'rect', a: n(f.size_a), b: n(f.size_b), r: n(f.corner_radius) }));
+    else if (f.type === 'pocket_round') w.items.push(Object.assign(base, { type: 'round', a: n(f.size_a) }));
+  }
+  w.ai = { name: sp.part_name || '', material: sp.material || '', view: sp.main_view || '', notes: sp.not_modelled || [], unsure: sp.uncertain || [], inch: sp.units === 'inch' };
+  return w;
 }
 
 // ------------------------------------------------------------ turning from a DXF profile (G71 roughing + G70 finishing)
@@ -4134,34 +4296,79 @@ widget('generator', {
     $('#genSim').onclick = () => this.toSim(); $('#genDl').onclick = () => this.download(); $('#genCopy').onclick = () => this.copy();
   },
   wzInit() {
-    const def = { shape: 'rect', L: 120, W: 80, R: 8, T: 15, items: [{ type: 'rect', x: 37, y: 40, a: 50, b: 36, r: 6, d: 6 }, { type: 'round', x: 92, y: 40, a: 30, d: 8 }, { type: 'hole', x: 10, y: 10, a: 6.6, d: 0 }, { type: 'hole', x: 110, y: 10, a: 6.6, d: 0 }, { type: 'hole', x: 10, y: 70, a: 6.6, d: 0 }, { type: 'hole', x: 110, y: 70, a: 6.6, d: 0 }, { type: 'tap', x: 92, y: 10, a: 6, d: 12 }] };
-    const w = this.wz = Object.assign(def, store.get('wizard', {}));
-    $('#wzShape').value = w.shape; $('#wzL').value = w.L; $('#wzW').value = w.W; $('#wzR').value = w.R; $('#wzT').value = w.T;
-    const K = { rect: 'Kieszeń prostokątna', round: 'Kieszeń okrągła', hole: 'Otwór', tap: 'Otwór gwintowany' };
+    const def = { shape: 'rect', L: 120, W: 80, R: 8, T: 15, pts: [{ x: 0, y: 0, arc: 'none', r: 0 }, { x: 60, y: 0, arc: 'none', r: 0 }, { x: 60, y: 30, arc: 'concave', r: 20 }, { x: 0, y: 30, arc: 'none', r: 0 }], items: [{ type: 'rect', x: 37, y: 40, a: 50, b: 36, r: 6, d: 6 }, { type: 'round', x: 92, y: 40, a: 30, d: 8 }, { type: 'hole', x: 10, y: 10, a: 6.6, d: 0 }, { type: 'hole', x: 110, y: 10, a: 6.6, d: 0 }, { type: 'hole', x: 10, y: 70, a: 6.6, d: 0 }, { type: 'hole', x: 110, y: 70, a: 6.6, d: 0 }, { type: 'tap', x: 92, y: 10, a: 6, d: 12 }] };
+    let w = this.wz = Object.assign(def, store.get('wizard', {}));
+    const K = { rect: 'Kieszeń prostokątna', round: 'Kieszeń okrągła', hole: 'Otwór', tap: 'Otwór gwintowany' }, A = { none: 'prosto', convex: 'łuk wypukły', concave: 'łuk wklęsły' };
+    const save = () => store.set('wizard', w);
+    const fill = () => { $('#wzShape').value = w.shape; $('#wzL').value = w.L; $('#wzW').value = w.W; $('#wzR').value = w.R; $('#wzT').value = w.T; };
     const draw = () => {
-      $('#wzLl').textContent = w.shape === 'round' ? 'Średnica Ø [mm]' : 'Długość X [mm]'; $$('[data-wz=rect]').forEach(e => { e.hidden = w.shape === 'round'; });
-      $('#wzTbl').innerHTML = '<thead><tr><th>#</th><th>Element</th><th>X środka</th><th>Y środka</th><th>Dł. / Ø / M</th><th>Szer.</th><th>R naroża</th><th>Głęb. (0 = przelot)</th><th></th></tr></thead><tbody>' + w.items.map((f, i) => `<tr data-i="${i}"><td>${i + 1}</td>
+      $('#wzLl').textContent = w.shape === 'round' ? 'Średnica Ø [mm]' : 'Długość X [mm]';
+      $$('[data-wz=rect]').forEach(e => { e.hidden = w.shape !== 'rect'; }); $('#wzL').closest('label').hidden = w.shape === 'poly'; $('#wzPtsBox').hidden = w.shape !== 'poly';
+      const ai = !!w.ai;
+      $('#wzPts').innerHTML = '<thead><tr><th>#</th><th>X</th><th>Y</th><th>Do następnego punktu</th><th>R łuku</th><th></th></tr></thead><tbody>' + (w.pts || []).map((p, i) => `<tr data-i="${i}"><td>${i + 1}</td>
+        <td><input type="number" step="0.001" data-k="x" value="${p.x}"></td><td><input type="number" step="0.001" data-k="y" value="${p.y}"></td>
+        <td><select data-k="arc">${Object.entries(A).map(([k, v]) => `<option value="${k}" ${p.arc === k ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
+        <td>${p.arc === 'none' ? '–' : `<input type="number" step="0.001" min="0" data-k="r" value="${p.r}">`}</td><td><button class="btn" type="button" data-del="${i}" aria-label="Usuń punkt ${i + 1}">✕</button></td></tr>`).join('') + '</tbody>';
+      $('#wzTbl').innerHTML = '<thead><tr><th>#</th><th>Element</th><th>X środka</th><th>Y środka</th><th>Dł. / Ø / M</th><th>Szer.</th><th>R naroża</th><th>Głęb. (0 = przelot)</th>' + (ai ? '<th>Odczytano z rysunku</th>' : '') + '<th></th></tr></thead><tbody>' + w.items.map((f, i) => `<tr data-i="${i}"><td>${i + 1}</td>
         <td><select data-k="type">${Object.entries(K).map(([k, v]) => `<option value="${k}" ${f.type === k ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
         <td><input type="number" step="0.001" data-k="x" value="${f.x}"></td><td><input type="number" step="0.001" data-k="y" value="${f.y}"></td>
         <td>${f.type === 'tap' ? `<select data-k="a">${TAPS.map(t => `<option value="${t[1]}" ${+f.a === t[1] ? 'selected' : ''}>M${t[1]} (Ø${pl(t[0], 1)})</option>`).join('')}</select>` : `<input type="number" step="0.001" data-k="a" value="${f.a}">`}</td>
         <td>${f.type === 'rect' ? `<input type="number" step="0.001" data-k="b" value="${f.b || 0}">` : '–'}</td><td>${f.type === 'rect' ? `<input type="number" step="0.001" data-k="r" value="${f.r || 0}">` : '–'}</td>
-        <td><input type="number" step="0.001" min="0" data-k="d" value="${f.d || 0}"></td><td><button class="btn" type="button" data-del="${i}" aria-label="Usuń element ${i + 1}">✕</button></td></tr>`).join('') + '</tbody>';
+        <td><input type="number" step="0.001" min="0" data-k="d" value="${f.d || 0}"></td>${ai ? `<td class="wz-src">${esc(f.src || '')}</td>` : ''}<td><button class="btn" type="button" data-del="${i}" aria-label="Usuń element ${i + 1}">✕</button></td></tr>`).join('') + '</tbody>';
+      this.wzAiPanel();
     };
-    const read = () => { w.shape = $('#wzShape').value; w.L = +$('#wzL').value; w.W = +$('#wzW').value; w.R = +$('#wzR').value || 0; w.T = +$('#wzT').value; store.set('wizard', w); };
-    ['wzShape', 'wzL', 'wzW', 'wzR', 'wzT'].forEach(id => $('#' + id).addEventListener('change', () => { read(); draw(); }));
-    $('#wzTbl').addEventListener('change', e => { const tr = e.target.closest('tr[data-i]'); if (!tr) return; const f = w.items[+tr.dataset.i], k = e.target.dataset.k; f[k] = k === 'type' ? e.target.value : +e.target.value; if (k === 'type') { if (f.type === 'tap') f.a = 6; if (f.type === 'rect') { f.b = f.b || 10; f.r = f.r || 0; } draw(); } store.set('wizard', w); });
-    $('#wzTbl').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; w.items.splice(+b.dataset.del, 1); store.set('wizard', w); draw(); });
-    $('#wzAdd').onclick = () => { w.items.push({ type: 'hole', x: 10, y: 10, a: 5, b: 10, r: 0, d: 0 }); store.set('wizard', w); draw(); };
-    const check = () => { read(); const err = wizardCheck(w); $('#wzErr').innerHTML = err.map(t => `<li class="err"><span class="k">błąd</span><span>${esc(t)}</span></li>`).join(''); return !err.length; };
+    const read = () => { w.shape = $('#wzShape').value; w.L = +$('#wzL').value; w.W = +$('#wzW').value; w.R = +$('#wzR').value || 0; w.T = +$('#wzT').value; save(); };
+    ['wzShape', 'wzL', 'wzW', 'wzR', 'wzT'].forEach(id => $('#' + id).addEventListener('change', () => { read(); if (w.shape === 'poly' && (!w.pts || w.pts.length < 3)) w.pts = def.pts.map(p => Object.assign({}, p)); draw(); }));
+    $('#wzTbl').addEventListener('change', e => { const tr = e.target.closest('tr[data-i]'); if (!tr) return; const f = w.items[+tr.dataset.i], k = e.target.dataset.k; f[k] = k === 'type' ? e.target.value : +e.target.value; if (k === 'type') { if (f.type === 'tap') f.a = 6; if (f.type === 'rect') { f.b = f.b || 10; f.r = f.r || 0; } draw(); } save(); });
+    $('#wzTbl').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; w.items.splice(+b.dataset.del, 1); save(); draw(); });
+    $('#wzPts').addEventListener('change', e => { const tr = e.target.closest('tr[data-i]'); if (!tr) return; const p = w.pts[+tr.dataset.i], k = e.target.dataset.k; p[k] = k === 'arc' ? e.target.value : +e.target.value; if (k === 'arc') { if (p.arc !== 'none' && !p.r) p.r = 5; draw(); } save(); });
+    $('#wzPts').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; w.pts.splice(+b.dataset.del, 1); save(); draw(); });
+    $('#wzPtAdd').onclick = () => { const l = w.pts[w.pts.length - 1] || { x: 0, y: 0 }; w.pts.push({ x: l.x, y: l.y + 10, arc: 'none', r: 0 }); save(); draw(); };
+    $('#wzAdd').onclick = () => { w.items.push({ type: 'hole', x: 10, y: 10, a: 5, b: 10, r: 0, d: 0 }); save(); draw(); };
+    const check = () => { read(); const err = wizardCheck(w); if (w.ai && !$('#wzOk').checked) err.unshift('Model odczytany ze zdjęcia: zaznacz najpierw, że porównałeś wszystkie wartości z rysunkiem.'); $('#wzErr').innerHTML = err.map(t => `<li class="err"><span class="k">błąd</span><span>${esc(t)}</span></li>`).join(''); return !err.length; };
     $('#wzDxf').onclick = () => { if (check()) saveBlob(new Blob([wizardDXF(w)], { type: 'application/dxf' }), 'rysunek_1-1.dxf'); };
     $('#wzGo').onclick = () => {
       if (!check()) return;
       const grip = $('#genFix').value === 'none' ? 0 : clamp(+$('#genGrip').value || 6, 1, 60);
       $('#genMach').value = $('#genMach').value === 'lathe' ? 'mill' : $('#genMach').value; $('#genThk').value = +(w.T + (grip ? grip + 1 : 2)).toFixed(3);
-      this.text(wizardDXF(w), 'rysunek.dxf'); this.pv('m');
-      this.info(`Model z rysunku: ${w.shape === 'round' ? 'krążek Ø' + pl(w.L, 3) : pl(w.L, 3) + ' × ' + pl(w.W, 3)} × ${pl(w.T, 3)} mm, elementów: ${w.items.length}. Półfabrykat ustawiono o ${pl(+$('#genThk').value - w.T, 1)} mm grubszy na chwyt w mocowaniu.`);
+      if (w.ai && w.ai.material) { const m = w.ai.material.toLowerCase(), i = /alu|al-|l1\d\d|6082|7075|2024/.test(m) ? 0 : /stainless|nierdz|1\.4|304|316/.test(m) ? 2 : /brass|mosi/.test(m) ? 3 : /pom|plast|nylon|pa6/.test(m) ? 4 : /steel|stal|c45|s235|42cr/.test(m) ? 1 : -1; if (i >= 0) $('#genMat').value = String(i); }
+      this.text(wizardDXF(w), (w.ai && w.ai.name ? ascii(w.ai.name).replace(/[^\w-]+/g, '_') : 'rysunek') + '.dxf'); this.pv('m');
+      this.info(`Model z rysunku: ${w.shape === 'round' ? 'krążek Ø' + pl(w.L, 3) : pl(w.L, 3) + ' × ' + pl(w.W, 3)} × ${pl(w.T, 3)} mm, elementów: ${w.items.length}. Półfabrykat ustawiono o ${pl(+$('#genThk').value - w.T, 1)} mm grubszy na chwyt w mocowaniu.${w.ai && w.ai.notes.length ? ' Elementy rysunku poza modelem: ' + esc(w.ai.notes.join('; ')) + '.' : ''}`);
     };
-    draw();
+    // photo of the drawing -> Claude -> wizard
+    $('#aiKey').value = store.get('aikey', '') ? '••••••••' : '';
+    $('#aiKeySave').onclick = () => { const v = $('#aiKey').value.trim(); if (v && !/^•+$/.test(v)) { store.set('aikey', v); $('#aiKey').value = '••••••••'; $('#aiKeyMsg').textContent = 'Zapisano na tym urządzeniu.'; } };
+    $('#aiKeyDel').onclick = () => { store.set('aikey', ''); $('#aiKey').value = ''; $('#aiKeyMsg').textContent = 'Usunięto klucz z tego urządzenia.'; };
+    const photo = async e => {
+      const file = e.target.files[0]; e.target.value = ''; if (!file) return;
+      const key = store.get('aikey', ''), out = $('#wzAiStatus');
+      if (!key) { $('#wzKeyBox').open = true; out.innerHTML = '<li class="warn"><span class="k">uwaga</span><span>Najpierw wpisz i zapisz klucz API Anthropic (poniżej).</span></li>'; return; }
+      if (!window.AnthropicSDK) { out.innerHTML = '<li class="err"><span class="k">błąd</span><span>Brak modułu API w tej wersji strony.</span></li>'; return; }
+      $('#wzPhotoBtn').classList.add('busy');
+      out.innerHTML = '<li class="info"><span class="k">pracuję</span><span>Claude czyta rysunek: wymiary, otwory, kieszenie. To trwa zwykle 30–90 sekund…</span></li>';
+      try {
+        const im = await aiImage(file); this.wzPhotoUrl = im.url;
+        const sp = await aiReadDrawing(im.b64, key);
+        if (!sp.readable) throw new Error('Na zdjęciu nie widać czytelnego rysunku z wymiarami. Zrób zdjęcie prosto, z bliska, bez odblasków.');
+        w = this.wz = specToWizard(sp); save(); fill(); draw();
+        out.innerHTML = '<li class="okm"><span class="k">gotowe</span><span>Wymiary wpisane do kreatora. Sprawdź każdą wartość z rysunkiem, zaznacz potwierdzenie i kliknij „Utwórz model i program”.</span></li>';
+        $('#wzAiBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) { out.innerHTML = `<li class="err"><span class="k">błąd</span><span>${esc(err.message || String(err))}</span></li>`; }
+      finally { $('#wzPhotoBtn').classList.remove('busy'); }
+    };
+    $('#wzPhoto').addEventListener('change', photo); $('#wzPhoto2').addEventListener('change', photo);
+    this.wzDraw = draw;
+    fill(); draw();
+  },
+  wzAiPanel() {
+    const w = this.wz, box = $('#wzAiBox'); box.hidden = !w.ai; if (!w.ai) return; const a = w.ai;
+    box.innerHTML = `<div class="wz-ai-grid">${this.wzPhotoUrl ? `<a href="${this.wzPhotoUrl}" target="_blank" rel="noopener"><img src="${this.wzPhotoUrl}" alt="Zdjęcie rysunku"></a>` : '<div class="gen-hint">Zdjęcie nie jest zapamiętywane po odświeżeniu strony.</div>'}
+      <div><p><b>Odczytano ze zdjęcia${a.name ? ': ' + esc(a.name) : ''}</b>${a.material ? ` · materiał: ${esc(a.material)}` : ''}${a.inch ? ' · przeliczono z cali' : ''}</p>
+      ${a.view ? `<p class="gen-hint">${esc(a.view)}</p>` : ''}
+      <ul class="msgs">${a.notes.map(t => `<li class="warn"><span class="k">poza modelem</span><span>${esc(t)}</span></li>`).join('')}${a.unsure.map(t => `<li class="info"><span class="k">sprawdź</span><span>${esc(t)}</span></li>`).join('')}</ul>
+      <label class="gen-chk wz-ok"><input type="checkbox" id="wzOk"> Porównałem obrys, grubość i wszystkie elementy w tabelach z rysunkiem</label>
+      <button class="btn" type="button" id="wzManual">Traktuj jako wpisane ręcznie</button></div></div>`;
+    $('#wzManual').onclick = () => { delete this.wz.ai; store.set('wizard', this.wz); this.wzDraw(); };
   },
   pv(m) {
     this.pvMode = m; $('#genPvT').classList.toggle('on', m === 't'); $('#genPvM').classList.toggle('on', m === 'm');
