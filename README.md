@@ -21,6 +21,7 @@ Interaktywny kurs programowania obrabiarek CNC (frezowanie i toczenie, składnia
 
 ## Instalacja
 
+- **Aplikacja Android (APK):** pobierz [`warsztat-gcode.apk`](https://github.com/Baniak88/programowanie-cnc/releases/download/apk-latest/warsztat-gcode.apk) na telefon, otwórz plik i zezwól na instalację z tego źródła. Aplikacja działa bez internetu, a zapisane programy (.NC), modele (.STL) i rysunki (.DXF) trafiają do `Pobrane/WarsztatGcode`. APK buduje się automatycznie (GitHub Actions, `.github/workflows/android.yml`) po każdej zmianie w `main` i jest publikowany w wydaniu `apk-latest`.
 - **Jako aplikacja (PC i telefon):** otwórz https://baniak88.github.io/programowanie-cnc/ w Chrome lub Edge i kliknij „Zainstaluj” w pasku adresu (na Androidzie: menu → „Zainstaluj aplikację”, na iPhonie: Udostępnij → „Do ekranu początkowego”). Aplikacja działa potem offline i sama się aktualizuje, a na komputerze otwiera pliki .DXF i .STL.
 - **Paczka offline:** pobierz [`dist/warsztat-gcode.zip`](https://github.com/Baniak88/programowanie-cnc/raw/main/dist/warsztat-gcode.zip), rozpakuj i otwórz `warsztat-gcode.html`. Instrukcja jest w `INSTALACJA.txt`.
 
@@ -37,3 +38,7 @@ Bez WebGL symulator przechodzi na widok z góry.
 ## Publikacja
 
 GitHub Pages: Settings → Pages → Deploy from a branch → `main` / `(root)`.
+
+## Aplikacja Android
+
+Projekt w `android/` to WebView, który wyświetla `index.html` z zasobów aplikacji (bez internetu). Budowanie lokalne: `./build.sh`, skopiuj `index.html` do `android/app/src/main/assets/`, potem w `android/` uruchom `gradle assembleRelease` (wymaga Android SDK). Klucz podpisu z `android/debug.keystore` jest publiczny i służy tylko do tego, żeby kolejne wersje instalowały się jako aktualizacja; do publikacji w sklepie podaj własny klucz w sekretach (`KS_FILE`, `KS_PASS`, `KS_ALIAS`, `KS_KEY_PASS`).

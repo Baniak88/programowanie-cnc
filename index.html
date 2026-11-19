@@ -342,7 +342,7 @@ ol.check li:has(input:checked) span{color:var(--muted)}
       <p class="eyebrow">Kurs od zera · frezowanie i toczenie · ISO / Fanuc</p>
       <h1>Warsztat G-code</h1>
       <p class="lead">Nauczysz się czytać i pisać programy na obrabiarki CNC: od osi maszyny, przez ruchy G00–G03 i parametry skrawania, po korekcje, cykle wiercenia i własny program sprawdzony w symulatorze 3D.</p>
-      <div class="row"><a class="btn primary" href="#maszyna">Zacznij od lekcji 1</a><a class="btn" href="#generator">Program z modelu (CAM)</a><a class="btn" href="#symulator">Symulator</a></div>
+      <div class="row"><a class="btn primary" href="#maszyna">Zacznij od lekcji 1</a><a class="btn" href="#generator">Program z modelu (CAM)</a><a class="btn" href="#symulator">Symulator</a><a class="btn apk-only-web" href="https://github.com/Baniak88/programowanie-cnc/releases/download/apk-latest/warsztat-gcode.apk">Aplikacja Android (APK)</a></div>
     </div>
     <div class="hero-screen scr" aria-label="Animacja: program płytki wykonywany linia po linii">
       <div class="scr-top"><span>O1001 · płytka</span><span id="heroDro">X 0.000 Y 0.000 Z 0.000</span></div>
@@ -3950,7 +3950,11 @@ function stlBlob(tris, name) { // binary STL with face normals
   }
   return new Blob([buf], { type: 'model/stl' });
 }
-function saveBlob(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+function saveBlob(blob, name) {
+  if (window.AndroidBridge && window.AndroidBridge.saveFile) { // inside the Android app: write to Downloads through the native bridge
+    const r = new FileReader(); r.onload = () => window.AndroidBridge.saveFile(name, blob.type || 'application/octet-stream', String(r.result).split(',')[1] || ''); r.readAsDataURL(blob); return;
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
 // drawing wizard: dimensions typed from a paper drawing -> exact DXF (the whole pipeline then works on vector data)
 function wizardDXF(w) {
   const E = [], t = Math.tan(Math.PI / 8);
@@ -4300,8 +4304,7 @@ widget('generator', {
   },
   download() {
     const R = GEN.res; if (!R) return; const o = this.opts();
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([R.code.replace(/\n/g, '\r\n') + '\r\n'], { type: 'text/plain' }));
-    a.download = `O${o.prog}_${ascii(o.name).replace(/[^\w-]+/g, '_')}.nc`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    saveBlob(new Blob([R.code.replace(/\n/g, '\r\n') + '\r\n'], { type: 'text/plain' }), `O${o.prog}_${ascii(o.name).replace(/[^\w-]+/g, '_')}.nc`);
   },
   copy() {
     const R = GEN.res; if (!R) return; const b = $('#genCopy'), done = () => { b.textContent = 'Skopiowano'; setTimeout(() => { b.textContent = 'Kopiuj program'; }, 1500); };
@@ -4645,6 +4648,7 @@ $('#testNew').onclick = newTest;
 $('#cheatQ').addEventListener('input', renderCheat); renderCheat();
 $('#dictQ').addEventListener('input', renderDict); renderDict();
 window.addEventListener('hashchange', show);
+if (window.AndroidBridge) $$('.apk-only-web').forEach(e => { e.hidden = true; });
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
 // installed app opened with a DXF/STL file (file_handlers)
 if ('launchQueue' in window) launchQueue.setConsumer(p => { if (p.files && p.files[0]) p.files[0].getFile().then(f => { location.hash = '#generator'; setTimeout(() => { const w = (WID.generator || [])[0]; if (w && w.ready) w.file(f); }, 300); }); });

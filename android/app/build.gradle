@@ -1,0 +1,33 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'pl.warsztat.gcode'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'pl.warsztat.gcode'
+        minSdk 24
+        targetSdk 34
+        versionCode Integer.parseInt(System.getenv('GITHUB_RUN_NUMBER') ?: '1')
+        versionName '1.' + (System.getenv('GITHUB_RUN_NUMBER') ?: '0')
+    }
+    signingConfigs {
+        release {
+            // Optional own key from repository secrets; otherwise the key stored in android/debug.keystore,
+            // so every build is signed the same way and updates install over the previous version.
+            storeFile file(System.getenv('KS_FILE') ?: '../debug.keystore')
+            storePassword System.getenv('KS_PASS') ?: 'android'
+            keyAlias System.getenv('KS_ALIAS') ?: 'androiddebugkey'
+            keyPassword System.getenv('KS_KEY_PASS') ?: 'android'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
